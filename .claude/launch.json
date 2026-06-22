@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "test1-board",
+      "runtimeExecutable": "C:\\Users\\ludov\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+      "runtimeArgs": ["-m", "http.server", "5500", "--directory", "test1"],
+      "port": 5500
+    },
+    {
+      "name": "pms",
+      "runtimeExecutable": "C:\\Users\\ludov\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+      "runtimeArgs": ["-m", "http.server", "5501", "--directory", "pms"],
+      "port": 5501
+    },
+    {
+      "name": "pms-app",
+      "runtimeExecutable": "C:\\Users\\ludov\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+      "runtimeArgs": ["C:\\Users\\ludov\\OneDrive\\문서\\BLtech-Louis\\pms\\server.py", "--no-browser"],
+      "port": 7777
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>나의 프로젝트 보드</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">🗂️ 나의 프로젝트 보드</div>
+    <div class="top-actions">
+      <button id="btn-export" class="btn ghost small">⬇ 백업 내보내기</button>
+      <button id="btn-import" class="btn ghost small">⬆ 백업 가져오기</button>
+      <input type="file" id="file-import" accept="application/json" hidden />
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <span>프로젝트</span>
+        <button id="btn-add-project" class="btn small primary">+ 추가</button>
+      </div>
+      <ul id="project-list" class="project-list"></ul>
+      <p class="sidebar-hint">데이터는 이 브라우저에 자동 저장됩니다.</p>
+    </aside>
+
+    <main class="main">
+      <div id="project-header" class="project-header"></div>
+      <div id="board" class="board"></div>
+      <div id="empty-state" class="empty-state" hidden>
+        왼쪽 <b>+ 추가</b> 버튼으로 새 프로젝트를 만들어 시작하세요.
+      </div>
+    </main>
+  </div>
+
+  <!-- 태스크 편집 모달 -->
+  <div id="modal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <h3 id="modal-title">태스크 편집</h3>
+      <label class="field">
+        <span>제목</span>
+        <input id="f-title" type="text" placeholder="할 일 제목" />
+      </label>
+      <label class="field">
+        <span>메모</span>
+        <textarea id="f-note" rows="3" placeholder="상세 내용 (선택)"></textarea>
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span>우선순위</span>
+          <select id="f-priority">
+            <option value="high">높음</option>
+            <option value="normal">보통</option>
+            <option value="low">낮음</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>마감일</span>
+          <input id="f-due" type="date" />
+        </label>
+        <label class="field">
+          <span>상태</span>
+          <select id="f-status">
+            <option value="todo">할 일</option>
+            <option value="doing">진행 중</option>
+            <option value="done">완료</option>
+          </select>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button id="f-delete" class="btn danger small">삭제</button>
+        <span class="spacer"></span>
+        <button id="f-cancel" class="btn ghost small">취소</button>
+        <button id="f-save" class="btn primary small">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
