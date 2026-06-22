@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BLtech-Louis · 내 작업 공간</title>
+  <style>
+    :root { --primary: #2563eb; --text: #172b4d; --soft: #5e6c84; --border: #dfe1e6; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      font-family: "Segoe UI", "Malgun Gothic", system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, #eef2ff, #f4f5f7 45%);
+      color: var(--text); display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .wrap { width: 100%; max-width: 760px; }
+    .head { text-align: center; margin-bottom: 28px; }
+    .head h1 { font-size: 30px; margin: 0 0 8px; }
+    .head p { margin: 0; color: var(--soft); font-size: 15px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card {
+      display: block; text-decoration: none; color: inherit; background: #fff;
+      border: 1px solid var(--border); border-radius: 14px; padding: 22px;
+      box-shadow: 0 1px 3px rgba(9, 30, 66, .12);
+      transition: transform .12s, box-shadow .12s, border-color .12s;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(9, 30, 66, .15); border-color: var(--primary); }
+    .card .icon { font-size: 34px; }
+    .card h2 { font-size: 18px; margin: 12px 0 6px; }
+    .card p { margin: 0; color: var(--soft); font-size: 13px; line-height: 1.5; }
+    .card .go { margin-top: 14px; color: var(--primary); font-size: 13px; font-weight: 600; }
+    .foot { text-align: center; margin-top: 28px; color: var(--soft); font-size: 12px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <h1>🗂️ BLtech-Louis</h1>
+      <p>내 작업 공간 · 아래에서 사용할 도구를 선택하세요</p>
+    </div>
+    <div class="cards">
+      <a class="card" href="pms/">
+        <div class="icon">🗂️</div>
+        <h2>나의 업무 관리 (PMS)</h2>
+        <p>회사 업무 · 오늘 꼭 해야 하는 일 · 개인 업무 · 자기 계발 · 개인 일정을 5개 영역으로 관리</p>
+        <div class="go">열기 →</div>
+      </a>
+      <a class="card" href="test1/">
+        <div class="icon">📋</div>
+        <h2>칸반 보드</h2>
+        <p>프로젝트별 할 일 · 진행 중 · 완료를 카드로 관리하는 범용 칸반 보드</p>
+        <div class="go">열기 →</div>
+      </a>
+    </div>
+    <div class="foot">온라인 버전은 데이터가 현재 사용하는 브라우저에 저장됩니다.</div>
+  </div>
+</body>
+</html>

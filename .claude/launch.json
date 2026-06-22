@@ -18,6 +18,12 @@
       "runtimeExecutable": "C:\\Users\\ludov\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
       "runtimeArgs": ["C:\\Users\\ludov\\OneDrive\\문서\\BLtech-Louis\\pms\\server.py", "--no-browser"],
       "port": 7777
+    },
+    {
+      "name": "site-root",
+      "runtimeExecutable": "C:\\Users\\ludov\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+      "runtimeArgs": ["-m", "http.server", "5502", "--directory", "."],
+      "port": 5502
     }
   ]
 }
