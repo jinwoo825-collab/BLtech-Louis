@@ -25,6 +25,7 @@
   .nav a.active{background:var(--accent-soft);color:var(--accent)}
   .nav a .ic{width:20px;text-align:center}
   .nav a .badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px}
+  .navsep{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;padding:12px 12px 5px;font-weight:700}
   .savebadge{margin-top:16px;padding:9px 10px;border-radius:9px;font-size:11.5px;text-align:center;border:1px solid var(--border);background:var(--panel2);color:var(--dim);line-height:1.35}
   .savebadge.ok{color:var(--green);border-color:#3fb95055}
   .savebadge.warn{color:var(--yellow);border-color:#d6a41766;cursor:help}
@@ -32,7 +33,7 @@
   .savebadge.dim{color:var(--dim)}
 
   /* Main */
-  .main{flex:1;padding:26px 30px;max-width:1280px}
+  .main{flex:1;padding:26px 30px;max-width:1320px}
   .pagehead{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px}
   .pagehead h2{font-size:21px;font-weight:700;letter-spacing:-.3px}
   .pagehead .desc{color:var(--dim);font-size:13px;margin-top:3px}
@@ -52,15 +53,17 @@
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   @media(max-width:960px){.grid2{grid-template-columns:1fr}}
-  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
-  .panel h3{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px}
+  .panel:last-child{margin-bottom:0}
+  .panel h3{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .panel h3 .sm{margin-left:auto;font-size:12px;font-weight:500;color:var(--dim)}
+  .panel h3 .sm a{color:var(--accent);cursor:pointer}
 
   /* Add bar */
   .addbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:16px}
   input,select,textarea,button{font-family:inherit;font-size:13.5px;color:var(--text);background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:8px 11px;outline:none}
-  input:focus,select:focus{border-color:var(--accent)}
-  input::placeholder{color:var(--dim)}
+  input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+  input::placeholder,textarea::placeholder{color:var(--dim)}
   button.add{background:var(--accent);border:none;font-weight:600;cursor:pointer;color:#fff}
   button.add:hover{filter:brightness(1.1)}
   .grow{flex:1 1 160px}
@@ -86,7 +89,7 @@
 
   /* Bar chart */
   .bars{display:flex;flex-direction:column;gap:11px}
-  .barrow{display:grid;grid-template-columns:96px 1fr 110px;align-items:center;gap:10px;font-size:13px}
+  .barrow{display:grid;grid-template-columns:140px 1fr 120px;align-items:center;gap:10px;font-size:13px}
   .barrow .bn{color:var(--text);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .bartrack{background:var(--panel2);border-radius:6px;height:20px;overflow:hidden}
   .barfill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--teal))}
@@ -96,9 +99,47 @@
   .leg .sw{width:11px;height:11px;border-radius:3px}
   .leg .lv{margin-left:auto;color:var(--dim);font-variant-numeric:tabular-nums}
 
+  /* Alerts */
+  .alert{padding:11px 14px;border-radius:9px;font-size:13px;font-weight:500;margin-bottom:8px;border:1px solid;overflow:hidden}
+  .alert:last-child{margin-bottom:0}
+  .alert.high{background:#f8514916;border-color:#f8514955;color:#ff9a93}
+  .alert.med{background:#d6a41716;border-color:#d6a41755;color:#e6c357}
+  .alert.ok{background:#3fb95012;border-color:#3fb95044;color:#7ee787}
+
+  /* Progress */
+  .progress{background:var(--panel2);border-radius:8px;height:13px;overflow:hidden}
+  .progress-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--accent),var(--teal));transition:width .3s}
+
+  /* mini kpi (6) */
+  .kpi6{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+  @media(max-width:1100px){.kpi6{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:640px){.kpi6{grid-template-columns:repeat(2,1fr)}}
+  .mkpi{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:12px}
+  .mkpi .l{font-size:11px;color:var(--dim)}
+  .mkpi .v{font-size:17px;font-weight:800;margin-top:5px;letter-spacing:-.3px}
+
+  /* funnel */
+  .funnel{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  @media(max-width:640px){.funnel{grid-template-columns:1fr}}
+  .fstep{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:15px;text-align:center;position:relative}
+  .fstep .fl{font-size:12px;color:var(--dim)}
+  .fstep .fv{font-size:20px;font-weight:800;margin-top:6px;letter-spacing:-.4px}
+  .fstep .fp{font-size:11.5px;color:var(--accent);margin-top:5px;font-weight:600}
+
+  /* brief */
+  .brief-card{background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:14px;margin-bottom:10px}
+  .brief-card .bc-cat{font-size:11px;color:var(--accent);font-weight:700}
+  .brief-card .bc-title{font-size:14px;font-weight:700;margin:4px 0 6px}
+  .brief-card .bc-body{font-size:12.5px;color:var(--text);line-height:1.65}
+  .brief-card .bc-src{font-size:11px;color:var(--dim);margin-top:7px}
+  .brief-card .row-del{font-size:12px;color:var(--red);border:1px solid #f8514944;border-radius:6px;padding:3px 9px}
+
   .toolnote{color:var(--dim);font-size:12px;margin-top:24px;text-align:center}
   .toolnote a{color:var(--accent);cursor:pointer}
   .input-file{display:none}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:11.5px;color:var(--dim)}
+  .field input{width:140px}
 </style>
 </head>
 <body>
@@ -110,9 +151,15 @@
     </div>
     <nav class="nav" id="nav">
       <a data-view="overview" class="active"><span class="ic">📊</span> 대시보드</a>
+      <a data-view="target"><span class="ic">🎯</span> 매출·목표</a>
+      <div class="navsep">신규사업 · 인텔리전스</div>
+      <a data-view="newbiz"><span class="ic">🧪</span> 신규사업(하이드로겔)</a>
+      <a data-view="brief"><span class="ic">📰</span> AI 브리핑</a>
+      <div class="navsep">일상 업무</div>
       <a data-view="today"><span class="ic">✅</span> 오늘 할 일 <span class="badge" id="navTodayBadge" style="display:none"></span></a>
       <a data-view="work"><span class="ic">🗂️</span> 개인 업무</a>
       <a data-view="schedule"><span class="ic">📅</span> 개인 일정</a>
+      <div class="navsep">재무 · 영업 · 생산</div>
       <a data-view="finance"><span class="ic">💰</span> 회계·자금 현황</a>
       <a data-view="orders"><span class="ic">🌐</span> 해외주문/출고/입금</a>
       <a data-view="contrib"><span class="ic">👥</span> 1인당 매출 공헌도</a>
@@ -128,25 +175,106 @@
         <div><h2>경영 대시보드</h2><div class="desc">대표이사 종합 현황 · 한눈에 보는 핵심 지표</div></div>
         <div class="date" id="dateStr"></div>
       </div>
+
+      <div class="panel" style="border-color:#f8514944">
+        <h3>🚨 CEO 위험경보 <span class="sm"><span id="alertCnt"></span> · <a onclick="App.addAlert()">+ 직접 경보 추가</a></span></h3>
+        <div id="alertWrap"></div>
+      </div>
+
       <div class="kpis" id="kpiRow"></div>
+
+      <div class="panel">
+        <h3>🎯 매출 목표 달성 현황 <span class="sm">이번 달 · <a onclick="App.go('target')">목표 설정 →</a></span></h3>
+        <div class="kpi6" id="targetMini"></div>
+        <div style="margin-top:14px"><div class="progress"><div class="progress-fill" id="targetBar" style="width:0%"></div></div>
+        <div id="targetBarLbl" style="font-size:12px;color:var(--dim);margin-top:7px"></div></div>
+      </div>
+
+      <div class="panel">
+        <h3>🔄 수주 → 매출(출고) → 입금 <span class="sm" id="funnelNote"></span></h3>
+        <div class="funnel" id="funnelWrap"></div>
+      </div>
+
       <div class="grid2">
-        <div class="panel">
-          <h3>✅ 오늘 할 일 <span class="sm" id="ovTodayCnt"></span></h3>
-          <div id="ovToday"></div>
-        </div>
-        <div class="panel">
-          <h3>📅 다가오는 일정</h3>
-          <div id="ovSchedule"></div>
-        </div>
-        <div class="panel">
-          <h3>🌐 출고/입금 대기 건</h3>
-          <div id="ovOrders"></div>
-        </div>
-        <div class="panel">
-          <h3>💰 이번 달 자금 흐름</h3>
-          <div id="ovFinance"></div>
+        <div class="panel"><h3>✅ 오늘 할 일 <span class="sm" id="ovTodayCnt"></span></h3><div id="ovToday"></div></div>
+        <div class="panel"><h3>📅 다가오는 일정</h3><div id="ovSchedule"></div></div>
+        <div class="panel"><h3>🌐 출고/입금 대기 건</h3><div id="ovOrders"></div></div>
+        <div class="panel"><h3>💰 이번 달 자금 흐름</h3><div id="ovFinance"></div></div>
+      </div>
+
+      <div class="grid2">
+        <div class="panel"><h3>🧪 신규사업(하이드로겔) <span class="sm"><a onclick="App.go('newbiz')">자세히 →</a></span></h3><div id="ovNewbiz"></div></div>
+        <div class="panel"><h3>📰 AI 브리핑 <span class="sm"><a onclick="App.go('brief')">전체 →</a></span></h3><div id="ovBrief"></div></div>
+      </div>
+    </section>
+
+    <!-- ============ TARGET / SETTINGS ============ -->
+    <section class="view" id="v-target">
+      <div class="pagehead"><div><h2>🎯 매출 목표 · 설정</h2><div class="desc">월 매출 목표와 환율·재고 기준을 설정하면 대시보드가 자동 계산합니다</div></div></div>
+      <div class="panel">
+        <h3>⚙️ 기준 설정</h3>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end">
+          <div class="field"><label>월 매출 목표(원)</label><input id="cfg_target" inputmode="numeric" placeholder="예: 120000000" style="width:170px" /></div>
+          <div class="field"><label>환율 USD→KRW</label><input id="cfg_usd" inputmode="numeric" /></div>
+          <div class="field"><label>환율 EUR→KRW</label><input id="cfg_eur" inputmode="numeric" /></div>
+          <div class="field"><label>환율 JPY→KRW</label><input id="cfg_jpy" inputmode="numeric" /></div>
+          <div class="field"><label>현재 재고 금액(원)</label><input id="cfg_inv" inputmode="numeric" /></div>
+          <div class="field"><label>목표 재고회전(연,회)</label><input id="cfg_turn" inputmode="numeric" /></div>
+          <button class="add" onclick="App.saveCfg()">저장</button>
         </div>
       </div>
+      <div class="panel">
+        <h3>📈 이번 달 매출 목표 달성</h3>
+        <div class="kpi6" id="targetMini2"></div>
+        <div style="margin-top:16px"><div class="progress"><div class="progress-fill" id="targetBar2" style="width:0%"></div></div>
+        <div id="targetBarLbl2" style="font-size:12.5px;color:var(--dim);margin-top:8px"></div></div>
+        <div style="font-size:11.5px;color:var(--dim);margin-top:12px;line-height:1.6">· <b>현재 누적</b>은 「회계·자금 현황」의 이번 달 수입 합계입니다.<br>· <b>남은 근무일</b>은 이번 달 남은 평일(주말 제외) 기준입니다. · <b>일평균 필요매출</b> = 남은 목표 ÷ 남은 근무일</div>
+      </div>
+    </section>
+
+    <!-- ============ NEW BUSINESS (HYDROGEL) ============ -->
+    <section class="view" id="v-newbiz">
+      <div class="pagehead"><div><h2>🧪 신규사업 · 하이드로겔</h2><div class="desc">투자 · 매출목표 · 손익 · 프로젝트 진행을 한눈에</div></div></div>
+      <div class="kpis" id="nbKpis"></div>
+      <div class="panel">
+        <h3>🚧 프로젝트 진행 단계 <span class="sm" id="nbTargetLbl"></span></h3>
+        <div class="addbar" style="margin-bottom:14px;background:var(--panel2)">
+          <input id="nbm_name" class="grow" placeholder="단계명 (예: GMP/인증)" />
+          <select id="nbm_status"><option>예정</option><option>진행</option><option>완료</option></select>
+          <input id="nbm_pct" placeholder="진행률 %" style="flex:0 1 100px" inputmode="numeric" />
+          <button class="add" onclick="App.addNbm()">+ 단계</button>
+        </div>
+        <div class="bars" id="nbmBars"></div>
+      </div>
+      <div class="panel">
+        <h3>💼 투자 · 매출 · 비용 장부</h3>
+        <div class="addbar" style="margin-bottom:14px;background:var(--panel2)">
+          <input id="nb_date" type="date" />
+          <select id="nb_type"><option value="invest">투자</option><option value="rev">매출</option><option value="cost">비용</option></select>
+          <input id="nb_item" class="grow" placeholder="내용 (예: 설비 도입)" />
+          <input id="nb_amt" placeholder="금액(원)" style="flex:0 1 150px" inputmode="numeric" />
+          <button class="add" onclick="App.addNb()">+ 기록</button>
+        </div>
+        <table><thead><tr><th style="width:120px">날짜</th><th style="width:70px">구분</th><th>내용</th><th class="num" style="width:140px">금액</th><th style="width:40px"></th></tr></thead><tbody id="tb_nb"></tbody></table>
+      </div>
+    </section>
+
+    <!-- ============ AI BRIEFING ============ -->
+    <section class="view" id="v-brief">
+      <div class="pagehead"><div><h2>📰 AI 브리핑</h2><div class="desc" id="briefUpdated">시장·지원사업 인텔리전스</div></div></div>
+      <div class="panel" style="background:var(--accent-soft);border-color:#4f9cf944">
+        <div style="font-size:12.5px;color:var(--text);line-height:1.6">💡 아래 브리핑은 Claude가 조사·정리한 내용입니다. <b>새 정보가 필요하시면 채팅에서 "AI 브리핑 갱신해줘"</b>라고 말씀하시면 최신으로 다시 채워드립니다. 직접 추가/수정도 가능합니다.</div>
+      </div>
+      <div class="addbar">
+        <select id="br_cat"><option>시장동향</option><option>가격/경쟁</option><option>지원사업</option><option>규제/인증</option><option>기타</option></select>
+        <input id="br_title" class="grow" placeholder="제목" />
+        <input id="br_src" placeholder="출처/근거" style="flex:0 1 160px" />
+        <button class="add" onclick="App.addBrief()">+ 추가</button>
+      </div>
+      <div class="addbar" style="margin-top:-8px">
+        <textarea id="br_body" class="grow" rows="2" placeholder="내용 (요약/메모)" style="resize:vertical;min-height:42px"></textarea>
+      </div>
+      <div id="briefList"></div>
     </section>
 
     <!-- ============ TODAY ============ -->
@@ -253,7 +381,7 @@
     </section>
 
     <p class="toolnote">
-      데이터는 이 브라우저에 자동 저장됩니다 ·
+      데이터는 이 브라우저/파일에 자동 저장됩니다 ·
       <a onclick="App.exportAll()">전체 백업(JSON)</a> ·
       <a onclick="document.getElementById('imp').click()">복원</a> ·
       <a onclick="App.resetAll()">초기화</a>
@@ -265,8 +393,8 @@
 <script>
 const App = (function(){
   "use strict";
-  const K = {today:'blt.today',work:'blt.work',sched:'blt.sched',fin:'blt.fin',ord:'blt.ord',ct:'blt.ct',mfg:'blt.mfg'};
-  const $ = s => document.querySelector(s);
+  const K = {today:'blt.today',work:'blt.work',sched:'blt.sched',fin:'blt.fin',ord:'blt.ord',ct:'blt.ct',mfg:'blt.mfg',nb:'blt.nb',nbm:'blt.nbm',brief:'blt.brief',alerts:'blt.alerts'};
+  const CFGKEY='blt.cfg';
   const el = id => document.getElementById(id);
   const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -274,19 +402,24 @@ const App = (function(){
   const set = (k,v) => localStorage.setItem(k,JSON.stringify(v));
   const num = v => { const n=parseFloat(String(v).replace(/[^0-9.-]/g,'')); return isNaN(n)?0:n; };
   const won = n => '₩'+Math.round(n).toLocaleString('ko-KR');
-  const wonShort = n => { const a=Math.abs(n); if(a>=1e8)return '₩'+(n/1e8).toFixed(1)+'억'; if(a>=1e4)return '₩'+Math.round(n/1e4).toLocaleString('ko-KR')+'만'; return won(n); };
+  const wonShort = n => { const a=Math.abs(n); const sg=n<0?'-':''; if(a>=1e8)return sg+'₩'+(a/1e8).toFixed(1)+'억'; if(a>=1e4)return sg+'₩'+Math.round(a/1e4).toLocaleString('ko-KR')+'만'; return won(n); };
   const cursym = {USD:'$',EUR:'€',JPY:'¥',KRW:'₩'};
   const cur = (n,c) => (cursym[c]||'')+Math.round(n).toLocaleString('en-US');
   const todayISO = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
   const thisMonth = () => todayISO().slice(0,7);
 
   let data = {};
+  let cfg = {};
   let serverAvailable = false;
   let saveTimer = null;
-  function loadAll(){ for(const k in K) data[k]=get(K[k]); }
-  function serialize(){ const o={}; for(const k in K) o[k]=data[k]||[]; return o; }
+
+  function cfgDefaults(){ return {salesTarget:0,fxUSD:1350,fxEUR:1450,fxJPY:9,invValue:0,invTurnTarget:6,nbInvestTarget:0,nbRevTarget:0}; }
+  function loadCfg(){ let c={}; try{c=JSON.parse(localStorage.getItem(CFGKEY))||{}}catch{c={}} cfg=Object.assign(cfgDefaults(),c); }
+  function loadAll(){ for(const k in K) data[k]=get(K[k]); loadCfg(); }
+  function serialize(){ const o={}; for(const k in K) o[k]=data[k]||[]; o.cfg=cfg; return o; }
   function hasData(o){ for(const k in K){ if(o && Array.isArray(o[k]) && o[k].length) return true; } return false; }
   function persist(k){ set(K[k],data[k]); scheduleSave(); }
+  function persistCfg(){ set(CFGKEY,cfg); scheduleSave(); }
   function scheduleSave(){ if(serverAvailable) setStatus('saving'); if(saveTimer) clearTimeout(saveTimer); saveTimer=setTimeout(saveToServer,500); }
   async function saveToServer(){
     if(!serverAvailable){ setStatus('local'); return; }
@@ -309,7 +442,8 @@ const App = (function(){
         serverAvailable=true;
         const obj=await res.json();
         if(hasData(obj)){
-          for(const k in K){ data[k]=Array.isArray(obj[k])?obj[k]:[]; set(K[k],data[k]); }
+          for(const k in K){ data[k]=Array.isArray(obj[k])?obj[k]:[]; }
+          cfg=Object.assign(cfgDefaults(),obj.cfg||{});
           loaded=true;
         }
       }
@@ -317,8 +451,12 @@ const App = (function(){
     if(!loaded){
       loadAll();
       if(!hasData(data) && !localStorage.getItem('blt.seeded')){ seed(); }
-      if(serverAvailable && hasData(data)){ await saveToServer(); }
     }
+    for(const k in K) if(!Array.isArray(data[k])) data[k]=[];
+    seedNew();
+    for(const k in K) set(K[k],data[k]);
+    set(CFGKEY,cfg);
+    if(serverAvailable) await saveToServer();
     setStatus(serverAvailable?'saved':'local');
   }
 
@@ -326,6 +464,7 @@ const App = (function(){
   function nav(view){
     document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active',a.dataset.view===view));
     document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.id==='v-'+view));
+    window.scrollTo(0,0);
     renderAll();
   }
 
@@ -418,9 +557,12 @@ const App = (function(){
   }
   function financeBalance(){ return data.fin.reduce((s,f)=>s+(f.type==='in'?f.amt:-f.amt),0); }
   function monthIncome(){ const m=thisMonth(); return data.fin.filter(f=>f.type==='in'&&f.date.startsWith(m)).reduce((s,f)=>s+f.amt,0); }
+  function monthExpense(){ const m=thisMonth(); return data.fin.filter(f=>f.type==='out'&&f.date.startsWith(m)).reduce((s,f)=>s+f.amt,0); }
 
   // ---------- ORDERS ----------
   const SHIP=['미출고','부분출고','출고완료'], PAY=['미입금','부분입금','입금완료'];
+  function fxRate(c){ return c==='USD'?(cfg.fxUSD||1350): c==='EUR'?(cfg.fxEUR||1450): c==='JPY'?(cfg.fxJPY||9): 1; }
+  function toKRW(amt,c){ return amt*fxRate(c); }
   function addOrder(){ const no=el('od_no').value.trim(),it=el('od_item').value.trim(); if(!no&&!it)return;
     data.ord.push({id:uid(),no:no||'-',country:el('od_country').value,cust:el('od_cust').value,item:it,amt:num(el('od_amt').value),curr:el('od_cur').value,ship:'미출고',pay:'미입금',paid:0});
     ['od_no','od_country','od_cust','od_item','od_amt'].forEach(i=>el(i).value=''); persist('ord'); renderAll(); }
@@ -446,7 +588,7 @@ const App = (function(){
     const byCur={};
     data.ord.forEach(o=>{ byCur[o.curr]=byCur[o.curr]||{amt:0,bal:0}; byCur[o.curr].amt+=o.amt; byCur[o.curr].bal+=(o.amt-(o.paid||0)); });
     const totLabel=Object.keys(byCur).map(c=>cur(byCur[c].amt,c)).join(' · ')||'-';
-    const balLabel=Object.keys(byCur).map(c=>cur(byCur[c].bal,c)).filter((_,i)=>true).join(' · ')||'-';
+    const balLabel=Object.keys(byCur).map(c=>cur(byCur[c].bal,c)).join(' · ')||'-';
     const unship=data.ord.filter(o=>o.ship!=='출고완료').length;
     const unpaid=data.ord.filter(o=>o.pay!=='입금완료').length;
     el('ordKpis').innerHTML=
@@ -454,6 +596,20 @@ const App = (function(){
       kpi('수주 금액',totLabel,'purple')+
       kpi('미출고',unship+'건',unship?'yellow':'green')+
       kpi('미입금 잔액',balLabel,unpaid?'red':'green');
+  }
+  function orderFunnel(){
+    let su=0,ch=0,ip=0;
+    data.ord.forEach(o=>{ const k=toKRW(o.amt,o.curr); su+=k; if(o.ship==='출고완료')ch+=k; else if(o.ship==='부분출고')ch+=k*0.5; ip+=toKRW(o.paid||0,o.curr); });
+    return {su,ch,ip};
+  }
+  function renderFunnel(){
+    const f=orderFunnel();
+    const shipRate=f.su?f.ch/f.su*100:0, payRate=f.su?f.ip/f.su*100:0;
+    el('funnelWrap').innerHTML=
+      `<div class="fstep"><div class="fl">📥 수주 (총 주문)</div><div class="fv">${wonShort(f.su)}</div><div class="fp">${data.ord.length}건 접수</div></div>
+       <div class="fstep"><div class="fl">📦 매출 / 출고</div><div class="fv">${wonShort(f.ch)}</div><div class="fp">출고율 ${shipRate.toFixed(0)}%</div></div>
+       <div class="fstep"><div class="fl">💵 입금</div><div class="fv">${wonShort(f.ip)}</div><div class="fp">입금율 ${payRate.toFixed(0)}%</div></div>`;
+    el('funnelNote').textContent=`KRW 환산 (USD ₩${(cfg.fxUSD||1350).toLocaleString('ko-KR')}) · 미입금 잔액 ${wonShort(f.su-f.ip)}`;
   }
 
   // ---------- CONTRIBUTION ----------
@@ -490,8 +646,9 @@ const App = (function(){
   // ---------- MFG COST ----------
   const CATCOLOR={'재료비':'#4f9cf9','노무비':'#a371f7','제조경비':'#2dd4bf','기타':'#d6a417'};
   function addMfg(){ const it=el('mf_item').value.trim(),a=num(el('mf_amt').value); if(!it||!a)return; data.mfg.push({id:uid(),cat:el('mf_cat').value,item:it,amt:a}); el('mf_item').value='';el('mf_amt').value=''; persist('mfg'); renderAll(); }
+  function mfgTotalFn(){ return data.mfg.reduce((s,m)=>s+m.amt,0); }
   function renderMfg(){
-    const total=data.mfg.reduce((s,m)=>s+m.amt,0);
+    const total=mfgTotalFn();
     const byCat={}; data.mfg.forEach(m=>byCat[m.cat]=(byCat[m.cat]||0)+m.amt);
     const rev=monthIncome();
     const ratio=rev?total/rev*100:0;
@@ -523,6 +680,119 @@ const App = (function(){
     });
   }
 
+  // ---------- SALES TARGET ----------
+  function bizDaysInMonth(){ const d=new Date(); const y=d.getFullYear(),mo=d.getMonth(); const last=new Date(y,mo+1,0).getDate(); let c=0; for(let day=1;day<=last;day++){ const w=new Date(y,mo,day).getDay(); if(w!==0&&w!==6)c++; } return c; }
+  function bizDaysLeft(){ const d=new Date(); const y=d.getFullYear(),mo=d.getMonth(); const last=new Date(y,mo+1,0).getDate(); let c=0; for(let day=d.getDate();day<=last;day++){ const w=new Date(y,mo,day).getDay(); if(w!==0&&w!==6)c++; } return c; }
+  function salesMetrics(){
+    const target=cfg.salesTarget||0;
+    const cum=monthIncome();
+    const rate=target?cum/target*100:0;
+    const remain=Math.max(0,target-cum);
+    const wd=bizDaysLeft();
+    const daily=wd>0?remain/wd:0;
+    return {target,cum,rate,remain,wd,daily};
+  }
+  function renderTarget(){
+    const sm=salesMetrics();
+    const cards=[
+      ['목표 매출(월)', cfg.salesTarget?wonShort(cfg.salesTarget):'미설정'],
+      ['현재 누적', wonShort(sm.cum)],
+      ['달성률', cfg.salesTarget?sm.rate.toFixed(1)+'%':'-'],
+      ['남은 목표', cfg.salesTarget?wonShort(sm.remain):'-'],
+      ['남은 근무일', sm.wd+'일'],
+      ['일평균 필요매출', (cfg.salesTarget&&sm.wd>0)?wonShort(sm.daily):'-'],
+    ];
+    const html=cards.map(c=>`<div class="mkpi"><div class="l">${c[0]}</div><div class="v">${c[1]}</div></div>`).join('');
+    ['targetMini','targetMini2'].forEach(id=>{ if(el(id)) el(id).innerHTML=html; });
+    const pct=Math.min(100,sm.rate);
+    const col= sm.rate>=100?'var(--green)': sm.rate>=70?'linear-gradient(90deg,var(--accent),var(--teal))':'var(--yellow)';
+    ['targetBar','targetBar2'].forEach(id=>{ if(el(id)){ el(id).style.width=pct.toFixed(1)+'%'; el(id).style.background=col; } });
+    const lbl=`달성률 <b style="color:var(--text)">${cfg.salesTarget?sm.rate.toFixed(1):'0'}%</b> · 목표까지 <b style="color:var(--text)">${cfg.salesTarget?wonShort(sm.remain):'-'}</b> 남음 · 남은 근무일 ${sm.wd}일 · 일평균 필요 <b style="color:var(--accent)">${cfg.salesTarget&&sm.wd?wonShort(sm.daily):'-'}</b>`;
+    ['targetBarLbl','targetBarLbl2'].forEach(id=>{ if(el(id)) el(id).innerHTML=lbl; });
+    // settings inputs
+    if(el('cfg_target')){ el('cfg_target').value=cfg.salesTarget||''; el('cfg_usd').value=cfg.fxUSD; el('cfg_eur').value=cfg.fxEUR; el('cfg_jpy').value=cfg.fxJPY; el('cfg_inv').value=cfg.invValue||''; el('cfg_turn').value=cfg.invTurnTarget||''; }
+  }
+  function saveCfg(){
+    cfg.salesTarget=num(el('cfg_target').value);
+    cfg.fxUSD=num(el('cfg_usd').value)||1350;
+    cfg.fxEUR=num(el('cfg_eur').value)||1450;
+    cfg.fxJPY=num(el('cfg_jpy').value)||9;
+    cfg.invValue=num(el('cfg_inv').value);
+    cfg.invTurnTarget=num(el('cfg_turn').value)||6;
+    persistCfg(); renderAll();
+  }
+
+  // ---------- NEW BUSINESS (HYDROGEL) ----------
+  const NBT={invest:'투자',rev:'매출',cost:'비용'};
+  function addNb(){ const it=el('nb_item').value.trim(),a=num(el('nb_amt').value); if(!it||!a)return; data.nb.push({id:uid(),date:el('nb_date').value||todayISO(),type:el('nb_type').value,item:it,amt:a}); el('nb_item').value='';el('nb_amt').value=''; persist('nb'); renderAll(); }
+  function addNbm(){ const n=el('nbm_name').value.trim(); if(!n)return; data.nbm.push({id:uid(),name:n,status:el('nbm_status').value,pct:Math.min(100,num(el('nbm_pct').value))}); el('nbm_name').value='';el('nbm_pct').value=''; persist('nbm'); renderAll(); }
+  function nbSum(){ const inv=data.nb.filter(x=>x.type==='invest').reduce((s,x)=>s+x.amt,0); const rev=data.nb.filter(x=>x.type==='rev').reduce((s,x)=>s+x.amt,0); const cost=data.nb.filter(x=>x.type==='cost').reduce((s,x)=>s+x.amt,0); const prog=data.nbm.length?data.nbm.reduce((s,m)=>s+(m.pct||0),0)/data.nbm.length:0; return {inv,rev,cost,pnl:rev-cost,prog}; }
+  function renderNewbiz(){
+    const s=nbSum();
+    el('nbKpis').innerHTML=
+      kpi('투자 누계',wonShort(s.inv),'purple','💉')+
+      kpi('누적 매출',wonShort(s.rev),'green','📈')+
+      kpi('손익(매출-비용)',(s.pnl>=0?'+':'')+wonShort(s.pnl),s.pnl>=0?'green':'red','⚖️')+
+      kpi('전체 진행률',s.prog.toFixed(0)+'%','blue','🚧');
+    if(el('nbTargetLbl')){ const rt=cfg.nbRevTarget||0,it=cfg.nbInvestTarget||0; el('nbTargetLbl').innerHTML=`매출목표 ${rt?wonShort(rt):'-'} 대비 <b style="color:var(--green)">${rt?(s.rev/rt*100).toFixed(0):'0'}%</b> · 투자목표 ${it?wonShort(it):'-'} 대비 <b style="color:var(--purple)">${it?(s.inv/it*100).toFixed(0):'0'}%</b>`; }
+    const mb=el('nbmBars'); mb.innerHTML= data.nbm.length?'':'<div class="empty">진행 단계를 추가하세요</div>';
+    data.nbm.forEach(m=>{
+      const row=document.createElement('div'); row.className='barrow';
+      const col=m.status==='완료'?'var(--green)':m.status==='진행'?'var(--accent)':'var(--dim)';
+      row.innerHTML=`<span class="bn">${esc(m.name)} <span style="color:var(--dim);font-size:11px">·${esc(m.status)}</span></span><div class="bartrack"><div class="barfill" style="width:${(m.pct||0)}%;background:${col}"></div></div><span class="bv">${(m.pct||0)}% <button class="row-del nbm-del">×</button></span>`;
+      row.querySelector('.nbm-del').onclick=()=>{data.nbm=data.nbm.filter(x=>x.id!==m.id);persist('nbm');renderAll();};
+      mb.appendChild(row);
+    });
+    const tb=el('tb_nb'); tb.innerHTML= data.nb.length?'':'<tr><td colspan="5" class="empty">장부가 비어 있습니다</td></tr>';
+    data.nb.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(x=>{
+      const col=x.type==='rev'?'var(--green)':x.type==='invest'?'var(--purple)':'var(--red)';
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${esc(x.date)}</td><td><span class="badgeP" style="color:${col};border-color:${col}66">${NBT[x.type]}</span></td><td>${esc(x.item)}</td><td class="num" style="color:${col}">${won(x.amt)}</td><td><button class="row-del">×</button></td>`;
+      tr.querySelector('.row-del').onclick=()=>{data.nb=data.nb.filter(y=>y.id!==x.id);persist('nb');renderAll();};
+      tb.appendChild(tr);
+    });
+    if(el('ovNewbiz')) el('ovNewbiz').innerHTML=
+      `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span style="color:var(--dim)">투자 누계</span><b>${wonShort(s.inv)}</b></div>
+       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span style="color:var(--dim)">누적 매출 / 손익</span><b>${wonShort(s.rev)} / <span style="color:${s.pnl>=0?'var(--green)':'var(--red)'}">${(s.pnl>=0?'+':'')+wonShort(s.pnl)}</span></b></div>
+       <div style="margin-top:9px"><div class="progress"><div class="progress-fill" style="width:${s.prog.toFixed(0)}%;background:var(--teal)"></div></div><div style="font-size:11.5px;color:var(--dim);margin-top:5px">전체 진행률 ${s.prog.toFixed(0)}%</div></div>`;
+  }
+
+  // ---------- AI BRIEFING ----------
+  function addBrief(){ const t=el('br_title').value.trim(); if(!t)return; data.brief.unshift({id:uid(),cat:el('br_cat').value,title:t,body:el('br_body').value.trim(),src:el('br_src').value.trim(),updated:todayISO()}); el('br_title').value='';el('br_body').value='';el('br_src').value=''; persist('brief'); renderAll(); }
+  function briefCard(b,full){ return `<div class="brief-card"><div class="bc-cat">${esc(b.cat||'브리핑')}${b.updated?' · '+esc(b.updated):''}</div><div class="bc-title">${esc(b.title)}</div>${b.body?`<div class="bc-body">${esc(b.body)}</div>`:''}${b.src?`<div class="bc-src">📎 ${esc(b.src)}</div>`:''}${full?`<div style="margin-top:9px"><button class="row-del bdel">삭제</button></div>`:''}</div>`; }
+  function renderBrief(){
+    const list=el('briefList');
+    list.innerHTML= data.brief.length? data.brief.map(b=>briefCard(b,true)).join(''):'<div class="empty">브리핑이 없습니다. 채팅에서 "AI 브리핑 갱신해줘"라고 하시면 채워드립니다.</div>';
+    list.querySelectorAll('.bdel').forEach((btn,i)=>{ const id=data.brief[i]?data.brief[i].id:null; btn.onclick=()=>{ if(id){data.brief=data.brief.filter(x=>x.id!==id);persist('brief');renderAll();} }; });
+    if(el('ovBrief')) el('ovBrief').innerHTML= data.brief.length? data.brief.slice(0,3).map(b=>briefCard(b,false)).join(''):'<div class="empty">브리핑 없음</div>';
+    if(el('briefUpdated')) el('briefUpdated').textContent= data.brief.length? '마지막 업데이트: '+(data.brief[0].updated||'')+' · 시장·지원사업 인텔리전스':'시장·지원사업 인텔리전스';
+  }
+
+  // ---------- ALERTS ----------
+  function computeAlerts(){
+    const out=[];
+    const overdue=data.ord.filter(o=>o.ship==='출고완료'&&o.pay!=='입금완료');
+    if(overdue.length){ const amt=overdue.reduce((s,o)=>s+toKRW(o.amt-(o.paid||0),o.curr),0); out.push({level:'high',icon:'💸',text:`입금 지연: 출고 완료했으나 미입금 ${overdue.length}건 (잔액 약 ${wonShort(amt)})`}); }
+    const inM=monthIncome(), outM=monthExpense();
+    if(inM-outM<0){ out.push({level:'high',icon:'📉',text:`적자 확대: 이번 달 손익 ${won(inM-outM)} (지출이 수입 초과)`}); }
+    const sm=salesMetrics();
+    if(cfg.salesTarget>0){ const total=bizDaysInMonth(),elapsed=total-sm.wd; const expect=cfg.salesTarget*(total?elapsed/total:0); if(sm.cum<expect*0.9){ out.push({level:'med',icon:'🎯',text:`매출 목표 미달 페이스: 현재 ${wonShort(sm.cum)} (적정 ${wonShort(expect)} 대비 부족) · 달성률 ${sm.rate.toFixed(0)}%`}); } }
+    if(cfg.invValue>0){ const cogs=mfgTotalFn(); const turn=cogs>0?(cogs*12)/cfg.invValue:0; if(turn<(cfg.invTurnTarget||6)){ out.push({level:'med',icon:'📦',text:`재고회전율 저조: 연환산 ${turn.toFixed(1)}회 (목표 ${cfg.invTurnTarget||6}회 미만) · 재고 ${wonShort(cfg.invValue)}`}); } }
+    const bal=financeBalance();
+    if(bal<monthExpense()){ out.push({level:'med',icon:'🏦',text:`자금 주의: 보유 현금 ${wonShort(bal)} 이 월 지출 ${wonShort(monthExpense())} 보다 적습니다`}); }
+    data.alerts.forEach(a=>out.push({level:a.level||'med',icon:'⚠️',text:a.text,manual:true,id:a.id}));
+    return out;
+  }
+  function renderAlerts(){
+    const al=computeAlerts();
+    const w=el('alertWrap');
+    if(!al.length){ w.innerHTML='<div class="alert ok">✅ 현재 위험 경보가 없습니다. 정상 운영 중입니다.</div>'; if(el('alertCnt'))el('alertCnt').textContent='0건'; return; }
+    if(el('alertCnt')) el('alertCnt').textContent=al.length+'건';
+    w.innerHTML=al.map(a=>`<div class="alert ${a.level}">${a.icon} ${esc(a.text)}${a.manual?` <button class="row-del adel" data-id="${a.id}" style="float:right;color:inherit">×</button>`:''}</div>`).join('');
+    w.querySelectorAll('.adel').forEach(b=>b.onclick=()=>{data.alerts=data.alerts.filter(x=>x.id!==b.dataset.id);persist('alerts');renderAll();});
+  }
+  function addAlert(){ const t=prompt('추가할 CEO 위험경보 내용을 입력하세요\\n(예: 인력부족 - 조립 라인 2명 충원 필요)'); if(!t||!t.trim())return; data.alerts.push({id:uid(),level:'med',text:t.trim()}); persist('alerts'); renderAll(); }
+
   // ---------- OVERVIEW ----------
   function renderOverview(){
     el('dateStr').textContent=todayISO()+' '+wday(todayISO());
@@ -530,38 +800,33 @@ const App = (function(){
     const bal=financeBalance();
     const unship=data.ord.filter(o=>o.ship!=='출고완료').length;
     const ctTotal=data.ct.reduce((s,c)=>s+c.amt,0); const ctAvg=data.ct.length?ctTotal/data.ct.length:0;
-    const mfgTotal=data.mfg.reduce((s,m)=>s+m.amt,0);
+    const mfgTotal=mfgTotalFn();
+    const sm=salesMetrics();
     el('kpiRow').innerHTML=
-      kpi('오늘 할 일',todoLeft+'건 남음',todoLeft?'yellow':'green','✅')+
+      kpi('이번 달 매출',wonShort(sm.cum),'green','📈')+
+      kpi('목표 달성률',cfg.salesTarget?sm.rate.toFixed(0)+'%':'미설정',sm.rate>=70?'green':cfg.salesTarget?'yellow':'blue','🎯')+
       kpi('보유 현금',wonShort(bal),bal>=0?'blue':'red','💰')+
+      kpi('이번 달 손익',wonShort(monthIncome()-monthExpense()),(monthIncome()-monthExpense())>=0?'green':'red','📊')+
       kpi('미출고 주문',unship+'건',unship?'red':'green','🌐')+
-      kpi('이번 달 매출',wonShort(monthIncome()),'green','📈')+
       kpi('제조비용',wonShort(mfgTotal),'purple','🏭')+
       kpi('1인당 평균매출',wonShort(ctAvg),'blue','👥')+
-      kpi('이번 달 손익',wonShort(monthIncome()-data.fin.filter(f=>f.type==='out'&&f.date.startsWith(thisMonth())).reduce((s,f)=>s+f.amt,0)),'green','📊')+
-      kpi('예정 일정',data.sched.filter(s=>s.date>=todayISO()).length+'건','teal','📅');
+      kpi('오늘 할 일',todoLeft+'건',todoLeft?'yellow':'green','✅');
 
-    // today list
     const ot=el('ovToday'); const tl=data.today.filter(t=>!t.done).slice(0,5);
     ot.innerHTML= tl.length? tl.map(t=>`<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)"><span class="badgeP ${pc(t.prio)}">${pl(t.prio)}</span> ${esc(t.title)}</div>`).join(''):'<div class="empty">완료 🎉</div>';
     el('ovTodayCnt').textContent=todoLeft?todoLeft+'건 남음':'';
 
-    // schedule
     const os=el('ovSchedule'); const sl=data.sched.filter(s=>s.date>=todayISO()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,5);
     os.innerHTML= sl.length? sl.map(s=>`<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)"><b style="color:var(--accent);white-space:nowrap">${esc(s.date.slice(5))} ${esc(s.time||'')}</b> <span>${esc(s.title)}</span></div>`).join(''):'<div class="empty">예정 일정 없음</div>';
 
-    // orders waiting
     const oo=el('ovOrders'); const ol=data.ord.filter(o=>o.ship!=='출고완료'||o.pay!=='입금완료').slice(0,5);
     oo.innerHTML= ol.length? ol.map(o=>`<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)"><b>${esc(o.no)}</b><span style="color:var(--dim)">${esc(o.country)}</span><span class="st ${o.ship==='출고완료'?'st-done':o.ship==='부분출고'?'st-part':'st-wait'}">${esc(o.ship)}</span><span class="st ${o.pay==='입금완료'?'st-done':o.pay==='부분입금'?'st-part':'st-wait'}">${esc(o.pay)}</span></div>`).join(''):'<div class="empty">대기 건 없음</div>';
 
-    // finance flow
-    const m=thisMonth();
-    const inM=data.fin.filter(f=>f.type==='in'&&f.date.startsWith(m)).reduce((s,f)=>s+f.amt,0);
-    const outM=data.fin.filter(f=>f.type==='out'&&f.date.startsWith(m)).reduce((s,f)=>s+f.amt,0);
+    const inM=monthIncome(),outM=monthExpense();
     const mx=Math.max(1,inM,outM);
     el('ovFinance').innerHTML=
-      `<div class="barrow"><span class="bn" style="color:var(--green)">수입</span><div class="bartrack"><div class="barfill" style="width:${(inM/mx*100).toFixed(0)}%;background:var(--green)"></div></div><span class="bv">${wonShort(inM)}</span></div>
-       <div class="barrow"><span class="bn" style="color:var(--red)">지출</span><div class="bartrack"><div class="barfill" style="width:${(outM/mx*100).toFixed(0)}%;background:var(--red)"></div></div><span class="bv">${wonShort(outM)}</span></div>
+      `<div class="barrow" style="grid-template-columns:60px 1fr 100px"><span class="bn" style="color:var(--green)">수입</span><div class="bartrack"><div class="barfill" style="width:${(inM/mx*100).toFixed(0)}%;background:var(--green)"></div></div><span class="bv">${wonShort(inM)}</span></div>
+       <div class="barrow" style="grid-template-columns:60px 1fr 100px"><span class="bn" style="color:var(--red)">지출</span><div class="bartrack"><div class="barfill" style="width:${(outM/mx*100).toFixed(0)}%;background:var(--red)"></div></div><span class="bv">${wonShort(outM)}</span></div>
        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between"><span style="color:var(--dim)">이번 달 순현금흐름</span><b style="color:${inM-outM>=0?'var(--green)':'var(--red)'}">${(inM-outM>=0?'+':'')+won(inM-outM)}</b></div>`;
   }
 
@@ -572,12 +837,12 @@ const App = (function(){
   function opt(vals,labels,sel){ return vals.map((v,i)=>`<option value="${v}" ${v===sel?'selected':''}>${labels[i]}</option>`).join(''); }
   function wday(iso){ const d=new Date(iso+'T00:00'); return '('+['일','월','화','수','목','금','토'][d.getDay()]+')'; }
 
-  function renderAll(){ renderToday();renderWork();renderSchedule();renderFinance();renderOrders();renderContrib();renderMfg();renderOverview(); }
+  function renderAll(){ renderAlerts();renderTarget();renderFunnel();renderToday();renderWork();renderSchedule();renderFinance();renderOrders();renderContrib();renderMfg();renderNewbiz();renderBrief();renderOverview(); }
 
   // ---------- backup ----------
-  function exportAll(){ const dump={}; for(const k in K)dump[k]=data[k]; const blob=new Blob([JSON.stringify(dump,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='bltech-pms-backup-'+todayISO()+'.json'; a.click(); }
-  function importAll(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ try{const d=JSON.parse(r.result); for(const k in K) if(d[k]){data[k]=d[k];persist(k);} renderAll(); alert('복원 완료');}catch{alert('파일을 읽을 수 없습니다');} }; r.readAsText(f); e.target.value=''; }
-  function resetAll(){ if(confirm('모든 데이터를 초기화할까요? 되돌릴 수 없습니다.')){ for(const k in K){data[k]=[];persist(k);} renderAll(); } }
+  function exportAll(){ const blob=new Blob([JSON.stringify(serialize(),null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='bltech-pms-backup-'+todayISO()+'.json'; a.click(); }
+  function importAll(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ try{const d=JSON.parse(r.result); for(const k in K) if(d[k]){data[k]=d[k];set(K[k],data[k]);} if(d.cfg){cfg=Object.assign(cfgDefaults(),d.cfg);set(CFGKEY,cfg);} scheduleSave(); renderAll(); alert('복원 완료');}catch{alert('파일을 읽을 수 없습니다');} }; r.readAsText(f); e.target.value=''; }
+  function resetAll(){ if(confirm('모든 데이터를 초기화할까요? 되돌릴 수 없습니다.')){ for(const k in K){data[k]=[];set(K[k],data[k]);} cfg=cfgDefaults();set(CFGKEY,cfg); localStorage.removeItem('blt.seeded');localStorage.removeItem('blt.seeded2'); scheduleSave(); renderAll(); } }
 
   // ---------- seed ----------
   function seed(){
@@ -632,8 +897,41 @@ const App = (function(){
       {id:uid(),cat:'제조경비',item:'설비 감가상각',amt:3000000},
       {id:uid(),cat:'기타',item:'외주가공비',amt:2600000},
     ];
-    for(const k in K) persist(k);
+    for(const k of ['today','work','sched','fin','ord','ct','mfg']) set(K[k],data[k]);
     localStorage.setItem('blt.seeded','1');
+  }
+
+  function seedNew(){
+    if(localStorage.getItem('blt.seeded2')) return;
+    if(!data.nb.length) data.nb=[
+      {id:uid(),date:'2026-03-10',type:'invest',item:'하이드로겔 생산설비 도입',amt:120000000},
+      {id:uid(),date:'2026-04-15',type:'invest',item:'R&D 인건비(1분기)',amt:35000000},
+      {id:uid(),date:'2026-05-20',type:'invest',item:'임상/인증 비용',amt:28000000},
+      {id:uid(),date:'2026-05-30',type:'cost',item:'원료(하이드로겔 폴리머)',amt:7200000},
+      {id:uid(),date:'2026-06-05',type:'rev',item:'시제품 초도 납품(국내 병원)',amt:18000000},
+      {id:uid(),date:'2026-06-10',type:'cost',item:'포장/멸균 외주',amt:3400000},
+      {id:uid(),date:'2026-06-18',type:'rev',item:'샘플 수출(동남아 디스트리뷰터)',amt:9500000},
+    ];
+    if(!data.nbm.length) data.nbm=[
+      {id:uid(),name:'제품 개발(R&D)',status:'완료',pct:100},
+      {id:uid(),name:'GMP / 식약처 인증',status:'진행',pct:60},
+      {id:uid(),name:'시제품 · 파일럿 양산',status:'진행',pct:45},
+      {id:uid(),name:'초도 영업 · 계약',status:'진행',pct:25},
+      {id:uid(),name:'본격 양산 · 매출 확대',status:'예정',pct:5},
+    ];
+    if(!data.brief.length) data.brief=[
+      {id:uid(),cat:'시장동향',title:'정형외과 부목/스플린트 시장 — 견조한 성장',body:'글로벌 정형외과 브레이스·캐스트·스플린트 시장은 2025년 약 80억 달러에서 2032년 128억 달러로 연 6.9% 성장 전망. 특히 스플린트 단독 부문은 2025년 16.9억 달러 → 2030년 26.7억 달러(연 9.6%)로 더 빠르게 성장. 지역별로는 북미 36.8%, 아시아·태평양 25.8%. 고령화와 근골격계 질환 증가가 핵심 동력.',src:'Coherent Market Insights / Mordor / Precedence Research (2025)',updated:'2026-06-24'},
+      {id:uid(),cat:'시장동향',title:'하이드로겔 운드드레싱·피부보호대 — 신규사업 우호적',body:'하이드로겔 드레싱 시장은 기관별 추정 편차가 크나(2025년 약 10~20억 달러 → 2030년 42~46억 달러, 연 4~17%), 공통적으로 만성창상·화상·당뇨족부 증가와 첨단 창상치료 수요로 성장세. 북미가 주도. → 비엘테크 신규 하이드로겔 사업에 우호적인 시장 환경.',src:'Grand View / Research&Markets / Custom Market Insights (2025)',updated:'2026-06-24'},
+      {id:uid(),cat:'가격/경쟁',title:'부목 가격·경쟁 포인트(참고)',body:'프리미엄 세그먼트(통기성·방수·경량 캐스트, 친환경/재단 용이 소재)가 단가·마진에서 우위. 저가 범용품은 수입품과의 경쟁이 치열 → 인증·품질·납기·기능성 차별화가 가격 방어의 핵심. 신제품은 기능성+근거(임상) 확보로 프리미엄 포지셔닝 권장.',src:'업계 일반 동향 정리(참고용 — 실제 견적/입찰가 별도 확인 필요)',updated:'2026-06-24'},
+      {id:uid(),cat:'지원사업',title:'활용 가능한 2026 정부 지원사업',body:'① 범부처 첨단 의료기기 R&D 2기(2026~2032, 총 9,408억원) ② 서울형 R&D 바이오·의료 기술사업화(과제당 최대 6억원/2년, AI 융복합 가점) ③ 2026 중소기업 기술개발 지원사업 통합공고(중기부) ④ 수출지원기반활용사업·긴급지원바우처 2차(KHIDI). → 하이드로겔/부목 신제품 R&D·인증·수출에 매칭 검토 권장.',src:'TIPA / KHIDI / 서울경제진흥원 (2026 공고)',updated:'2026-06-24'},
+    ];
+    if(!data.alerts.length) data.alerts=[
+      {id:uid(),level:'med',text:'인력부족: 하이드로겔 파일럿 양산 대비 생산 인력 2명 충원 검토 필요'},
+    ];
+    if(!cfg.salesTarget) cfg=Object.assign(cfg,{salesTarget:120000000,nbInvestTarget:300000000,nbRevTarget:200000000,invValue:45000000,invTurnTarget:6});
+    for(const k of ['nb','nbm','brief','alerts']) set(K[k],data[k]);
+    set(CFGKEY,cfg);
+    localStorage.setItem('blt.seeded2','1');
   }
 
   // ---------- init ----------
@@ -646,11 +944,15 @@ const App = (function(){
     el('fn_amt').addEventListener('keydown',e=>{if(e.key==='Enter')addFinance();});
     el('ct_amt').addEventListener('keydown',e=>{if(e.key==='Enter')addContrib();});
     el('mf_amt').addEventListener('keydown',e=>{if(e.key==='Enter')addMfg();});
-    el('fn_date').value=todayISO(); el('sc_date').value=todayISO();
+    el('nb_amt').addEventListener('keydown',e=>{if(e.key==='Enter')addNb();});
+    el('nbm_pct').addEventListener('keydown',e=>{if(e.key==='Enter')addNbm();});
+    el('br_title').addEventListener('keydown',e=>{if(e.key==='Enter')addBrief();});
+    el('fn_date').value=todayISO(); el('sc_date').value=todayISO(); el('nb_date').value=todayISO();
     renderAll();
   }
 
-  return {init,addToday,addWork,addSchedule,addFinance,addOrder,addContrib,addMfg,exportAll,importAll,resetAll};
+  return {init,go:nav,addToday,addWork,addSchedule,addFinance,addOrder,addContrib,addMfg,
+    saveCfg,addNb,addNbm,addBrief,addAlert,exportAll,importAll,resetAll};
 })();
 document.addEventListener('DOMContentLoaded',App.init);
 </script>
