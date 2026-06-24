@@ -1,0 +1,4 @@
+# 사용자 실제 데이터 (개인 경영 데이터 - GitHub에 올리지 않음)
+data.json
+data.bak.json
+*.tmp

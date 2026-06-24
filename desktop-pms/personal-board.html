@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Project Manager</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --panel: #1a212b;
+    --panel-2: #222b36;
+    --border: #2e3a47;
+    --text: #e6edf3;
+    --text-dim: #8b98a5;
+    --accent: #4f9cf9;
+    --accent-soft: #4f9cf922;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+    --radius: 12px;
+    --shadow: 0 4px 18px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", "Malgun Gothic", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .title h1 { font-size: 24px; font-weight: 700; letter-spacing: -.3px; }
+  .title p { color: var(--text-dim); font-size: 13px; margin-top: 2px; }
+
+  .stats { display: flex; gap: 12px; flex-wrap: wrap; }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    min-width: 92px;
+    text-align: center;
+  }
+  .stat .num { font-size: 22px; font-weight: 700; }
+  .stat .lbl { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .5px; }
+  .stat.todo .num { color: var(--accent); }
+  .stat.doing .num { color: var(--yellow); }
+  .stat.done .num { color: var(--green); }
+  .stat.over .num { color: var(--red); }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 20px;
+  }
+  input, select, textarea, button {
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  input::placeholder { color: var(--text-dim); }
+  #taskTitle { flex: 1 1 240px; }
+  button {
+    cursor: pointer;
+    background: var(--accent);
+    border: none;
+    font-weight: 600;
+    transition: filter .15s;
+  }
+  button:hover { filter: brightness(1.1); }
+  button.ghost { background: var(--panel-2); border: 1px solid var(--border); font-weight: 500; }
+  .pill-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+  .pill {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .pill.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+  /* Board */
+  .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 820px) { .board { grid-template-columns: 1fr; } }
+  .column {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+  }
+  .column.drag-over { border-color: var(--accent); background: var(--accent-soft); }
+  .col-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px; padding: 0 2px;
+  }
+  .col-head .name { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .col-todo .dot { background: var(--accent); }
+  .col-doing .dot { background: var(--yellow); }
+  .col-done .dot { background: var(--green); }
+  .count { background: var(--panel-2); color: var(--text-dim); font-size: 12px; padding: 1px 9px; border-radius: 20px; }
+
+  .card {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--text-dim);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: grab;
+    transition: transform .1s, box-shadow .15s;
+  }
+  .card:hover { box-shadow: var(--shadow); }
+  .card.dragging { opacity: .5; }
+  .card.p-high { border-left-color: var(--red); }
+  .card.p-med  { border-left-color: var(--yellow); }
+  .card.p-low  { border-left-color: var(--green); }
+  .card .ct-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card .text { font-size: 14px; font-weight: 500; word-break: break-word; }
+  .card.done-card .text { text-decoration: line-through; color: var(--text-dim); }
+  .del {
+    background: none; border: none; color: var(--text-dim);
+    cursor: pointer; font-size: 16px; padding: 0 2px; line-height: 1;
+  }
+  .del:hover { color: var(--red); }
+  .card .meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 9px; align-items: center; }
+  .tag {
+    font-size: 11px; padding: 2px 8px; border-radius: 6px;
+    background: var(--panel); border: 1px solid var(--border); color: var(--text-dim);
+  }
+  .tag.proj { color: var(--accent); border-color: var(--accent); }
+  .tag.due.overdue { color: var(--red); border-color: var(--red); }
+  .tag.due.soon { color: var(--yellow); border-color: var(--yellow); }
+  .empty { color: var(--text-dim); font-size: 13px; text-align: center; padding: 20px 0; }
+
+  .footer-note { text-align: center; color: var(--text-dim); font-size: 12px; margin-top: 26px; }
+  .footer-note a { color: var(--accent); cursor: pointer; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title">
+    <h1>🗂️ My Project Manager</h1>
+    <p>오늘 <span id="today"></span> · 작업하면서 참고하는 개인 보드</p>
+  </div>
+  <div class="stats">
+    <div class="stat todo"><div class="num" id="sTodo">0</div><div class="lbl">할 일</div></div>
+    <div class="stat doing"><div class="num" id="sDoing">0</div><div class="lbl">진행 중</div></div>
+    <div class="stat done"><div class="num" id="sDone">0</div><div class="lbl">완료</div></div>
+    <div class="stat over"><div class="num" id="sOver">0</div><div class="lbl">기한초과</div></div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <input id="taskTitle" placeholder="할 일을 입력하세요…  (Enter 로 추가)" />
+  <input id="taskProject" list="projList" placeholder="프로젝트" style="flex:0 1 150px;" />
+  <datalist id="projList"></datalist>
+  <select id="taskPriority">
+    <option value="high">🔴 높음</option>
+    <option value="med" selected>🟡 보통</option>
+    <option value="low">🟢 낮음</option>
+  </select>
+  <input id="taskDue" type="date" style="flex:0 1 150px;" />
+  <button id="addBtn">+ 추가</button>
+</div>
+
+<div class="pill-filter" id="filters"></div>
+
+<div class="board">
+  <div class="column col-todo" data-status="todo">
+    <div class="col-head"><span class="name"><span class="dot"></span>할 일</span><span class="count" id="cTodo">0</span></div>
+    <div class="cards" id="listTodo"></div>
+  </div>
+  <div class="column col-doing" data-status="doing">
+    <div class="col-head"><span class="name"><span class="dot"></span>진행 중</span><span class="count" id="cDoing">0</span></div>
+    <div class="cards" id="listDoing"></div>
+  </div>
+  <div class="column col-done" data-status="done">
+    <div class="col-head"><span class="name"><span class="dot"></span>완료</span><span class="count" id="cDone">0</span></div>
+    <div class="cards" id="listDone"></div>
+  </div>
+</div>
+
+<p class="footer-note">
+  드래그해서 상태를 바꾸세요 · 데이터는 이 브라우저에 자동 저장됩니다 ·
+  <a id="exportBtn">JSON 내보내기</a> · <a id="importBtn">가져오기</a> · <a id="clearBtn">전체 초기화</a>
+  <input type="file" id="fileInput" accept="application/json" hidden />
+</p>
+
+<script>
+(function () {
+  "use strict";
+  const KEY = "myPM.tasks.v1";
+  const $ = (id) => document.getElementById(id);
+
+  let tasks = load();
+  let filter = "all";
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch { return []; }
+  }
+  function save() { localStorage.setItem(KEY, JSON.stringify(tasks)); }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+  function todayStr() {
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+
+  function addTask() {
+    const title = $("taskTitle").value.trim();
+    if (!title) { $("taskTitle").focus(); return; }
+    tasks.push({
+      id: uid(),
+      title,
+      project: $("taskProject").value.trim(),
+      priority: $("taskPriority").value,
+      due: $("taskDue").value || "",
+      status: "todo",
+      created: todayStr()
+    });
+    $("taskTitle").value = "";
+    $("taskDue").value = "";
+    save(); render();
+    $("taskTitle").focus();
+  }
+
+  function delTask(id) {
+    tasks = tasks.filter(t => t.id !== id);
+    save(); render();
+  }
+
+  function moveTask(id, status) {
+    const t = tasks.find(x => x.id === id);
+    if (t && t.status !== status) { t.status = status; save(); render(); }
+  }
+
+  function projects() {
+    return [...new Set(tasks.map(t => t.project).filter(Boolean))].sort();
+  }
+
+  function dueState(due) {
+    if (!due) return "";
+    const today = todayStr();
+    if (due < today) return "overdue";
+    // within 3 days
+    const d1 = new Date(due), d0 = new Date(today);
+    const diff = (d1 - d0) / 86400000;
+    return diff <= 3 ? "soon" : "";
+  }
+
+  function card(t) {
+    const pClass = t.priority === "high" ? "p-high" : t.priority === "low" ? "p-low" : "p-med";
+    const el = document.createElement("div");
+    el.className = "card " + pClass + (t.status === "done" ? " done-card" : "");
+    el.draggable = true;
+    el.dataset.id = t.id;
+
+    const meta = [];
+    if (t.project) meta.push(`<span class="tag proj">${esc(t.project)}</span>`);
+    if (t.due) {
+      const ds = dueState(t.due);
+      const label = ds === "overdue" ? "기한초과 " : "";
+      meta.push(`<span class="tag due ${ds}">📅 ${label}${t.due.slice(5)}</span>`);
+    }
+
+    el.innerHTML = `
+      <div class="ct-top">
+        <div class="text">${esc(t.title)}</div>
+        <button class="del" title="삭제">×</button>
+      </div>
+      ${meta.length ? `<div class="meta">${meta.join("")}</div>` : ""}`;
+
+    el.querySelector(".del").addEventListener("click", () => delTask(t.id));
+    el.addEventListener("dragstart", e => { e.dataTransfer.setData("text/plain", t.id); el.classList.add("dragging"); });
+    el.addEventListener("dragend", () => el.classList.remove("dragging"));
+    return el;
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+
+  function renderFilters() {
+    const wrap = $("filters");
+    const projs = projects();
+    const items = ["all", ...projs];
+    wrap.innerHTML = "";
+    items.forEach(p => {
+      const pill = document.createElement("span");
+      pill.className = "pill" + (filter === p ? " active" : "");
+      pill.textContent = p === "all" ? "전체" : p;
+      pill.addEventListener("click", () => { filter = p; render(); });
+      wrap.appendChild(pill);
+    });
+    // datalist for input
+    $("projList").innerHTML = projs.map(p => `<option value="${esc(p)}">`).join("");
+  }
+
+  function render() {
+    renderFilters();
+    const visible = tasks.filter(t => filter === "all" || t.project === filter);
+    const cols = { todo: $("listTodo"), doing: $("listDoing"), done: $("listDone") };
+    Object.values(cols).forEach(c => c.innerHTML = "");
+
+    const order = { high: 0, med: 1, low: 2 };
+    visible
+      .slice()
+      .sort((a, b) => (order[a.priority] - order[b.priority]) || ((a.due||"9999") < (b.due||"9999") ? -1 : 1))
+      .forEach(t => cols[t.status] && cols[t.status].appendChild(card(t)));
+
+    Object.entries(cols).forEach(([k, c]) => {
+      if (!c.children.length) c.innerHTML = '<div class="empty">비어 있음</div>';
+    });
+
+    const n = s => visible.filter(t => t.status === s).length;
+    $("cTodo").textContent = n("todo");
+    $("cDoing").textContent = n("doing");
+    $("cDone").textContent = n("done");
+    $("sTodo").textContent = n("todo");
+    $("sDoing").textContent = n("doing");
+    $("sDone").textContent = n("done");
+    $("sOver").textContent = visible.filter(t => t.status !== "done" && t.due && dueState(t.due) === "overdue").length;
+  }
+
+  // Drag & drop on columns
+  document.querySelectorAll(".column").forEach(col => {
+    col.addEventListener("dragover", e => { e.preventDefault(); col.classList.add("drag-over"); });
+    col.addEventListener("dragleave", () => col.classList.remove("drag-over"));
+    col.addEventListener("drop", e => {
+      e.preventDefault();
+      col.classList.remove("drag-over");
+      const id = e.dataTransfer.getData("text/plain");
+      moveTask(id, col.dataset.status);
+    });
+  });
+
+  // Export / import / clear
+  $("exportBtn").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(tasks, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "my-pm-backup-" + todayStr() + ".json";
+    a.click();
+  });
+  $("importBtn").addEventListener("click", () => $("fileInput").click());
+  $("fileInput").addEventListener("change", e => {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const data = JSON.parse(r.result);
+        if (Array.isArray(data)) { tasks = data; save(); render(); }
+        else alert("올바른 백업 파일이 아닙니다.");
+      } catch { alert("파일을 읽을 수 없습니다."); }
+    };
+    r.readAsText(f);
+    e.target.value = "";
+  });
+  $("clearBtn").addEventListener("click", () => {
+    if (confirm("모든 작업을 삭제할까요? 되돌릴 수 없습니다.")) { tasks = []; save(); render(); }
+  });
+
+  $("addBtn").addEventListener("click", addTask);
+  $("taskTitle").addEventListener("keydown", e => { if (e.key === "Enter") addTask(); });
+  $("taskProject").addEventListener("keydown", e => { if (e.key === "Enter") addTask(); });
+
+  $("today").textContent = todayStr();
+
+  // Seed sample data on very first run
+  if (!localStorage.getItem(KEY)) {
+    tasks = [
+      { id: uid(), title: "이 보드 사용법 익히기 (드래그해 보세요)", project: "시작하기", priority: "med", due: "", status: "todo", created: todayStr() },
+      { id: uid(), title: "이번 주 우선순위 정리", project: "시작하기", priority: "high", due: todayStr(), status: "doing", created: todayStr() },
+      { id: uid(), title: "프로젝트 매니저 설치 완료", project: "시작하기", priority: "low", due: "", status: "done", created: todayStr() }
+    ];
+    save();
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
