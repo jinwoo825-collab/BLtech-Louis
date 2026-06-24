@@ -1,0 +1,6 @@
+# 웹 배포에 불필요한 파일 (로컬 실행/문서용) — 정적 사이트는 HTML/CSS/JS만 배포
+**/*.py
+**/*.bat
+**/*.md
+**/.gitignore
+.claude
