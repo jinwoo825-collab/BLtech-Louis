@@ -849,7 +849,7 @@ const App = (function(){
 
   // ---------- MARKET (실시간 경제지표) ----------
   const MARKET_URL = (location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:')
-    ? 'https://b-ltech-louis.vercel.app/api/market' : '/api/market';
+    ? 'https://b-ltech-louis.vercel.app/api/market/' : '/api/market/';
   const MKT_DEF = [
     {k:'kospi', name:'코스피', dec:2},
     {k:'kosdaq', name:'코스닥', dec:2},
