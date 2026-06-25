@@ -137,29 +137,45 @@
   .mkt-up{color:#e5484d}
   .mkt-down{color:#2f6fe6}
 
-  /* AI 비서 챗봇 */
-  .chat-fab{position:fixed;top:18px;right:22px;z-index:70;width:54px;height:54px;border-radius:50%;background:linear-gradient(180deg,#005b9d,#013f72);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 8px 22px rgba(0,43,98,.32)}
-  .chat-fab:hover{filter:brightness(1.08)}
-  .chat-panel{position:fixed;top:18px;right:22px;z-index:70;width:372px;max-width:calc(100vw - 32px);height:564px;max-height:calc(100vh - 36px);background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 20px 54px rgba(0,43,98,.24);display:flex;flex-direction:column;overflow:hidden}
-  .chat-head{background:linear-gradient(180deg,#002b62,#013f72);color:#fff;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-  .ch-title{font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:7px}
-  .ch-dot{width:7px;height:7px;border-radius:50%;background:#3fd28a;box-shadow:0 0 0 3px #3fd28a33}
-  .ch-min{background:rgba(255,255,255,.16);border:none;color:#fff;width:27px;height:27px;border-radius:8px;cursor:pointer;font-size:18px;line-height:1}
-  .chat-msgs{flex:1;overflow:auto;padding:14px;background:#eef3f9;display:flex;flex-direction:column;gap:10px}
-  .cmsg{max-width:88%;padding:10px 12px;border-radius:13px;font-size:13px;line-height:1.6;word-break:break-word}
-  .cmsg.bot{background:#fff;border:1px solid var(--border);align-self:flex-start;border-top-left-radius:4px}
-  .cmsg.me{background:#005b9d;color:#fff;align-self:flex-end;border-top-right-radius:4px}
+  /* AI 비서 (Apple 스타일 · 우측 하단) */
+  .chat-fab{position:fixed;bottom:26px;right:26px;z-index:80;width:60px;height:60px;border-radius:50%;background:#005b9d;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(0,43,98,.30);transition:transform .18s ease,box-shadow .18s ease}
+  .chat-fab:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 14px 32px rgba(0,43,98,.36)}
+  .chat-fab svg{width:27px;height:27px}
+  .chat-panel{position:fixed;bottom:26px;right:26px;z-index:80;width:384px;max-width:calc(100vw - 32px);height:600px;max-height:calc(100vh - 52px);background:rgba(255,255,255,.97);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border:1px solid rgba(0,0,0,.06);border-radius:24px;box-shadow:0 30px 72px rgba(0,30,80,.26);display:flex;flex-direction:column;overflow:hidden;transform-origin:bottom right;animation:chatIn .22s cubic-bezier(.22,1,.36,1)}
+  @keyframes chatIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
+  .chat-head{padding:17px 18px 13px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid rgba(0,0,0,.05)}
+  .ch-title{font-weight:700;font-size:16px;color:var(--navy);letter-spacing:-.3px}
+  .ch-sub{font-size:11.5px;color:#86868b;margin-top:1px;font-weight:500}
+  .ch-min{background:#f0f1f3;border:none;color:#6b7280;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
+  .ch-min:hover{background:#e5e7eb;color:#1d1d1f}
+  .chat-msgs{flex:1;overflow:auto;padding:16px 16px 8px;display:flex;flex-direction:column;gap:12px}
+  .cmsg{max-width:90%;padding:11px 14px;border-radius:18px;font-size:13.5px;line-height:1.62;word-break:break-word}
+  .cmsg.bot{background:#f1f3f6;color:#1d1d1f;align-self:flex-start;border-bottom-left-radius:6px}
+  .cmsg.me{background:#005b9d;color:#fff;align-self:flex-end;border-bottom-right-radius:6px}
   .cmsg.bot b{color:var(--navy)}
-  .cmsg .risk{color:#c92a2a;font-weight:600}
-  .cmsg .ok{color:#15924f;font-weight:600}
-  .chat-quick{display:flex;gap:6px;flex-wrap:wrap;padding:8px 10px;border-top:1px solid var(--border);background:#fff;flex-shrink:0}
-  .chat-quick button{font-size:11.5px;padding:5px 10px;border-radius:14px;border:1px solid var(--border);background:var(--panel2);color:var(--text);cursor:pointer}
-  .chat-quick button:hover{border-color:var(--accent);color:var(--accent)}
-  .chat-input{display:flex;gap:7px;padding:10px;border-top:1px solid var(--border);background:#fff;flex-shrink:0}
-  .chat-input input{flex:1}
-  .ch-send{background:var(--accent);color:#fff;border:none;border-radius:8px;width:42px;cursor:pointer;font-size:15px;flex-shrink:0}
+  .ans-sec{margin-top:9px}.ans-sec:first-child{margin-top:0}
+  .ans-label{font-size:10px;font-weight:700;letter-spacing:.5px;color:#86868b;margin-bottom:3px}
+  .ans-concl{font-size:14px;font-weight:600;color:#1d1d1f;line-height:1.5}
+  .ans-list{margin:0;padding:0;list-style:none}
+  .ans-list li{position:relative;padding-left:14px;margin:3px 0;font-size:12.8px;color:#3a3a3c;line-height:1.5}
+  .ans-list li:before{content:'';position:absolute;left:3px;top:7px;width:4px;height:4px;border-radius:50%;background:#c7c7cc}
+  .ans-risk li{color:#c0392b}.ans-risk li:before{background:#ff3b30}
+  .ans-act li{color:#1d7a45}.ans-act li:before{background:#34c759}
+  .ans-none{color:#34c759;font-size:12.8px;font-weight:600}
+  .ch-confirm{display:flex;gap:8px;margin-top:10px}
+  .ch-confirm button{flex:1;padding:9px;border-radius:13px;border:none;font-size:13px;font-weight:600;cursor:pointer}
+  .ch-confirm .yes{background:#005b9d;color:#fff}
+  .ch-confirm .no{background:#e9ebef;color:#1d1d1f}
+  .chat-sugg{display:flex;gap:7px;flex-wrap:wrap;padding:2px 14px 12px;flex-shrink:0}
+  .chat-sugg button{font-size:12px;padding:7px 13px;border-radius:16px;border:1px solid rgba(0,0,0,.09);background:#fff;color:#1d1d1f;cursor:pointer;transition:background .12s}
+  .chat-sugg button:hover{background:#f1f3f6}
+  .chat-input{display:flex;gap:9px;align-items:center;padding:12px 14px 14px;flex-shrink:0;border-top:1px solid rgba(0,0,0,.05)}
+  .chat-input input{flex:1;border:1px solid rgba(0,0,0,.1);background:#f5f5f7;border-radius:21px;padding:10px 16px;font-size:13.5px}
+  .chat-input input:focus{border-color:#005b9d;background:#fff}
+  .ch-send{width:40px;height:40px;border-radius:50%;background:#005b9d;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .ch-send svg{width:18px;height:18px}
   .ch-send:hover{filter:brightness(1.08)}
-  @media(max-width:560px){.chat-panel{width:calc(100vw - 20px);height:calc(100vh - 24px);top:10px;right:10px}}
+  @media(max-width:560px){.chat-panel{width:auto;left:10px;right:10px;height:calc(100vh - 24px);bottom:12px}}
   .mkt-flat{color:var(--dim)}
 
   /* brief */
@@ -432,24 +448,25 @@
   </main>
 </div>
 
-<!-- ===== 대표이사 AI 비서 챗봇 (우측 상단) ===== -->
-<button id="chatFab" class="chat-fab" title="AI 비서 열기" onclick="App.chatToggle(true)" style="display:none">🤖</button>
+<!-- ===== 대표이사 AI 비서 (우측 하단) ===== -->
+<button id="chatFab" class="chat-fab" onclick="App.chatToggle(true)" aria-label="AI 비서 열기" style="display:none">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
 <div id="chatPanel" class="chat-panel" style="display:none">
   <div class="chat-head">
-    <span class="ch-title"><span class="ch-dot"></span>🤖 대표이사 AI 비서</span>
-    <button class="ch-min" title="최소화" onclick="App.chatToggle(false)">—</button>
+    <div><div class="ch-title">✨ AI 비서</div><div class="ch-sub">비엘테크 경영 어시스턴트</div></div>
+    <button class="ch-min" onclick="App.chatToggle(false)" aria-label="닫기">✕</button>
   </div>
   <div class="chat-msgs" id="chatMsgs"></div>
-  <div class="chat-quick">
-    <button onclick="App.chatQuick('briefing')">📊 종합 브리핑</button>
-    <button onclick="App.chatQuick('risk')">🚨 위험 점검</button>
-    <button onclick="App.chatQuick('cash')">💰 자금</button>
-    <button onclick="App.chatQuick('sales')">🌐 영업</button>
-    <button onclick="App.chatQuick('newbiz')">🧪 신규사업</button>
+  <div class="chat-sugg">
+    <button onclick="App.chatQuick('briefing')">종합 브리핑</button>
+    <button onclick="App.chatQuick('risk')">위험 점검</button>
+    <button onclick="App.chatQuick('cash')">자금 현황</button>
+    <button onclick="App.chatQuick('sales')">영업 현황</button>
   </div>
   <div class="chat-input">
-    <input id="chatInput" placeholder="질문하거나 지시하세요…" autocomplete="off" />
-    <button class="ch-send" title="전송" onclick="App.chatSend()">➤</button>
+    <input id="chatInput" placeholder="무엇이든 물어보세요" autocomplete="off" />
+    <button class="ch-send" onclick="App.chatSend()" aria-label="전송"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
   </div>
 </div>
 
@@ -932,18 +949,36 @@ const App = (function(){
 
   // ========== AI 비서 챗봇 ==========
   const CHAT_URL=(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:')?'https://b-ltech-louis.vercel.app/api/chat/':'/api/chat/';
-  let chatHist=[], aiReason='';
+  let chatHist=[], aiReason='', chatOpened=false, pendingApply=null;
   function chatPass(){ try{return localStorage.getItem('blt.chatpass')||''}catch{return''} }
-  function chatToggle(open){ const p=el('chatPanel'),f=el('chatFab'); if(!p)return; p.style.display=open?'flex':'none'; f.style.display=open?'none':'flex'; if(open)setTimeout(()=>{const i=el('chatInput');if(i)i.focus();},60); }
+  function chatToggle(open){ const p=el('chatPanel'),f=el('chatFab'); if(!p)return; p.style.display=open?'flex':'none'; f.style.display=open?'none':'flex'; if(open){ if(!chatOpened){ chatOpened=true; chatGreet(); } setTimeout(()=>{const i=el('chatInput');if(i)i.focus();},80); } }
   function chatEl(role,html){ const d=document.createElement('div'); d.className='cmsg '+(role==='me'?'me':'bot'); d.innerHTML=html; const m=el('chatMsgs'); m.appendChild(d); m.scrollTop=m.scrollHeight; return d; }
-  function chatGreet(){ chatEl('bot','안녕하세요, 대표님. <b>AI 비서</b>입니다. 영업·생산·구매·재무·연구개발을 종합해 분석하고 <span class="risk">위험을 먼저</span> 알려드립니다. 무엇을 도와드릴까요?'); chatEl('bot',gRisk()); }
+  function chatGreet(){ chatEl('bot','안녕하세요, 대표님. 회사 데이터를 바탕으로 의사결정을 돕는 <b>AI 비서</b>입니다. 답변은 <b>결론 → 근거 → 위험 → 추천 행동</b> 순서로 드립니다. 무엇을 도와드릴까요?'); chatEl('bot', fmtAns(gRisk())); }
   function chatSend(){ const v=el('chatInput').value.trim(); if(!v)return; el('chatInput').value=''; chatEl('me',esc(v)); handleMsg(v); }
-  function chatQuick(kind){ const map={briefing:['종합 브리핑',gBriefing],risk:['위험 점검',gRisk],cash:['자금 현황',gCash],sales:['영업 현황',gSales],newbiz:['신규사업',gNewbiz]}; const it=map[kind]; if(!it)return; chatEl('me',esc(it[0])); chatEl('bot',it[1]()); }
+  function chatQuick(kind){ const map={briefing:['종합 브리핑',gBriefing],risk:['위험 점검',gRisk],cash:['자금 현황',gCash],sales:['영업 현황',gSales],newbiz:['신규사업',gNewbiz]}; const it=map[kind]; if(!it)return; chatEl('me',esc(it[0])); chatEl('bot', fmtAns(it[1]())); }
+  function fmtAns(o){
+    if(typeof o==='string') return o;
+    if(o.plain) return `<div class="ans-concl">${o.c}</div>`;
+    let h=`<div class="ans-sec"><div class="ans-label">결론</div><div class="ans-concl">${o.c}</div></div>`;
+    if(o.e&&o.e.length) h+=`<div class="ans-sec"><div class="ans-label">근거</div><ul class="ans-list">${o.e.map(x=>'<li>'+x+'</li>').join('')}</ul></div>`;
+    h+=`<div class="ans-sec"><div class="ans-label">위험</div>`+((o.r&&o.r.length)?`<ul class="ans-list ans-risk">${o.r.map(x=>'<li>'+x+'</li>').join('')}</ul>`:`<div class="ans-none">특이 위험 없음 ✓</div>`)+`</div>`;
+    if(o.a&&o.a.length) h+=`<div class="ans-sec"><div class="ans-label">추천 행동</div><ul class="ans-list ans-act">${o.a.map(x=>'<li>'+x+'</li>').join('')}</ul></div>`;
+    return h;
+  }
+  function confirmBubble(label){ return `<div style="font-weight:600;margin-bottom:7px">아래 작업을 실행할까요?</div><div style="color:var(--navy);font-weight:600">${label}</div><div class="ch-confirm"><button class="yes" onclick="App.chatConfirm(true)">확인</button><button class="no" onclick="App.chatConfirm(false)">취소</button></div>`; }
+  function chatConfirm(yes){ if(!pendingApply)return; const f=pendingApply; pendingApply=null; chatEl('bot', yes? f() : '네, 실행을 취소했습니다.'); }
   async function handleMsg(text){
-    const c=tryCommand(text); if(c){ chatEl('bot',c); return; }
-    const i=detectIntent(text); if(i){ chatEl('bot',i); return; }
-    const t=chatEl('bot','<span style="color:var(--dim)">분석 중…</span>');
-    const a=await askClaude(text);
+    const s=text.trim();
+    if(pendingApply){
+      if(/^(예|네|응|확인|좋아|그래|ㅇㅇ|ok|yes|y)$/i.test(s)){ const f=pendingApply; pendingApply=null; chatEl('bot', f()); return; }
+      if(/^(아니|아니오|아뇨|취소|no|n)$/i.test(s)){ pendingApply=null; chatEl('bot','네, 실행을 취소했습니다.'); return; }
+      pendingApply=null;
+    }
+    const c=tryCommand(s);
+    if(c){ if(c.unknown){ chatEl('bot','데이터 수정 요청으로 보입니다. 이렇게 말씀해 주세요: "오늘 할일 추가 ○○", "경보 추가 ○○", "매출목표 1.2억 설정", "일정 추가 2026-07-01 회의". <span style="color:#86868b">수정 전 반드시 확인을 받습니다.</span>'); return; } pendingApply=c.apply; chatEl('bot', confirmBubble(c.label)); return; }
+    const i=detectIntent(s); if(i){ chatEl('bot', fmtAns(i)); return; }
+    const t=chatEl('bot','<span style="color:#86868b">분석 중…</span>');
+    const a=await askClaude(s);
     t.innerHTML = a || gFallback(); const m=el('chatMsgs'); m.scrollTop=m.scrollHeight;
   }
   async function askClaude(text){
@@ -952,7 +987,7 @@ const App = (function(){
       const h={'content-type':'application/json'}; const p=chatPass(); if(p)h['x-bl-pass']=p;
       const res=await fetch(CHAT_URL,{method:'POST',headers:h,body:JSON.stringify({messages:chatHist,snapshot:buildSnapshot()})});
       const j=await res.json();
-      if(j&&j.ok&&j.text){ chatHist.push({role:'assistant',content:j.text}); return esc(j.text).replace(/\n/g,'<br>'); }
+      if(j&&j.ok&&j.text){ chatHist.push({role:'assistant',content:j.text}); return esc(j.text).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>'); }
       aiReason=(j&&j.reason)||'error'; return null;
     }catch(e){ aiReason='network'; return null; }
   }
@@ -978,10 +1013,11 @@ const App = (function(){
   function parseAmt(s){ let m=s.match(/([\d.]+)\s*억/); if(m)return Math.round(parseFloat(m[1])*1e8); m=s.match(/([\d,]+)\s*만/); if(m)return Math.round(parseFloat(m[1].replace(/,/g,''))*1e4); m=s.match(/([\d,]{4,})/); if(m)return Math.round(parseFloat(m[1].replace(/,/g,''))); return 0; }
   function tryCommand(s){
     let m;
-    if(/매출\s*목표/.test(s)&&/(설정|변경|로|=|\d)/.test(s)){ const a=parseAmt(s); if(a>0){ cfg.salesTarget=a; persistCfg(); renderAll(); return `✅ 이번 달 <b>매출 목표</b>를 ${won(a)} 로 설정했습니다.`; } }
-    m=s.match(/(?:위험\s*)?경보\s*(?:추가|등록)\s*[:\-]?\s*(.+)/); if(m&&m[1].trim()){ data.alerts.push({id:uid(),level:'med',text:m[1].trim()}); persist('alerts'); renderAll(); return `✅ CEO 위험경보에 추가했습니다: "${esc(m[1].trim())}"`; }
-    m=s.match(/(?:오늘\s*)?할\s*일\s*(?:추가|등록)\s*[:\-]?\s*(.+)/)||s.match(/^오늘\s*[:\-]?\s*(.+?)\s*(?:추가|등록)$/); if(m&&m[1].trim()){ data.today.push({id:uid(),title:m[1].trim(),prio:'med',done:false}); persist('today'); renderAll(); return `✅ 오늘 할 일에 추가했습니다: "${esc(m[1].trim())}"`; }
-    m=s.match(/일정\s*(?:추가|등록)\s*[:\-]?\s*(.+)/); if(m&&m[1].trim()){ const dm=m[1].match(/(\d{4}-\d{2}-\d{2})/); data.sched.push({id:uid(),date:dm?dm[1]:todayISO(),time:'',title:m[1].replace(/\d{4}-\d{2}-\d{2}/,'').trim(),place:''}); persist('sched'); renderAll(); return `✅ 일정에 추가했습니다: "${esc(m[1].trim())}"`; }
+    if(/매출\s*목표/.test(s)&&/(설정|변경|로|=|\d)/.test(s)){ const a=parseAmt(s); if(a>0) return {label:`매출 목표를 ${won(a)} 로 설정`, apply:()=>{cfg.salesTarget=a;persistCfg();renderAll();return `✅ 매출 목표를 ${won(a)} 로 설정했습니다.`;}}; }
+    m=s.match(/(?:위험\s*)?경보\s*(?:추가|등록)\s*[:\-]?\s*(.+)/); if(m&&m[1].trim()){ const t=m[1].trim(); return {label:`CEO 위험경보 추가 — "${esc(t)}"`, apply:()=>{data.alerts.push({id:uid(),level:'med',text:t});persist('alerts');renderAll();return '✅ 위험경보에 추가했습니다.';}}; }
+    m=s.match(/(?:오늘\s*)?할\s*일\s*(?:추가|등록)\s*[:\-]?\s*(.+)/)||s.match(/^오늘\s*[:\-]?\s*(.+?)\s*(?:추가|등록)$/); if(m&&m[1].trim()){ const t=m[1].trim(); return {label:`오늘 할 일 추가 — "${esc(t)}"`, apply:()=>{data.today.push({id:uid(),title:t,prio:'med',done:false});persist('today');renderAll();return '✅ 오늘 할 일에 추가했습니다.';}}; }
+    m=s.match(/일정\s*(?:추가|등록)\s*[:\-]?\s*(.+)/); if(m&&m[1].trim()){ const raw=m[1].trim(); const dm=raw.match(/(\d{4}-\d{2}-\d{2})/); const title=raw.replace(/\d{4}-\d{2}-\d{2}/,'').trim()||raw; return {label:`일정 추가 — "${esc(raw)}"`, apply:()=>{data.sched.push({id:uid(),date:dm?dm[1]:todayISO(),time:'',title:title,place:''});persist('sched');renderAll();return '✅ 일정에 추가했습니다.';}}; }
+    if(/(추가|등록|수정|변경|삭제|설정|완료처리|바꿔|고쳐|변경해|등록해)/.test(s)) return {unknown:true};
     return null;
   }
   function detectIntent(t){
@@ -999,52 +1035,106 @@ const App = (function(){
   }
   function gRisk(){
     const al=computeAlerts();
-    if(!al.length) return '✅ <b>현재 위험 경보 없음.</b> 주요 지표가 정상 범위입니다.';
-    return `🚨 <b>위험 경보 ${al.length}건</b> — 우선 확인하세요:<br>`+al.map(a=>`<div class="risk">${a.icon} ${esc(a.text)}</div>`).join('');
+    return { c: al.length? `현재 <b>위험 ${al.length}건</b>이 감지됩니다. 우선 대응이 필요합니다.` : '현재 중대한 위험은 없습니다. 정상 운영 중입니다.',
+      r: al.map(a=>`${a.icon} ${esc(a.text)}`),
+      a: al.length? riskActions(al) : ['현 수준 유지 · 주간 단위 모니터링'] };
+  }
+  function riskActions(al){
+    const t=al.map(a=>a.text).join(' '); const acts=[];
+    if(/입금/.test(t)) acts.push('미입금 거래처 수금 독촉 · 출고-입금 조건 재점검');
+    if(/적자|손익/.test(t)) acts.push('당월 지출 항목 점검 · 고정비 절감 검토');
+    if(/자금|현금/.test(t)) acts.push('단기 자금계획 수립 · 대출/한도 여력 확인');
+    if(/재고/.test(t)) acts.push('재고 회전 점검 · 과잉 재고 처분 검토');
+    if(/목표|페이스/.test(t)) acts.push('영업 파이프라인 점검 · 남은 기간 집중 수주');
+    if(/인력/.test(t)) acts.push('충원 계획 확정 · 핵심 라인 우선 배치');
+    if(!acts.length) acts.push('원인 확인 후 담당자 지정 · 기한 설정');
+    return acts;
   }
   function gBriefing(){
     const sm=salesMetrics(),f=orderFunnel(),bal=financeBalance(),inM=monthIncome(),outM=monthExpense(),nb=nbSum(),mfg=mfgTotalFn();
     const ct=data.ct.reduce((s,c)=>s+c.amt,0),ctAvg=data.ct.length?ct/data.ct.length:0,ratio=inM?mfg/inM*100:0;
     const purchase=data.mfg.filter(m=>m.cat==='재료비').reduce((s,m)=>s+m.amt,0)+data.fin.filter(x=>x.type==='out'&&/원자재|구매|부품|소모|자재|외주/.test(x.item)&&x.date.startsWith(thisMonth())).reduce((s,x)=>s+x.amt,0);
     const al=computeAlerts();
-    return `📊 <b>종합 브리핑</b> (${todayISO()})<br>`+
-      (al.length?`<div class="risk">⚠️ 위험 ${al.length}건 — "위험 점검" 확인</div>`:'<div class="ok">✅ 위험 경보 없음</div>')+
-      `• <b>영업</b>: 이번 달 매출 ${wonShort(inM)} / 목표달성 ${cfg.salesTarget?sm.rate.toFixed(0)+'%':'미설정'} · 수주 ${wonShort(f.su)}→입금 ${wonShort(f.ip)}(미입금 ${wonShort(f.su-f.ip)})<br>`+
-      `• <b>재무</b>: 보유현금 ${wonShort(bal)} · 당월손익 ${(inM-outM>=0?'+':'')+wonShort(inM-outM)}<br>`+
-      `• <b>생산</b>: 제조원가율 ${inM?ratio.toFixed(0)+'%':'-'} · 1인당 평균 ${wonShort(ctAvg)}<br>`+
-      `• <b>구매</b>: 당월 재료·구매비 ${wonShort(purchase)}<br>`+
-      `• <b>R&D(하이드로겔)</b>: 투자 ${wonShort(nb.inv)} · 손익 ${(nb.pnl>=0?'+':'')+wonShort(nb.pnl)} · 진행 ${nb.prog.toFixed(0)}%`;
+    const acts=[]; if(cfg.salesTarget&&sm.rate<100)acts.push(`남은 근무일 ${sm.wd}일, 일평균 ${wonShort(sm.daily)} 수주 필요 — 영업 집중`); if(f.su-f.ip>0)acts.push('미입금 수금 관리'); if(inM-outM<0)acts.push('지출 점검 및 자금계획'); if(!acts.length)acts.push('현 전략 유지 · 주간 점검');
+    return {
+      c: `이번 달 매출 <b>${wonShort(inM)}</b>${cfg.salesTarget?` (목표 달성 ${sm.rate.toFixed(0)}%)`:''}, 손익 <b>${(inM-outM>=0?'+':'')+wonShort(inM-outM)}</b>. ${al.length?`위험 ${al.length}건 확인 필요.`:'전반적으로 안정적입니다.'}`,
+      e: [
+        `영업: 수주 ${wonShort(f.su)} → 출고 ${wonShort(f.ch)} → 입금 ${wonShort(f.ip)} (미입금 ${wonShort(f.su-f.ip)})`,
+        `재무: 보유현금 ${wonShort(bal)} · 당월 수입 ${wonShort(inM)} / 지출 ${wonShort(outM)}`,
+        `생산: 제조원가율 ${inM?ratio.toFixed(0)+'%':'-'} · 1인당 평균 ${wonShort(ctAvg)}`,
+        `구매: 당월 재료·구매비 ${wonShort(purchase)}`,
+        `R&D(하이드로겔): 투자누계 ${wonShort(nb.inv)} · 손익 ${(nb.pnl>=0?'+':'')+wonShort(nb.pnl)} · 진행 ${nb.prog.toFixed(0)}%`
+      ],
+      r: al.map(a=>`${a.icon} ${esc(a.text)}`),
+      a: acts
+    };
   }
   function gCash(){
     const bal=financeBalance(),inM=monthIncome(),outM=monthExpense();
     const unpaid=data.ord.filter(o=>o.pay!=='입금완료').reduce((s,o)=>s+toKRW(o.amt-(o.paid||0),o.curr),0);
-    return `💰 <b>자금 현황</b><br>• 보유현금 <b>${wonShort(bal)}</b><br>• 이번 달 수입 ${wonShort(inM)} / 지출 ${wonShort(outM)} → 손익 ${(inM-outM>=0?'+':'')+wonShort(inM-outM)}<br>• 미입금(원화 환산) 약 ${wonShort(unpaid)}<br>`+(bal<outM?'<div class="risk">⚠️ 보유현금이 월 지출보다 적습니다. 자금 계획 점검 필요.</div>':'<div class="ok">✅ 단기 유동성 양호</div>');
+    const low=bal<outM;
+    return {
+      c: `보유현금 <b>${wonShort(bal)}</b>, 당월 손익 <b>${(inM-outM>=0?'+':'')+wonShort(inM-outM)}</b>. ${low?'단기 유동성 주의가 필요합니다.':'단기 유동성은 양호합니다.'}`,
+      e: [`이번 달 수입 ${wonShort(inM)} / 지출 ${wonShort(outM)}`, `미입금(원화 환산) 약 ${wonShort(unpaid)}`],
+      r: low? [`보유현금이 월 지출(${wonShort(outM)})보다 적음`] : [],
+      a: low? ['미입금 수금 우선 · 지출 시점 조정 · 대출 한도 확인'] : ['미입금 '+wonShort(unpaid)+' 수금 관리 · 현 수준 유지']
+    };
   }
   function gSales(){
     const sm=salesMetrics(),f=orderFunnel();
-    return `🌐 <b>영업·수주 현황</b><br>• 이번 달 매출 ${wonShort(sm.cum)} / 목표 ${cfg.salesTarget?wonShort(cfg.salesTarget):'미설정'} (달성 ${cfg.salesTarget?sm.rate.toFixed(0)+'%':'-'})<br>• 남은 목표 ${cfg.salesTarget?wonShort(sm.remain):'-'} · 남은 근무일 ${sm.wd}일 · 일평균 필요 ${cfg.salesTarget&&sm.wd?wonShort(sm.daily):'-'}<br>• 수주 ${wonShort(f.su)} → 출고 ${wonShort(f.ch)} → 입금 ${wonShort(f.ip)}<br>• 미출고 ${data.ord.filter(o=>o.ship!=='출고완료').length}건 · 미입금 ${data.ord.filter(o=>o.pay!=='입금완료').length}건`;
+    const unship=data.ord.filter(o=>o.ship!=='출고완료').length,unpaid=data.ord.filter(o=>o.pay!=='입금완료').length;
+    const behind=cfg.salesTarget&&sm.rate<100;
+    const r=[]; if(behind)r.push(`목표 대비 진도 부족 (달성 ${sm.rate.toFixed(0)}%)`); if(f.su-f.ip>0)r.push(`미입금 잔액 ${wonShort(f.su-f.ip)}`);
+    const a=[]; if(behind)a.push(`남은 ${sm.wd}일간 일평균 ${wonShort(sm.daily)} 수주 — 핵심 거래처 집중`); if(unpaid)a.push('미입금 거래처 수금 독촉'); if(unship)a.push('미출고 건 납기 점검'); if(!a.length)a.push('현 영업 전략 유지');
+    return {
+      c: cfg.salesTarget? `이번 달 매출 <b>${wonShort(sm.cum)}</b> / 목표 ${wonShort(cfg.salesTarget)} — 달성 <b>${sm.rate.toFixed(0)}%</b>.` : `이번 달 매출 <b>${wonShort(sm.cum)}</b>. (매출 목표 미설정)`,
+      e: [`수주 ${wonShort(f.su)} → 출고 ${wonShort(f.ch)} → 입금 ${wonShort(f.ip)}`, cfg.salesTarget?`남은 목표 ${wonShort(sm.remain)} · 남은 근무일 ${sm.wd}일 · 일평균 필요 ${wonShort(sm.daily)}`:`미출고 ${unship}건 · 미입금 ${unpaid}건`],
+      r:r, a:a
+    };
   }
   function gNewbiz(){
-    const s=nbSum(),ms=data.nbm.map(m=>`${esc(m.name)} ${m.pct||0}%`).join(' · ');
-    return `🧪 <b>신규사업(하이드로겔)</b><br>• 투자누계 ${wonShort(s.inv)} · 누적매출 ${wonShort(s.rev)} · 손익 ${(s.pnl>=0?'+':'')+wonShort(s.pnl)}<br>• 매출목표 ${cfg.nbRevTarget?wonShort(cfg.nbRevTarget):'-'} 대비 ${cfg.nbRevTarget?(s.rev/cfg.nbRevTarget*100).toFixed(0)+'%':'-'} · 전체 진행률 ${s.prog.toFixed(0)}%<br>`+(ms?'• 단계: '+ms:'');
+    const s=nbSum(),rt=cfg.nbRevTarget||0;
+    const r=[]; if(s.pnl<0)r.push(`아직 적자 ${wonShort(s.pnl)} (투자 회수 전)`); const stuck=data.nbm.filter(m=>m.status==='진행'&&(m.pct||0)<50); if(stuck.length)r.push(`지연 우려 단계: ${stuck.map(m=>esc(m.name)).join(', ')}`);
+    return {
+      c: `하이드로겔 사업 — 투자누계 <b>${wonShort(s.inv)}</b>, 누적매출 ${wonShort(s.rev)}, 손익 <b>${(s.pnl>=0?'+':'')+wonShort(s.pnl)}</b>, 진행률 <b>${s.prog.toFixed(0)}%</b>.`,
+      e: [rt?`매출목표 ${wonShort(rt)} 대비 ${(s.rev/rt*100).toFixed(0)}%`:'매출목표 미설정', '단계: '+(data.nbm.map(m=>`${esc(m.name)} ${m.pct||0}%`).join(' · ')||'없음')],
+      r:r,
+      a: ['정부 지원사업(범부처 의료기기 R&D·중기부 통합공고) 매칭 검토', '인증/양산 일정 점검 · 초도 영업 가속']
+    };
   }
   function gProduction(){
     const mfg=mfgTotalFn(),rev=monthIncome(),ratio=rev?mfg/rev*100:0;
     const ct=data.ct.slice().sort((a,b)=>b.amt-a.amt),total=ct.reduce((s,c)=>s+c.amt,0),avg=ct.length?total/ct.length:0;
-    return `🏭 <b>생산 현황</b><br>• 제조비용 ${wonShort(mfg)} · 제조원가율 ${rev?ratio.toFixed(0)+'%':'-'}<br>• 생산 ${ct.length}명 · 1인당 평균 ${wonShort(avg)}${ct[0]?' · 최고 '+esc(ct[0].name)+' '+wonShort(ct[0].amt):''}<br>`+(ratio>80?'<div class="risk">⚠️ 제조원가율이 높습니다(80%↑). 원가 절감 검토 필요.</div>':'');
+    const high=ratio>80;
+    return {
+      c: `제조비용 <b>${wonShort(mfg)}</b>, 제조원가율 <b>${rev?ratio.toFixed(0)+'%':'-'}</b>, 1인당 평균 ${wonShort(avg)}.`,
+      e: [`생산 ${ct.length}명`+(ct[0]?` · 최고 ${esc(ct[0].name)} ${wonShort(ct[0].amt)}`:''), `총 생산매출 ${wonShort(total)}`],
+      r: high? [`제조원가율 ${ratio.toFixed(0)}% (80% 초과)`] : [],
+      a: high? ['원가 절감(재료·외주·수율) 점검 · 단가 재협상'] : ['현 생산성 유지 · 공정 효율 모니터링']
+    };
   }
   function gPurchasing(){
     const mat=data.mfg.filter(m=>m.cat==='재료비').reduce((s,m)=>s+m.amt,0);
     const buy=data.fin.filter(x=>x.type==='out'&&/원자재|구매|부품|소모|자재|외주/.test(x.item)).reduce((s,x)=>s+x.amt,0);
-    return `🛒 <b>구매 현황</b><br>• 재료비(제조) ${wonShort(mat)}<br>• 구매·외주 지출(장부) ${wonShort(buy)}<br>• 합계 약 ${wonShort(mat+buy)}<br><span style="color:var(--dim)">상세는 회계·자금 / 제조비용 메뉴에서 확인하세요.</span>`;
+    return {
+      c: `재료비 ${wonShort(mat)}, 구매·외주 지출 ${wonShort(buy)} — 합계 약 <b>${wonShort(mat+buy)}</b>.`,
+      e: ['재료비(제조비용 기준) '+wonShort(mat), '구매·외주(장부 기준) '+wonShort(buy)],
+      r: [],
+      a: ['주요 원자재 단가·재고 점검', '대량/장기 계약으로 단가 인하 검토']
+    };
   }
   function gToday(){
     const td=data.today.filter(t=>!t.done);
     const sc=data.sched.filter(s=>s.date>=todayISO()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,4);
-    return `🗓️ <b>오늘·예정</b><br>• 할 일 ${td.length}건${td.length?': '+td.slice(0,5).map(t=>esc(t.title)).join(', '):''}<br>• 다가오는 일정: ${sc.length?sc.map(s=>esc(s.date.slice(5))+' '+esc(s.title)).join(' / '):'없음'}`;
+    return {
+      c: `오늘 할 일 <b>${td.length}건</b>, 예정 일정 ${sc.length}건.`,
+      e: [td.length?('할 일: '+td.slice(0,5).map(t=>esc(t.title)).join(', ')):'할 일 없음', sc.length?('일정: '+sc.map(s=>esc(s.date.slice(5))+' '+esc(s.title)).join(' / ')):'예정 일정 없음'],
+      r: [],
+      a: td.length?['우선순위 높은 건부터 처리']:['신규 우선순위 설정']
+    };
   }
   function gHelp(){
-    return `대표님, 이렇게 도와드립니다:<br>• <b>분석/현황</b>: "종합 브리핑", "위험 점검", "자금 현황", "영업", "생산", "구매", "신규사업"<br>• <b>지시(데이터 수정)</b>: "오늘 할일 추가 ○○", "경보 추가 ○○", "매출목표 1.2억 설정", "일정 추가 2026-07-01 월간회의"<br>• 그 외 자유로운 질문/상담도 가능합니다(AI 연동 시).`;
+    return { plain:true, c:`회사 데이터를 바탕으로 이렇게 도와드립니다:<br>• <b>분석/현황</b>: "종합 브리핑", "위험 점검", "자금 현황", "영업/생산/구매", "신규사업"<br>• <b>지시(수정 전 확인)</b>: "오늘 할일 추가 ○○", "경보 추가 ○○", "매출목표 1.2억 설정", "일정 추가 2026-07-01 회의"<br>모든 답변은 <b>결론 → 근거 → 위험 → 추천 행동</b> 순으로 드립니다.` };
   }
 
   // ---------- helpers ----------
@@ -1168,12 +1258,12 @@ const App = (function(){
     renderAll();
     loadMarket(); setInterval(loadMarket, 60000);
     el('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter')chatSend();});
-    chatToggle(true); chatGreet();
+    chatToggle(false);
   }
 
   return {init,go:nav,addToday,addWork,addSchedule,addFinance,addOrder,addContrib,addMfg,
     saveCfg,addNb,addNbm,addBrief,addAlert,exportAll,importAll,resetAll,
-    chatToggle,chatSend,chatQuick};
+    chatToggle,chatSend,chatQuick,chatConfirm};
 })();
 document.addEventListener('DOMContentLoaded',App.init);
 </script>
