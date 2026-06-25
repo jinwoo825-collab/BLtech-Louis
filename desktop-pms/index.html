@@ -136,6 +136,30 @@
   .mkt .mchg{font-size:12px;font-weight:600;margin-top:3px;font-variant-numeric:tabular-nums}
   .mkt-up{color:#e5484d}
   .mkt-down{color:#2f6fe6}
+
+  /* AI 비서 챗봇 */
+  .chat-fab{position:fixed;top:18px;right:22px;z-index:70;width:54px;height:54px;border-radius:50%;background:linear-gradient(180deg,#005b9d,#013f72);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 8px 22px rgba(0,43,98,.32)}
+  .chat-fab:hover{filter:brightness(1.08)}
+  .chat-panel{position:fixed;top:18px;right:22px;z-index:70;width:372px;max-width:calc(100vw - 32px);height:564px;max-height:calc(100vh - 36px);background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 20px 54px rgba(0,43,98,.24);display:flex;flex-direction:column;overflow:hidden}
+  .chat-head{background:linear-gradient(180deg,#002b62,#013f72);color:#fff;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+  .ch-title{font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:7px}
+  .ch-dot{width:7px;height:7px;border-radius:50%;background:#3fd28a;box-shadow:0 0 0 3px #3fd28a33}
+  .ch-min{background:rgba(255,255,255,.16);border:none;color:#fff;width:27px;height:27px;border-radius:8px;cursor:pointer;font-size:18px;line-height:1}
+  .chat-msgs{flex:1;overflow:auto;padding:14px;background:#eef3f9;display:flex;flex-direction:column;gap:10px}
+  .cmsg{max-width:88%;padding:10px 12px;border-radius:13px;font-size:13px;line-height:1.6;word-break:break-word}
+  .cmsg.bot{background:#fff;border:1px solid var(--border);align-self:flex-start;border-top-left-radius:4px}
+  .cmsg.me{background:#005b9d;color:#fff;align-self:flex-end;border-top-right-radius:4px}
+  .cmsg.bot b{color:var(--navy)}
+  .cmsg .risk{color:#c92a2a;font-weight:600}
+  .cmsg .ok{color:#15924f;font-weight:600}
+  .chat-quick{display:flex;gap:6px;flex-wrap:wrap;padding:8px 10px;border-top:1px solid var(--border);background:#fff;flex-shrink:0}
+  .chat-quick button{font-size:11.5px;padding:5px 10px;border-radius:14px;border:1px solid var(--border);background:var(--panel2);color:var(--text);cursor:pointer}
+  .chat-quick button:hover{border-color:var(--accent);color:var(--accent)}
+  .chat-input{display:flex;gap:7px;padding:10px;border-top:1px solid var(--border);background:#fff;flex-shrink:0}
+  .chat-input input{flex:1}
+  .ch-send{background:var(--accent);color:#fff;border:none;border-radius:8px;width:42px;cursor:pointer;font-size:15px;flex-shrink:0}
+  .ch-send:hover{filter:brightness(1.08)}
+  @media(max-width:560px){.chat-panel{width:calc(100vw - 20px);height:calc(100vh - 24px);top:10px;right:10px}}
   .mkt-flat{color:var(--dim)}
 
   /* brief */
@@ -406,6 +430,27 @@
       <input type="file" id="imp" class="input-file" accept="application/json" onchange="App.importAll(event)" />
     </p>
   </main>
+</div>
+
+<!-- ===== 대표이사 AI 비서 챗봇 (우측 상단) ===== -->
+<button id="chatFab" class="chat-fab" title="AI 비서 열기" onclick="App.chatToggle(true)" style="display:none">🤖</button>
+<div id="chatPanel" class="chat-panel" style="display:none">
+  <div class="chat-head">
+    <span class="ch-title"><span class="ch-dot"></span>🤖 대표이사 AI 비서</span>
+    <button class="ch-min" title="최소화" onclick="App.chatToggle(false)">—</button>
+  </div>
+  <div class="chat-msgs" id="chatMsgs"></div>
+  <div class="chat-quick">
+    <button onclick="App.chatQuick('briefing')">📊 종합 브리핑</button>
+    <button onclick="App.chatQuick('risk')">🚨 위험 점검</button>
+    <button onclick="App.chatQuick('cash')">💰 자금</button>
+    <button onclick="App.chatQuick('sales')">🌐 영업</button>
+    <button onclick="App.chatQuick('newbiz')">🧪 신규사업</button>
+  </div>
+  <div class="chat-input">
+    <input id="chatInput" placeholder="질문하거나 지시하세요…" autocomplete="off" />
+    <button class="ch-send" title="전송" onclick="App.chatSend()">➤</button>
+  </div>
 </div>
 
 <script>
@@ -885,6 +930,123 @@ const App = (function(){
     }
   }
 
+  // ========== AI 비서 챗봇 ==========
+  const CHAT_URL=(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:')?'https://b-ltech-louis.vercel.app/api/chat/':'/api/chat/';
+  let chatHist=[], aiReason='';
+  function chatPass(){ try{return localStorage.getItem('blt.chatpass')||''}catch{return''} }
+  function chatToggle(open){ const p=el('chatPanel'),f=el('chatFab'); if(!p)return; p.style.display=open?'flex':'none'; f.style.display=open?'none':'flex'; if(open)setTimeout(()=>{const i=el('chatInput');if(i)i.focus();},60); }
+  function chatEl(role,html){ const d=document.createElement('div'); d.className='cmsg '+(role==='me'?'me':'bot'); d.innerHTML=html; const m=el('chatMsgs'); m.appendChild(d); m.scrollTop=m.scrollHeight; return d; }
+  function chatGreet(){ chatEl('bot','안녕하세요, 대표님. <b>AI 비서</b>입니다. 영업·생산·구매·재무·연구개발을 종합해 분석하고 <span class="risk">위험을 먼저</span> 알려드립니다. 무엇을 도와드릴까요?'); chatEl('bot',gRisk()); }
+  function chatSend(){ const v=el('chatInput').value.trim(); if(!v)return; el('chatInput').value=''; chatEl('me',esc(v)); handleMsg(v); }
+  function chatQuick(kind){ const map={briefing:['종합 브리핑',gBriefing],risk:['위험 점검',gRisk],cash:['자금 현황',gCash],sales:['영업 현황',gSales],newbiz:['신규사업',gNewbiz]}; const it=map[kind]; if(!it)return; chatEl('me',esc(it[0])); chatEl('bot',it[1]()); }
+  async function handleMsg(text){
+    const c=tryCommand(text); if(c){ chatEl('bot',c); return; }
+    const i=detectIntent(text); if(i){ chatEl('bot',i); return; }
+    const t=chatEl('bot','<span style="color:var(--dim)">분석 중…</span>');
+    const a=await askClaude(text);
+    t.innerHTML = a || gFallback(); const m=el('chatMsgs'); m.scrollTop=m.scrollHeight;
+  }
+  async function askClaude(text){
+    chatHist.push({role:'user',content:text}); chatHist=chatHist.slice(-12);
+    try{
+      const h={'content-type':'application/json'}; const p=chatPass(); if(p)h['x-bl-pass']=p;
+      const res=await fetch(CHAT_URL,{method:'POST',headers:h,body:JSON.stringify({messages:chatHist,snapshot:buildSnapshot()})});
+      const j=await res.json();
+      if(j&&j.ok&&j.text){ chatHist.push({role:'assistant',content:j.text}); return esc(j.text).replace(/\n/g,'<br>'); }
+      aiReason=(j&&j.reason)||'error'; return null;
+    }catch(e){ aiReason='network'; return null; }
+  }
+  function gFallback(){
+    if(aiReason==='no_key'||aiReason==='bad_pass') return '자유 대화형 AI는 아직 켜져 있지 않습니다. 분석·위험·브리핑은 아래 버튼으로 바로 가능합니다. 전체 AI 대화를 켜려면 Vercel 환경변수 <b>ANTHROPIC_API_KEY</b> 등록이 필요합니다 — 원하시면 설정을 안내해 드릴게요.';
+    return '이 질문은 아직 제가 정확히 이해하지 못했어요. 아래 버튼을 쓰거나 "위험 점검", "자금 현황", "영업 현황", "오늘 할일 추가 ○○" 처럼 말씀해 주세요.';
+  }
+  function buildSnapshot(){
+    const sm=salesMetrics(),f=orderFunnel(),nb=nbSum(),inM=monthIncome(),outM=monthExpense();
+    return {
+      날짜:todayISO(),
+      영업:{이번달매출:inM,매출목표:cfg.salesTarget,달성률:cfg.salesTarget?+sm.rate.toFixed(1):null,남은목표:cfg.salesTarget?Math.round(sm.remain):null,남은근무일:sm.wd,일평균필요:cfg.salesTarget&&sm.wd?Math.round(sm.daily):null,수주KRW:Math.round(f.su),출고KRW:Math.round(f.ch),입금KRW:Math.round(f.ip),미출고건:data.ord.filter(o=>o.ship!=='출고완료').length,미입금건:data.ord.filter(o=>o.pay!=='입금완료').length},
+      재무:{보유현금:financeBalance(),당월수입:inM,당월지출:outM,당월손익:inM-outM},
+      생산:{제조비용:mfgTotalFn(),제조원가율:inM?+(mfgTotalFn()/inM*100).toFixed(0):null,생산인원:data.ct.length,일인당평균:data.ct.length?Math.round(data.ct.reduce((s,c)=>s+c.amt,0)/data.ct.length):0},
+      구매:{당월재료비:data.mfg.filter(m=>m.cat==='재료비').reduce((s,m)=>s+m.amt,0)},
+      연구개발_하이드로겔:{투자누계:nb.inv,누적매출:nb.rev,비용:nb.cost,손익:nb.pnl,진행률:+nb.prog.toFixed(0),매출목표:cfg.nbRevTarget,투자목표:cfg.nbInvestTarget,단계:data.nbm.map(m=>({이름:m.name,상태:m.status,진행:m.pct}))},
+      해외주문:data.ord.map(o=>({번호:o.no,국가:o.country,거래처:o.cust,금액:o.amt,통화:o.curr,출고:o.ship,입금:o.pay,입금액:o.paid||0})),
+      위험경보:computeAlerts().map(a=>a.text),
+      오늘할일:data.today.filter(t=>!t.done).map(t=>t.title),
+      예정일정:data.sched.filter(s=>s.date>=todayISO()).slice(0,5).map(s=>({날짜:s.date,내용:s.title}))
+    };
+  }
+  function parseAmt(s){ let m=s.match(/([\d.]+)\s*억/); if(m)return Math.round(parseFloat(m[1])*1e8); m=s.match(/([\d,]+)\s*만/); if(m)return Math.round(parseFloat(m[1].replace(/,/g,''))*1e4); m=s.match(/([\d,]{4,})/); if(m)return Math.round(parseFloat(m[1].replace(/,/g,''))); return 0; }
+  function tryCommand(s){
+    let m;
+    if(/매출\s*목표/.test(s)&&/(설정|변경|로|=|\d)/.test(s)){ const a=parseAmt(s); if(a>0){ cfg.salesTarget=a; persistCfg(); renderAll(); return `✅ 이번 달 <b>매출 목표</b>를 ${won(a)} 로 설정했습니다.`; } }
+    m=s.match(/(?:위험\s*)?경보\s*(?:추가|등록)\s*[:\-]?\s*(.+)/); if(m&&m[1].trim()){ data.alerts.push({id:uid(),level:'med',text:m[1].trim()}); persist('alerts'); renderAll(); return `✅ CEO 위험경보에 추가했습니다: "${esc(m[1].trim())}"`; }
+    m=s.match(/(?:오늘\s*)?할\s*일\s*(?:추가|등록)\s*[:\-]?\s*(.+)/)||s.match(/^오늘\s*[:\-]?\s*(.+?)\s*(?:추가|등록)$/); if(m&&m[1].trim()){ data.today.push({id:uid(),title:m[1].trim(),prio:'med',done:false}); persist('today'); renderAll(); return `✅ 오늘 할 일에 추가했습니다: "${esc(m[1].trim())}"`; }
+    m=s.match(/일정\s*(?:추가|등록)\s*[:\-]?\s*(.+)/); if(m&&m[1].trim()){ const dm=m[1].match(/(\d{4}-\d{2}-\d{2})/); data.sched.push({id:uid(),date:dm?dm[1]:todayISO(),time:'',title:m[1].replace(/\d{4}-\d{2}-\d{2}/,'').trim(),place:''}); persist('sched'); renderAll(); return `✅ 일정에 추가했습니다: "${esc(m[1].trim())}"`; }
+    return null;
+  }
+  function detectIntent(t){
+    const s=t.replace(/\s/g,'');
+    if(/위험|리스크|경보|문제없/.test(s)) return gRisk();
+    if(/브리핑|요약|종합|전체현황|현황보고|보고서/.test(s)) return gBriefing();
+    if(/자금|현금|재무|손익|잔액|돈/.test(s)) return gCash();
+    if(/매출|영업|수주|목표|주문|출고|입금/.test(s)) return gSales();
+    if(/신규사업|하이드로겔|연구|개발|R&D/i.test(s)) return gNewbiz();
+    if(/생산|제조|원가|공헌|가동|불량/.test(s)) return gProduction();
+    if(/구매|원자재|자재|발주|조달|외주/.test(s)) return gPurchasing();
+    if(/오늘|할일|일정|스케줄/.test(s)) return gToday();
+    if(/안녕|반가|하이|hello|hi|도움|기능|뭐할수|무엇을할/i.test(s)) return gHelp();
+    return null;
+  }
+  function gRisk(){
+    const al=computeAlerts();
+    if(!al.length) return '✅ <b>현재 위험 경보 없음.</b> 주요 지표가 정상 범위입니다.';
+    return `🚨 <b>위험 경보 ${al.length}건</b> — 우선 확인하세요:<br>`+al.map(a=>`<div class="risk">${a.icon} ${esc(a.text)}</div>`).join('');
+  }
+  function gBriefing(){
+    const sm=salesMetrics(),f=orderFunnel(),bal=financeBalance(),inM=monthIncome(),outM=monthExpense(),nb=nbSum(),mfg=mfgTotalFn();
+    const ct=data.ct.reduce((s,c)=>s+c.amt,0),ctAvg=data.ct.length?ct/data.ct.length:0,ratio=inM?mfg/inM*100:0;
+    const purchase=data.mfg.filter(m=>m.cat==='재료비').reduce((s,m)=>s+m.amt,0)+data.fin.filter(x=>x.type==='out'&&/원자재|구매|부품|소모|자재|외주/.test(x.item)&&x.date.startsWith(thisMonth())).reduce((s,x)=>s+x.amt,0);
+    const al=computeAlerts();
+    return `📊 <b>종합 브리핑</b> (${todayISO()})<br>`+
+      (al.length?`<div class="risk">⚠️ 위험 ${al.length}건 — "위험 점검" 확인</div>`:'<div class="ok">✅ 위험 경보 없음</div>')+
+      `• <b>영업</b>: 이번 달 매출 ${wonShort(inM)} / 목표달성 ${cfg.salesTarget?sm.rate.toFixed(0)+'%':'미설정'} · 수주 ${wonShort(f.su)}→입금 ${wonShort(f.ip)}(미입금 ${wonShort(f.su-f.ip)})<br>`+
+      `• <b>재무</b>: 보유현금 ${wonShort(bal)} · 당월손익 ${(inM-outM>=0?'+':'')+wonShort(inM-outM)}<br>`+
+      `• <b>생산</b>: 제조원가율 ${inM?ratio.toFixed(0)+'%':'-'} · 1인당 평균 ${wonShort(ctAvg)}<br>`+
+      `• <b>구매</b>: 당월 재료·구매비 ${wonShort(purchase)}<br>`+
+      `• <b>R&D(하이드로겔)</b>: 투자 ${wonShort(nb.inv)} · 손익 ${(nb.pnl>=0?'+':'')+wonShort(nb.pnl)} · 진행 ${nb.prog.toFixed(0)}%`;
+  }
+  function gCash(){
+    const bal=financeBalance(),inM=monthIncome(),outM=monthExpense();
+    const unpaid=data.ord.filter(o=>o.pay!=='입금완료').reduce((s,o)=>s+toKRW(o.amt-(o.paid||0),o.curr),0);
+    return `💰 <b>자금 현황</b><br>• 보유현금 <b>${wonShort(bal)}</b><br>• 이번 달 수입 ${wonShort(inM)} / 지출 ${wonShort(outM)} → 손익 ${(inM-outM>=0?'+':'')+wonShort(inM-outM)}<br>• 미입금(원화 환산) 약 ${wonShort(unpaid)}<br>`+(bal<outM?'<div class="risk">⚠️ 보유현금이 월 지출보다 적습니다. 자금 계획 점검 필요.</div>':'<div class="ok">✅ 단기 유동성 양호</div>');
+  }
+  function gSales(){
+    const sm=salesMetrics(),f=orderFunnel();
+    return `🌐 <b>영업·수주 현황</b><br>• 이번 달 매출 ${wonShort(sm.cum)} / 목표 ${cfg.salesTarget?wonShort(cfg.salesTarget):'미설정'} (달성 ${cfg.salesTarget?sm.rate.toFixed(0)+'%':'-'})<br>• 남은 목표 ${cfg.salesTarget?wonShort(sm.remain):'-'} · 남은 근무일 ${sm.wd}일 · 일평균 필요 ${cfg.salesTarget&&sm.wd?wonShort(sm.daily):'-'}<br>• 수주 ${wonShort(f.su)} → 출고 ${wonShort(f.ch)} → 입금 ${wonShort(f.ip)}<br>• 미출고 ${data.ord.filter(o=>o.ship!=='출고완료').length}건 · 미입금 ${data.ord.filter(o=>o.pay!=='입금완료').length}건`;
+  }
+  function gNewbiz(){
+    const s=nbSum(),ms=data.nbm.map(m=>`${esc(m.name)} ${m.pct||0}%`).join(' · ');
+    return `🧪 <b>신규사업(하이드로겔)</b><br>• 투자누계 ${wonShort(s.inv)} · 누적매출 ${wonShort(s.rev)} · 손익 ${(s.pnl>=0?'+':'')+wonShort(s.pnl)}<br>• 매출목표 ${cfg.nbRevTarget?wonShort(cfg.nbRevTarget):'-'} 대비 ${cfg.nbRevTarget?(s.rev/cfg.nbRevTarget*100).toFixed(0)+'%':'-'} · 전체 진행률 ${s.prog.toFixed(0)}%<br>`+(ms?'• 단계: '+ms:'');
+  }
+  function gProduction(){
+    const mfg=mfgTotalFn(),rev=monthIncome(),ratio=rev?mfg/rev*100:0;
+    const ct=data.ct.slice().sort((a,b)=>b.amt-a.amt),total=ct.reduce((s,c)=>s+c.amt,0),avg=ct.length?total/ct.length:0;
+    return `🏭 <b>생산 현황</b><br>• 제조비용 ${wonShort(mfg)} · 제조원가율 ${rev?ratio.toFixed(0)+'%':'-'}<br>• 생산 ${ct.length}명 · 1인당 평균 ${wonShort(avg)}${ct[0]?' · 최고 '+esc(ct[0].name)+' '+wonShort(ct[0].amt):''}<br>`+(ratio>80?'<div class="risk">⚠️ 제조원가율이 높습니다(80%↑). 원가 절감 검토 필요.</div>':'');
+  }
+  function gPurchasing(){
+    const mat=data.mfg.filter(m=>m.cat==='재료비').reduce((s,m)=>s+m.amt,0);
+    const buy=data.fin.filter(x=>x.type==='out'&&/원자재|구매|부품|소모|자재|외주/.test(x.item)).reduce((s,x)=>s+x.amt,0);
+    return `🛒 <b>구매 현황</b><br>• 재료비(제조) ${wonShort(mat)}<br>• 구매·외주 지출(장부) ${wonShort(buy)}<br>• 합계 약 ${wonShort(mat+buy)}<br><span style="color:var(--dim)">상세는 회계·자금 / 제조비용 메뉴에서 확인하세요.</span>`;
+  }
+  function gToday(){
+    const td=data.today.filter(t=>!t.done);
+    const sc=data.sched.filter(s=>s.date>=todayISO()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,4);
+    return `🗓️ <b>오늘·예정</b><br>• 할 일 ${td.length}건${td.length?': '+td.slice(0,5).map(t=>esc(t.title)).join(', '):''}<br>• 다가오는 일정: ${sc.length?sc.map(s=>esc(s.date.slice(5))+' '+esc(s.title)).join(' / '):'없음'}`;
+  }
+  function gHelp(){
+    return `대표님, 이렇게 도와드립니다:<br>• <b>분석/현황</b>: "종합 브리핑", "위험 점검", "자금 현황", "영업", "생산", "구매", "신규사업"<br>• <b>지시(데이터 수정)</b>: "오늘 할일 추가 ○○", "경보 추가 ○○", "매출목표 1.2억 설정", "일정 추가 2026-07-01 월간회의"<br>• 그 외 자유로운 질문/상담도 가능합니다(AI 연동 시).`;
+  }
+
   // ---------- helpers ----------
   function kpi(lbl,val,color,icon){ return `<div class="kpi"><div class="lbl">${icon?icon+' ':''}${lbl}</div><div class="val ${color||''}">${val}</div></div>`; }
   function pc(p){return p==='high'?'p-high':p==='low'?'p-low':'p-med';}
@@ -1005,10 +1167,13 @@ const App = (function(){
     el('fn_date').value=todayISO(); el('sc_date').value=todayISO(); el('nb_date').value=todayISO();
     renderAll();
     loadMarket(); setInterval(loadMarket, 60000);
+    el('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter')chatSend();});
+    chatToggle(true); chatGreet();
   }
 
   return {init,go:nav,addToday,addWork,addSchedule,addFinance,addOrder,addContrib,addMfg,
-    saveCfg,addNb,addNbm,addBrief,addAlert,exportAll,importAll,resetAll};
+    saveCfg,addNb,addNbm,addBrief,addAlert,exportAll,importAll,resetAll,
+    chatToggle,chatSend,chatQuick};
 })();
 document.addEventListener('DOMContentLoaded',App.init);
 </script>
