@@ -77,6 +77,8 @@
   th.num{text-align:right}
   .row-del{background:none;border:none;color:var(--dim);cursor:pointer;font-size:15px;padding:0 4px}
   .row-del:hover{color:var(--red)}
+  .row-edit{background:none;border:none;color:var(--dim);cursor:pointer;font-size:13px;padding:0 5px}
+  .row-edit:hover{color:var(--accent)}
   select.mini{padding:4px 8px;font-size:12px;border-radius:6px}
   .chk{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
   .strike{text-decoration:line-through;color:var(--dim)}
@@ -361,15 +363,29 @@
 
     <!-- ============ SCHEDULE ============ -->
     <section class="view" id="v-schedule">
-      <div class="pagehead"><div><h2>📅 개인 일정</h2><div class="desc">미팅 · 출장 · 행사 일정</div></div></div>
+      <div class="pagehead"><div><h2>📅 개인 일정</h2><div class="desc">미팅 · 출장 · 행사 일정 · Outlook 연동</div></div></div>
+      <div class="panel">
+        <h3>📨 Outlook 캘린더 연동 <span class="sm" id="olStatus"></span></h3>
+        <div id="olConfig" class="addbar" style="margin-bottom:0;box-shadow:none;border:1px dashed var(--border)">
+          <input id="olClientId" class="grow" placeholder="Azure 앱(SPA) Client ID 붙여넣기" />
+          <button class="add" onclick="App.olSaveConfig()">저장</button>
+          <span style="flex-basis:100%;font-size:11.5px;color:var(--dim)">설정법은 <b>desktop-pms/OUTLOOK-SETUP.md</b> 참고 · 비밀번호/ID는 저장하지 않고 Microsoft 로그인(OAuth)만 사용합니다.</span>
+        </div>
+        <div id="olConnect" style="display:none;gap:8px;flex-wrap:wrap;align-items:center">
+          <button class="add" id="olBtnConnect" onclick="App.olConnect()">Microsoft 계정으로 연결</button>
+          <button id="olBtnSignout" onclick="App.olSignout()" style="display:none">로그아웃</button>
+          <button id="olBtnRefresh" onclick="App.olRefresh()" style="display:none">새로고침</button>
+          <span style="font-size:11.5px;color:var(--dim)">연결 시 Outlook 일정이 아래 표에 표시되고, 추가·수정·삭제가 Outlook에 자동 반영됩니다(60초마다 동기화).</span>
+        </div>
+      </div>
       <div class="addbar">
         <input id="sc_date" type="date" />
         <input id="sc_time" type="time" style="flex:0 1 120px" />
         <input id="sc_title" class="grow" placeholder="일정 내용 (Enter)" />
         <input id="sc_place" placeholder="장소/비고" style="flex:0 1 150px" />
-        <button class="add" onclick="App.addSchedule()">+ 추가</button>
+        <button class="add" id="sc_btn" onclick="App.addSchedule()">+ 추가</button>
       </div>
-      <div class="panel"><table><thead><tr><th style="width:130px">날짜</th><th style="width:70px">시간</th><th>일정</th><th style="width:160px">장소/비고</th><th style="width:40px"></th></tr></thead><tbody id="tb_schedule"></tbody></table></div>
+      <div class="panel"><table><thead><tr><th style="width:130px">날짜</th><th style="width:70px">시간</th><th>일정</th><th style="width:160px">장소/비고</th><th style="width:74px"></th></tr></thead><tbody id="tb_schedule"></tbody></table></div>
     </section>
 
     <!-- ============ FINANCE ============ -->
@@ -470,6 +486,9 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3/lib/msal-browser.min.js"></script>
+<script src="outlook-config.js"></script>
+<script src="outlook.js"></script>
 <script>
 const App = (function(){
   "use strict";
@@ -590,19 +609,36 @@ const App = (function(){
   }
 
   // ---------- SCHEDULE ----------
-  function addSchedule(){ const t=el('sc_title').value.trim(),d=el('sc_date').value; if(!t||!d)return; data.sched.push({id:uid(),date:d,time:el('sc_time').value,title:t,place:el('sc_place').value}); el('sc_title').value='';el('sc_place').value=''; persist('sched'); renderAll(); }
+  async function addSchedule(){
+    const t=el('sc_title').value.trim(),d=el('sc_date').value; if(!t||!d)return;
+    const payload={title:t,date:d,time:el('sc_time').value,place:el('sc_place').value};
+    if(olOn){
+      try{
+        if(schedEditId){ await Outlook.updateEvent(schedEditId,payload); schedEditId=null; if(el('sc_btn'))el('sc_btn').textContent='+ 추가'; }
+        else { await Outlook.createEvent(payload); }
+        clearSchedInputs(); await Outlook.refresh();
+      }catch(e){ alert('Outlook 반영 실패: '+((e&&e.message)||e)); }
+      return;
+    }
+    if(schedEditId){ const it=data.sched.find(x=>x.id===schedEditId); if(it){it.title=t;it.date=d;it.time=payload.time;it.place=payload.place;} schedEditId=null; if(el('sc_btn'))el('sc_btn').textContent='+ 추가'; }
+    else { data.sched.push({id:uid(),date:d,time:payload.time,title:t,place:payload.place}); }
+    clearSchedInputs(); persist('sched'); renderAll();
+  }
   function renderSchedule(){
-    const list=data.sched.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+    olUI();
+    const list=schedList().slice().sort((a,b)=>((a.date||'')+(a.time||'')).localeCompare((b.date||'')+(b.time||'')));
     const tb=el('tb_schedule'); tb.innerHTML='';
-    if(!list.length) tb.innerHTML='<tr><td colspan="5" class="empty">등록된 일정이 없습니다</td></tr>';
+    if(!list.length) tb.innerHTML=`<tr><td colspan="5" class="empty">${olOn?'Outlook 일정이 없습니다':'등록된 일정이 없습니다'}</td></tr>`;
     const ti=todayISO();
     list.forEach(s=>{
-      const past=s.date<ti;
+      const past=(s.date||'')<ti;
       const tr=document.createElement('tr');
-      tr.innerHTML=`<td style="${past?'color:var(--dim)':''}">${esc(s.date)} ${wday(s.date)}</td>
+      tr.innerHTML=`<td style="${past?'color:var(--dim)':''}">${esc(s.date)} ${s.date?wday(s.date):''}</td>
         <td>${esc(s.time||'-')}</td><td class="${past?'strike':''}">${esc(s.title)}</td>
-        <td style="color:var(--dim)">${esc(s.place||'')}</td><td><button class="row-del">×</button></td>`;
-      tr.querySelector('.row-del').onclick=()=>{data.sched=data.sched.filter(x=>x.id!==s.id);persist('sched');renderAll();};
+        <td style="color:var(--dim)">${esc(s.place||'')}</td>
+        <td style="white-space:nowrap"><button class="row-edit" title="수정">✎</button><button class="row-del" title="삭제">×</button></td>`;
+      tr.querySelector('.row-edit').onclick=()=>schedEdit(s);
+      tr.querySelector('.row-del').onclick=()=>schedDelete(s);
       tb.appendChild(tr);
     });
   }
@@ -896,7 +932,7 @@ const App = (function(){
     ot.innerHTML= tl.length? tl.map(t=>`<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)"><span class="badgeP ${pc(t.prio)}">${pl(t.prio)}</span> ${esc(t.title)}</div>`).join(''):'<div class="empty">완료 🎉</div>';
     el('ovTodayCnt').textContent=todoLeft?todoLeft+'건 남음':'';
 
-    const os=el('ovSchedule'); const sl=data.sched.filter(s=>s.date>=todayISO()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,5);
+    const os=el('ovSchedule'); const sl=schedList().filter(s=>(s.date||'')>=todayISO()).sort((a,b)=>((a.date||'')+(a.time||'')).localeCompare((b.date||'')+(b.time||''))).slice(0,5);
     os.innerHTML= sl.length? sl.map(s=>`<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)"><b style="color:var(--accent);white-space:nowrap">${esc(s.date.slice(5))} ${esc(s.time||'')}</b> <span>${esc(s.title)}</span></div>`).join(''):'<div class="empty">예정 일정 없음</div>';
 
     const oo=el('ovOrders'); const ol=data.ord.filter(o=>o.ship!=='출고완료'||o.pay!=='입금완료').slice(0,5);
@@ -946,6 +982,45 @@ const App = (function(){
       if(el('marketStrip').querySelector('.mkt')==null) el('marketStrip').innerHTML='<div class="empty" style="grid-column:1/-1">시세를 불러올 수 없습니다. 인터넷 연결을 확인하세요.</div>';
     }
   }
+
+  // ========== Outlook(Microsoft Graph) 캘린더 연동 ==========
+  let olOn=false, olEvents=[], schedEditId=null;
+  function schedList(){ return olOn ? olEvents.map(e=>({id:e.id,date:e.date,time:e.time,title:e.subject,place:e.location,ol:true})) : data.sched; }
+  function clearSchedInputs(){ el('sc_title').value='';el('sc_place').value='';el('sc_time').value=''; }
+  function schedEdit(s){ el('sc_date').value=s.date||''; el('sc_time').value=s.time||''; el('sc_title').value=s.title||''; el('sc_place').value=s.place||''; schedEditId=s.id; if(el('sc_btn'))el('sc_btn').textContent='✓ 수정 저장'; el('sc_title').focus(); }
+  async function schedDelete(s){
+    if(s.ol){ if(!confirm('이 Outlook 일정을 삭제할까요? Outlook에서도 삭제됩니다.'))return; try{ await Outlook.deleteEvent(s.id); await Outlook.refresh(); }catch(e){ alert('삭제 실패: '+((e&&e.message)||e)); } return; }
+    if(!confirm('이 일정을 삭제할까요?'))return; data.sched=data.sched.filter(x=>x.id!==s.id); persist('sched'); renderAll();
+  }
+  function olUI(){
+    const st=el('olStatus'); if(!st)return;
+    const conf = window.Outlook && Outlook.configured();
+    if(el('olConfig')) el('olConfig').style.display = conf?'none':'flex';
+    if(el('olConnect')) el('olConnect').style.display = conf?'flex':'none';
+    if(el('olBtnConnect')) el('olBtnConnect').style.display = olOn?'none':'inline-block';
+    if(el('olBtnSignout')) el('olBtnSignout').style.display = olOn?'inline-block':'none';
+    if(el('olBtnRefresh')) el('olBtnRefresh').style.display = olOn?'inline-block':'none';
+    if(olOn){ const a=Outlook.account(); st.innerHTML='<span style="color:var(--green);font-weight:600">● 연결됨</span> '+(a?esc(a.email||a.name||''):''); }
+    else st.innerHTML = conf?'<span style="color:var(--dim)">미연결 — Microsoft 계정으로 연결하세요</span>':'<span style="color:var(--yellow)">설정 필요 — Client ID를 입력하세요</span>';
+  }
+  async function olInit(){
+    if(!window.Outlook){ olUI(); return; }
+    Outlook.onChange((ev)=>{ if(ev){ olEvents=ev; renderAll(); } });
+    if(Outlook.configured()){
+      try{ await Outlook.ensure(); olOn=Outlook.connected(); if(olOn){ Outlook.startPolling(60000); Outlook.refresh().catch(()=>{}); } }catch(e){}
+    }
+    window.addEventListener('focus',()=>{ if(olOn) Outlook.refresh().catch(()=>{}); });
+    olUI();
+  }
+  async function olConnect(){
+    try{
+      if(!Outlook.configured()){ alert('먼저 Client ID를 입력하고 저장하세요.'); return; }
+      await Outlook.connect(); olOn=true; Outlook.startPolling(60000); await Outlook.refresh(); olUI(); renderAll();
+    }catch(e){ alert('연결 실패: '+((e&&(e.message||e.errorMessage))||e)); }
+  }
+  async function olSignout(){ try{ await Outlook.signout(); }catch(e){} olOn=false; olEvents=[]; if(window.Outlook)Outlook.stopPolling(); olUI(); renderAll(); }
+  async function olRefresh(){ if(!olOn)return; try{ await Outlook.refresh(); olUI(); }catch(e){ alert('새로고침 실패: '+((e&&e.message)||e)); } }
+  function olSaveConfig(){ const id=el('olClientId').value.trim(); if(!id){ alert('Client ID를 입력하세요.'); return; } Outlook.setClientId(id); olUI(); alert('Client ID가 저장되었습니다. 이제 "Microsoft 계정으로 연결"을 누르세요.'); }
 
   // ========== AI 비서 챗봇 ==========
   const CHAT_URL=(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:')?'https://b-ltech-louis.vercel.app/api/chat/':'/api/chat/';
@@ -1007,7 +1082,7 @@ const App = (function(){
       해외주문:data.ord.map(o=>({번호:o.no,국가:o.country,거래처:o.cust,금액:o.amt,통화:o.curr,출고:o.ship,입금:o.pay,입금액:o.paid||0})),
       위험경보:computeAlerts().map(a=>a.text),
       오늘할일:data.today.filter(t=>!t.done).map(t=>t.title),
-      예정일정:data.sched.filter(s=>s.date>=todayISO()).slice(0,5).map(s=>({날짜:s.date,내용:s.title}))
+      예정일정:schedList().filter(s=>(s.date||'')>=todayISO()).slice(0,5).map(s=>({날짜:s.date,내용:s.title}))
     };
   }
   function parseAmt(s){ let m=s.match(/([\d.]+)\s*억/); if(m)return Math.round(parseFloat(m[1])*1e8); m=s.match(/([\d,]+)\s*만/); if(m)return Math.round(parseFloat(m[1].replace(/,/g,''))*1e4); m=s.match(/([\d,]{4,})/); if(m)return Math.round(parseFloat(m[1].replace(/,/g,''))); return 0; }
@@ -1259,11 +1334,13 @@ const App = (function(){
     loadMarket(); setInterval(loadMarket, 60000);
     el('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter')chatSend();});
     chatToggle(false);
+    olInit();
   }
 
   return {init,go:nav,addToday,addWork,addSchedule,addFinance,addOrder,addContrib,addMfg,
     saveCfg,addNb,addNbm,addBrief,addAlert,exportAll,importAll,resetAll,
-    chatToggle,chatSend,chatQuick,chatConfirm};
+    chatToggle,chatSend,chatQuick,chatConfirm,
+    olConnect,olSignout,olRefresh,olSaveConfig};
 })();
 document.addEventListener('DOMContentLoaded',App.init);
 </script>
