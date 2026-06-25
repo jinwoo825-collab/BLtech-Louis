@@ -6,36 +6,36 @@
 <title>비엘테크(주) · 경영 대시보드</title>
 <style>
   :root{
-    --bg:#eaf0fa; --panel:#ffffff; --panel2:#f3f6fc; --border:#e4eaf3;
-    --text:#1f2a3d; --dim:#6b7689; --accent:#4f7cf9; --accent-soft:#eaf1ff;
-    --green:#16a34a; --yellow:#d2890a; --red:#e5484d; --purple:#7c5cff; --teal:#0fb5a5;
-    --radius:14px; --shadow:0 4px 18px rgba(31,42,61,.08);
+    --bg:#eaf0fa; --panel:#ffffff; --panel2:#f2f6fb; --border:#e2e9f2;
+    --navy:#002b62; --text:#22304a; --dim:#6b7689; --accent:#005b9d; --accent-soft:#e6f0f8;
+    --green:#15924f; --yellow:#cc8500; --red:#e5484d; --purple:#5e7bc4; --teal:#38b2b9;
+    --radius:14px; --shadow:0 6px 20px rgba(0,43,98,.07);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,"Segoe UI","Malgun Gothic",Roboto,sans-serif;background:linear-gradient(165deg,#f3f7fd 0%,#e8eef8 100%);min-height:100vh;color:var(--text);font-size:14px;line-height:1.5}
+  body{font-family:-apple-system,"Segoe UI","Malgun Gothic",Roboto,sans-serif;background:linear-gradient(165deg,#eef4fb 0%,#e1eaf6 100%);min-height:100vh;color:var(--text);font-size:14px;line-height:1.5}
   .app{display:flex;min-height:100vh}
 
   /* Sidebar */
-  .side{width:236px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);padding:20px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+  .side{width:236px;flex-shrink:0;background:linear-gradient(180deg,#002b62 0%,#013f72 100%);border-right:1px solid #00223f;padding:20px 14px;position:sticky;top:0;height:100vh;overflow:auto;box-shadow:2px 0 16px rgba(0,43,98,.14)}
   .brand{padding:6px 8px 18px}
-  .brand .co{font-size:16px;font-weight:800;letter-spacing:-.3px}
-  .brand .sub{font-size:11px;color:var(--dim);margin-top:2px}
-  .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;color:var(--dim);cursor:pointer;font-weight:500;font-size:13.5px;margin-bottom:3px;text-decoration:none}
-  .nav a:hover{background:var(--panel2);color:var(--text)}
-  .nav a.active{background:var(--accent-soft);color:var(--accent)}
+  .brand .co{font-size:16px;font-weight:800;letter-spacing:-.3px;color:#fff}
+  .brand .sub{font-size:11px;color:#9fc0e0;margin-top:2px}
+  .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;color:#c2d6ec;cursor:pointer;font-weight:500;font-size:13.5px;margin-bottom:3px;text-decoration:none}
+  .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+  .nav a.active{background:rgba(255,255,255,.16);color:#fff;font-weight:700}
   .nav a .ic{width:20px;text-align:center}
   .nav a .badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px}
-  .navsep{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;padding:12px 12px 5px;font-weight:700}
-  .savebadge{margin-top:16px;padding:9px 10px;border-radius:9px;font-size:11.5px;text-align:center;border:1px solid var(--border);background:var(--panel2);color:var(--dim);line-height:1.35}
-  .savebadge.ok{color:var(--green);border-color:#3fb95055}
-  .savebadge.warn{color:var(--yellow);border-color:#d6a41766;cursor:help}
-  .savebadge.err{color:var(--red);border-color:#f8514966}
-  .savebadge.dim{color:var(--dim)}
+  .navsep{font-size:10px;color:#7aa0c8;text-transform:uppercase;letter-spacing:.5px;padding:12px 12px 5px;font-weight:700}
+  .savebadge{margin-top:16px;padding:9px 10px;border-radius:9px;font-size:11.5px;text-align:center;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#c2d6ec;line-height:1.35}
+  .savebadge.ok{color:#86e6b0;border-color:rgba(134,230,176,.4)}
+  .savebadge.warn{color:#ffd479;border-color:rgba(255,212,121,.4);cursor:help}
+  .savebadge.err{color:#ff9a93;border-color:rgba(255,154,147,.4)}
+  .savebadge.dim{color:#9fc0e0}
 
   /* Main */
   .main{flex:1;padding:26px 30px;max-width:1320px}
   .pagehead{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px}
-  .pagehead h2{font-size:21px;font-weight:700;letter-spacing:-.3px}
+  .pagehead h2{font-size:21px;font-weight:800;letter-spacing:-.3px;color:var(--navy)}
   .pagehead .desc{color:var(--dim);font-size:13px;margin-top:3px}
   .pagehead .date{color:var(--dim);font-size:13px}
 
@@ -127,8 +127,9 @@
   .fstep .fp{font-size:11.5px;color:var(--accent);margin-top:5px;font-weight:600}
 
   /* market strip */
-  .market-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-  @media(max-width:900px){.market-strip{grid-template-columns:repeat(2,1fr)}}
+  .market-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+  @media(max-width:1100px){.market-strip{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:640px){.market-strip{grid-template-columns:repeat(2,1fr)}}
   .mkt{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:11px 14px}
   .mkt .mname{font-size:11.5px;color:var(--dim)}
   .mkt .mval{font-size:19px;font-weight:800;margin-top:5px;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
@@ -855,6 +856,7 @@ const App = (function(){
     {k:'kosdaq', name:'코스닥', dec:2},
     {k:'usdkrw', name:'원/달러', dec:2, unit:'₩'},
     {k:'jpykrw', name:'원/100엔', dec:2, unit:'₩', mul:100},
+    {k:'kr10y', name:'국고채 10년', dec:2, suf:'%'},
     {k:'ust10y', name:'미 국채 10년', dec:2, suf:'%'},
   ];
   function fmtNum(n,dec){ return Number(n).toLocaleString('ko-KR',{minimumFractionDigits:dec,maximumFractionDigits:dec}); }
