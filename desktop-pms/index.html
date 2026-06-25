@@ -6,13 +6,13 @@
 <title>비엘테크(주) · 경영 대시보드</title>
 <style>
   :root{
-    --bg:#0e1116; --panel:#171c24; --panel2:#1f2630; --border:#2a323d;
-    --text:#e6edf3; --dim:#8b98a5; --accent:#4f9cf9; --accent-soft:#4f9cf922;
-    --green:#3fb950; --yellow:#d6a417; --red:#f85149; --purple:#a371f7; --teal:#2dd4bf;
-    --radius:12px; --shadow:0 6px 22px rgba(0,0,0,.4);
+    --bg:#eaf0fa; --panel:#ffffff; --panel2:#f3f6fc; --border:#e4eaf3;
+    --text:#1f2a3d; --dim:#6b7689; --accent:#4f7cf9; --accent-soft:#eaf1ff;
+    --green:#16a34a; --yellow:#d2890a; --red:#e5484d; --purple:#7c5cff; --teal:#0fb5a5;
+    --radius:14px; --shadow:0 4px 18px rgba(31,42,61,.08);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,"Segoe UI","Malgun Gothic",Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+  body{font-family:-apple-system,"Segoe UI","Malgun Gothic",Roboto,sans-serif;background:linear-gradient(165deg,#f3f7fd 0%,#e8eef8 100%);background-attachment:fixed;color:var(--text);font-size:14px;line-height:1.5}
   .app{display:flex;min-height:100vh}
 
   /* Sidebar */
@@ -45,7 +45,7 @@
   /* Cards / KPIs */
   .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
   @media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}}
-  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
   .kpi .lbl{font-size:12px;color:var(--dim);display:flex;align-items:center;gap:6px}
   .kpi .val{font-size:23px;font-weight:800;margin-top:8px;letter-spacing:-.5px}
   .kpi .note{font-size:11.5px;color:var(--dim);margin-top:4px}
@@ -53,14 +53,14 @@
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   @media(max-width:960px){.grid2{grid-template-columns:1fr}}
-  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px;box-shadow:var(--shadow)}
   .panel:last-child{margin-bottom:0}
   .panel h3{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .panel h3 .sm{margin-left:auto;font-size:12px;font-weight:500;color:var(--dim)}
   .panel h3 .sm a{color:var(--accent);cursor:pointer}
 
   /* Add bar */
-  .addbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:16px}
+  .addbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:16px;box-shadow:var(--shadow)}
   input,select,textarea,button{font-family:inherit;font-size:13.5px;color:var(--text);background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:8px 11px;outline:none}
   input:focus,select:focus,textarea:focus{border-color:var(--accent)}
   input::placeholder,textarea::placeholder{color:var(--dim)}
@@ -102,9 +102,9 @@
   /* Alerts */
   .alert{padding:11px 14px;border-radius:9px;font-size:13px;font-weight:500;margin-bottom:8px;border:1px solid;overflow:hidden}
   .alert:last-child{margin-bottom:0}
-  .alert.high{background:#f8514916;border-color:#f8514955;color:#ff9a93}
-  .alert.med{background:#d6a41716;border-color:#d6a41755;color:#e6c357}
-  .alert.ok{background:#3fb95012;border-color:#3fb95044;color:#7ee787}
+  .alert.high{background:#fdecec;border-color:#f6c9c9;color:#c92a2a}
+  .alert.med{background:#fef4e2;border-color:#f3d9a2;color:#a06a08}
+  .alert.ok{background:#e8f7ef;border-color:#bce6cf;color:#107a44}
 
   /* Progress */
   .progress{background:var(--panel2);border-radius:8px;height:13px;overflow:hidden}
@@ -133,8 +133,8 @@
   .mkt .mname{font-size:11.5px;color:var(--dim)}
   .mkt .mval{font-size:19px;font-weight:800;margin-top:5px;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
   .mkt .mchg{font-size:12px;font-weight:600;margin-top:3px;font-variant-numeric:tabular-nums}
-  .mkt-up{color:#f85149}
-  .mkt-down{color:#4f9cf9}
+  .mkt-up{color:#e5484d}
+  .mkt-down{color:#2f6fe6}
   .mkt-flat{color:var(--dim)}
 
   /* brief */
