@@ -126,6 +126,17 @@
   .fstep .fv{font-size:20px;font-weight:800;margin-top:6px;letter-spacing:-.4px}
   .fstep .fp{font-size:11.5px;color:var(--accent);margin-top:5px;font-weight:600}
 
+  /* market strip */
+  .market-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  @media(max-width:900px){.market-strip{grid-template-columns:repeat(2,1fr)}}
+  .mkt{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:11px 14px}
+  .mkt .mname{font-size:11.5px;color:var(--dim)}
+  .mkt .mval{font-size:19px;font-weight:800;margin-top:5px;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
+  .mkt .mchg{font-size:12px;font-weight:600;margin-top:3px;font-variant-numeric:tabular-nums}
+  .mkt-up{color:#f85149}
+  .mkt-down{color:#4f9cf9}
+  .mkt-flat{color:var(--dim)}
+
   /* brief */
   .brief-card{background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:14px;margin-bottom:10px}
   .brief-card .bc-cat{font-size:11px;color:var(--accent);font-weight:700}
@@ -174,6 +185,12 @@
       <div class="pagehead">
         <div><h2>경영 대시보드</h2><div class="desc">대표이사 종합 현황 · 한눈에 보는 핵심 지표</div></div>
         <div class="date" id="dateStr"></div>
+      </div>
+
+      <div class="panel" style="padding:14px 16px">
+        <h3 style="margin-bottom:12px">📈 실시간 경제지표 <span class="sm" id="mktUpdated">불러오는 중…</span></h3>
+        <div class="market-strip" id="marketStrip"><div class="empty" style="grid-column:1/-1">시세를 불러오는 중…</div></div>
+        <div style="font-size:11px;color:var(--dim);margin-top:8px">상승=빨강 · 하락=파랑 · 데이터 제공: Yahoo Finance · 60초마다 자동 갱신 · 인터넷 연결 필요</div>
       </div>
 
       <div class="panel" style="border-color:#f8514944">
@@ -830,6 +847,42 @@ const App = (function(){
        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between"><span style="color:var(--dim)">이번 달 순현금흐름</span><b style="color:${inM-outM>=0?'var(--green)':'var(--red)'}">${(inM-outM>=0?'+':'')+won(inM-outM)}</b></div>`;
   }
 
+  // ---------- MARKET (실시간 경제지표) ----------
+  const MARKET_URL = (location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:')
+    ? 'https://b-ltech-louis.vercel.app/api/market' : '/api/market';
+  const MKT_DEF = [
+    {k:'kospi', name:'코스피', dec:2},
+    {k:'kosdaq', name:'코스닥', dec:2},
+    {k:'usdkrw', name:'원/달러', dec:2, unit:'₩'},
+    {k:'jpykrw', name:'원/100엔', dec:2, unit:'₩', mul:100},
+    {k:'ust10y', name:'미 국채 10년', dec:2, suf:'%'},
+  ];
+  function fmtNum(n,dec){ return Number(n).toLocaleString('ko-KR',{minimumFractionDigits:dec,maximumFractionDigits:dec}); }
+  function renderMarket(d){
+    el('marketStrip').innerHTML = MKT_DEF.map(def=>{
+      const m = d ? d[def.k] : null;
+      if(!m || m.price==null) return `<div class="mkt"><div class="mname">${def.name}</div><div class="mval mkt-flat">–</div><div class="mchg mkt-flat">데이터 없음</div></div>`;
+      const mul=def.mul||1, price=m.price*mul, chg=(m.change||0)*mul, pct=m.changePct||0;
+      const cls = pct>0?'mkt-up':pct<0?'mkt-down':'mkt-flat';
+      const arrow = pct>0?'▲':pct<0?'▼':'–';
+      const val = (def.unit||'')+fmtNum(price,def.dec)+(def.suf||'');
+      const chgStr = `${arrow} ${fmtNum(Math.abs(chg),def.dec)} (${pct>=0?'+':''}${pct.toFixed(2)}%)`;
+      return `<div class="mkt"><div class="mname">${def.name}</div><div class="mval ${cls}">${val}</div><div class="mchg ${cls}">${chgStr}</div></div>`;
+    }).join('');
+  }
+  async function loadMarket(){
+    try{
+      const res = await fetch(MARKET_URL,{cache:'no-store'});
+      if(!res.ok) throw new Error('status '+res.status);
+      const j = await res.json();
+      renderMarket(j.data);
+      el('mktUpdated').textContent = '갱신 '+new Date().toLocaleTimeString('ko-KR');
+    }catch(e){
+      el('mktUpdated').textContent = '실시간 데이터를 불러올 수 없습니다 (인터넷 확인)';
+      if(el('marketStrip').querySelector('.mkt')==null) el('marketStrip').innerHTML='<div class="empty" style="grid-column:1/-1">시세를 불러올 수 없습니다. 인터넷 연결을 확인하세요.</div>';
+    }
+  }
+
   // ---------- helpers ----------
   function kpi(lbl,val,color,icon){ return `<div class="kpi"><div class="lbl">${icon?icon+' ':''}${lbl}</div><div class="val ${color||''}">${val}</div></div>`; }
   function pc(p){return p==='high'?'p-high':p==='low'?'p-low':'p-med';}
@@ -949,6 +1002,7 @@ const App = (function(){
     el('br_title').addEventListener('keydown',e=>{if(e.key==='Enter')addBrief();});
     el('fn_date').value=todayISO(); el('sc_date').value=todayISO(); el('nb_date').value=todayISO();
     renderAll();
+    loadMarket(); setInterval(loadMarket, 60000);
   }
 
   return {init,go:nav,addToday,addWork,addSchedule,addFinance,addOrder,addContrib,addMfg,
