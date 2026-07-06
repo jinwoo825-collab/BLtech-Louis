@@ -15,7 +15,8 @@ async function readBody(req) {
   });
 }
 
-const MODEL = process.env.OPENAI_MODEL || 'gpt-5.5';
+// 모델 ID는 소문자여야 함(예: gpt-5.5). 대문자/공백을 넣어도 자동 보정.
+const MODEL = (process.env.OPENAI_MODEL || 'gpt-5.5').trim().toLowerCase();
 
 const SYSTEM = `당신은 비엘테크(주)의 임직원 전용 AI 도우미입니다. 아래 [회사 정보]에 근거해 임직원의 회사 관련 질문에 친절하고 정확하게 답합니다.
 - 회사 정보에 있는 내용은 구체적으로 답하고, 없는 내용은 지어내지 말고 "확인되지 않은 정보"라고 안내한 뒤 담당 부서 문의를 권하세요.
