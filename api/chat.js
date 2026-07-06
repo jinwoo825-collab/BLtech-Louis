@@ -1,6 +1,7 @@
-// 대표이사 AI 비서 — Vercel 서버리스 함수 (Anthropic Claude)
+// 대표이사 AI 비서 — Vercel 서버리스 함수 (OpenAI)
 // 영업·생산·구매·재무·연구개발 데이터를 종합해 의사결정을 돕고, 위험을 먼저 알립니다. (읽기 전용)
-// 기본은 꺼짐: 환경변수 ANTHROPIC_API_KEY 가 없으면 {ok:false, reason:"no_key"} 를 반환 → 프론트는 로컬 엔진으로 동작.
+// 임직원 도우미(api/assistant.js)와 동일한 OPENAI_API_KEY 를 재사용합니다.
+// 기본은 꺼짐: 환경변수 OPENAI_API_KEY 가 없으면 {ok:false, reason:"no_key"} 를 반환 → 프론트는 로컬 엔진으로 동작.
 // 선택: 환경변수 BL_CHAT_PASSCODE 설정 시, 요청 헤더 x-bl-pass 가 일치해야 함(오남용 방지).
 
 async function readBody(req) {
@@ -12,6 +13,9 @@ async function readBody(req) {
     req.on('error', () => resolve({}));
   });
 }
+
+// 모델 ID는 소문자여야 함(예: gpt-5.5). 대문자/공백을 넣어도 자동 보정.
+const MODEL = (process.env.OPENAI_MODEL || 'gpt-5.5').trim().toLowerCase();
 
 const SYSTEM = `당신은 비엘테크(주) 대표이사의 AI 경영 비서입니다. 일반적인 잡담이 아니라, 제공된 회사 데이터에 근거해 경영 의사결정을 돕습니다.
 
@@ -33,7 +37,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') { res.status(200).end(); return; }
   if (req.method !== 'POST') { res.status(200).json({ ok: false, reason: 'method' }); return; }
 
-  const key = process.env.ANTHROPIC_API_KEY;
+  const key = process.env.OPENAI_API_KEY;
   if (!key) { res.status(200).json({ ok: false, reason: 'no_key' }); return; }
 
   const pass = process.env.BL_CHAT_PASSCODE;
@@ -47,25 +51,20 @@ export default async function handler(req, res) {
   const system = SYSTEM + '\n\n[현황 데이터]\n' + JSON.stringify(snapshot);
 
   try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
+    const r = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
       body: JSON.stringify({
-        model: 'claude-opus-4-8',
-        max_tokens: 1200,
-        system,
-        messages,
+        model: MODEL,
+        messages: [{ role: 'system', content: system }, ...messages],
+        max_completion_tokens: 1200,
       }),
     });
     const j = await r.json();
-    if (!r.ok) { res.status(200).json({ ok: false, reason: 'api_error', detail: (j && j.error && j.error.message) || '' }); return; }
-    const text = (j.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('\n').trim();
-    res.status(200).json({ ok: true, text });
+    if (!r.ok) { res.status(200).json({ ok: false, reason: 'api_error', detail: (j && j.error && j.error.message) || ('HTTP ' + r.status) }); return; }
+    const text = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+    res.status(200).json({ ok: true, text: text.trim(), model: MODEL });
   } catch (e) {
-    res.status(200).json({ ok: false, reason: 'network' });
+    res.status(200).json({ ok: false, reason: 'network', detail: String(e && e.message || e) });
   }
 }

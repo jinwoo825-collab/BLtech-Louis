@@ -1067,7 +1067,7 @@ const App = (function(){
     }catch(e){ aiReason='network'; return null; }
   }
   function gFallback(){
-    if(aiReason==='no_key'||aiReason==='bad_pass') return '자유 대화형 AI는 아직 켜져 있지 않습니다. 분석·위험·브리핑은 아래 버튼으로 바로 가능합니다. 전체 AI 대화를 켜려면 Vercel 환경변수 <b>ANTHROPIC_API_KEY</b> 등록이 필요합니다 — 원하시면 설정을 안내해 드릴게요.';
+    if(aiReason==='no_key'||aiReason==='bad_pass') return '자유 대화형 AI는 아직 켜져 있지 않습니다. 분석·위험·브리핑은 아래 버튼으로 바로 가능합니다. 전체 AI 대화를 켜려면 Vercel 환경변수 <b>OPENAI_API_KEY</b> 등록이 필요합니다 — 원하시면 설정을 안내해 드릴게요.';
     return '이 질문은 아직 제가 정확히 이해하지 못했어요. 아래 버튼을 쓰거나 "위험 점검", "자금 현황", "영업 현황", "오늘 할일 추가 ○○" 처럼 말씀해 주세요.';
   }
   function buildSnapshot(){
