@@ -70,7 +70,7 @@ export default async function handler(req, res) {
             { role: 'system', content: BRIEF_SYSTEM },
             { role: 'user', content: '현황 데이터:\n' + JSON.stringify(snap) + '\n\n위 지침에 따라 최신 브리핑 카드를 JSON으로 만들어줘.' },
           ],
-          max_completion_tokens: 2000,
+          max_completion_tokens: 6000,
           response_format: { type: 'json_object' },
         }),
       });
@@ -78,8 +78,12 @@ export default async function handler(req, res) {
       if (!r.ok) { res.status(200).json({ ok: false, reason: 'api_error', detail: (j && j.error && j.error.message) || ('HTTP ' + r.status) }); return; }
       const content = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
       let cards = [];
-      try { const p = JSON.parse(content); cards = Array.isArray(p) ? p : (p.cards || p.브리핑 || []); }
-      catch { const mm = content.match(/\{[\s\S]*\}/); if (mm) { try { cards = (JSON.parse(mm[0]).cards) || []; } catch {} } }
+      try { const p = JSON.parse(content); cards = Array.isArray(p) ? p : (p.cards || p.브리핑 || []); } catch {}
+      // 응답이 토큰 한도로 잘렸어도 완성된 카드 객체만 개별로 살려냄
+      if (!Array.isArray(cards) || !cards.length) {
+        const objs = content.match(/\{[^{}]*"title"[^{}]*\}/g) || [];
+        cards = objs.map((o) => { try { return JSON.parse(o); } catch { return null; } }).filter(Boolean);
+      }
       cards = (Array.isArray(cards) ? cards : []).filter((c) => c && c.title)
         .map((c) => ({ cat: String(c.cat || '브리핑'), title: String(c.title || ''), body: String(c.body || ''), src: String(c.src || '') }))
         .slice(0, 8);
