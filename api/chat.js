@@ -45,6 +45,52 @@ export default async function handler(req, res) {
 
   let body;
   try { body = await readBody(req); } catch { body = {}; }
+
+  // ── 브리핑 갱신 모드: AI가 브리핑 카드(JSON)를 생성 ──
+  if (body.mode === 'brief') {
+    const snap = body.snapshot || {};
+    const BRIEF_SYSTEM = `당신은 비엘테크(주) 대표이사를 위한 경영 인텔리전스 브리핑 편집자입니다.
+아래 [현황 데이터]와 회사 배경지식을 바탕으로, 대표가 한눈에 읽을 브리핑 카드 4~6개를 만드세요.
+
+[출력 형식] 오직 아래 JSON 객체 하나만 출력하세요(다른 설명·코드펜스 금지).
+{"cards":[{"cat":"분류","title":"제목","body":"3~5문장 요약","src":"출처 또는 근거"}]}
+
+[카드 구성]
+- 첫 카드는 반드시 cat="내부현황": [현황 데이터]의 실제 숫자(매출/손익/보유현금/미입금/신규사업 진행 등)만 근거로 요약하세요. 숫자를 지어내지 마세요.
+- 나머지는 cat을 "시장동향","지원사업","리스크" 등으로 — 의료기기(정형외과 부목/스플린트)·하이드로겔 창상피복재·수출 관점의 인텔리전스.
+- 최신 수치·공고명·금액처럼 실시간 확인이 필요한 외부 정보는 body 끝이나 src에 "확인 필요"를 명시하고 단정하지 마세요. 존재하지 않는 지원사업·통계를 지어내지 마세요.
+- 한국어로, 각 body는 간결하게(3~5문장).`;
+    try {
+      const r = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
+        body: JSON.stringify({
+          model: MODEL,
+          messages: [
+            { role: 'system', content: BRIEF_SYSTEM },
+            { role: 'user', content: '현황 데이터:\n' + JSON.stringify(snap) + '\n\n위 지침에 따라 최신 브리핑 카드를 JSON으로 만들어줘.' },
+          ],
+          max_completion_tokens: 2000,
+          response_format: { type: 'json_object' },
+        }),
+      });
+      const j = await r.json();
+      if (!r.ok) { res.status(200).json({ ok: false, reason: 'api_error', detail: (j && j.error && j.error.message) || ('HTTP ' + r.status) }); return; }
+      const content = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+      let cards = [];
+      try { const p = JSON.parse(content); cards = Array.isArray(p) ? p : (p.cards || p.브리핑 || []); }
+      catch { const mm = content.match(/\{[\s\S]*\}/); if (mm) { try { cards = (JSON.parse(mm[0]).cards) || []; } catch {} } }
+      cards = (Array.isArray(cards) ? cards : []).filter((c) => c && c.title)
+        .map((c) => ({ cat: String(c.cat || '브리핑'), title: String(c.title || ''), body: String(c.body || ''), src: String(c.src || '') }))
+        .slice(0, 8);
+      if (!cards.length) { res.status(200).json({ ok: false, reason: 'empty_brief' }); return; }
+      res.status(200).json({ ok: true, cards });
+    } catch (e) {
+      res.status(200).json({ ok: false, reason: 'network', detail: String(e && e.message || e) });
+    }
+    return;
+  }
+
   const messages = Array.isArray(body.messages) ? body.messages.slice(-12) : [];
   if (!messages.length) { res.status(200).json({ ok: false, reason: 'empty' }); return; }
   const snapshot = body.snapshot || {};

@@ -1049,6 +1049,7 @@ const App = (function(){
       if(/^(아니|아니오|아뇨|취소|no|n)$/i.test(s)){ pendingApply=null; chatEl('bot','네, 실행을 취소했습니다.'); return; }
       pendingApply=null;
     }
+    if(/브리핑|briefing/i.test(s) && /(갱신|업데이트|새로고침|새로 ?채워|최신|다시|리프레시|refresh|만들어|생성)/i.test(s)){ await refreshBrief(); return; }
     const c=tryCommand(s);
     if(c){ if(c.unknown){ chatEl('bot','데이터 수정 요청으로 보입니다. 이렇게 말씀해 주세요: "오늘 할일 추가 ○○", "경보 추가 ○○", "매출목표 1.2억 설정", "일정 추가 2026-07-01 회의". <span style="color:#86868b">수정 전 반드시 확인을 받습니다.</span>'); return; } pendingApply=c.apply; chatEl('bot', confirmBubble(c.label)); return; }
     const i=detectIntent(s); if(i){ chatEl('bot', fmtAns(i)); return; }
@@ -1065,6 +1066,24 @@ const App = (function(){
       if(j&&j.ok&&j.text){ chatHist.push({role:'assistant',content:j.text}); return esc(j.text).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>'); }
       aiReason=(j&&j.reason)||'error'; return null;
     }catch(e){ aiReason='network'; return null; }
+  }
+  async function refreshBrief(){
+    const t=chatEl('bot','<span style="color:#86868b">📰 AI 브리핑을 최신으로 생성 중입니다… (10~20초 소요)</span>');
+    try{
+      const h={'content-type':'application/json'}; const p=chatPass(); if(p)h['x-bl-pass']=p;
+      const res=await fetch(CHAT_URL,{method:'POST',headers:h,body:JSON.stringify({mode:'brief',snapshot:buildSnapshot()})});
+      const j=await res.json();
+      if(j&&j.ok&&Array.isArray(j.cards)&&j.cards.length){
+        const today=todayISO();
+        data.brief=j.cards.map(c=>({id:uid(),cat:String(c.cat||'브리핑').slice(0,20),title:String(c.title||''),body:String(c.body||''),src:String(c.src||''),updated:today}));
+        persist('brief'); renderAll();
+        t.innerHTML='✅ <b>AI 브리핑을 '+data.brief.length+'건으로 갱신</b>했습니다. 좌측 <b>📰 AI 브리핑</b> 메뉴에서 확인하세요.<div style="margin-top:8px"><button class="yes" style="padding:6px 14px;border:none;border-radius:8px;background:var(--navy);color:#fff;cursor:pointer" onclick="App.go(\'brief\')">브리핑 열기 →</button></div>';
+      } else {
+        aiReason=(j&&j.reason)||'error';
+        t.innerHTML=(aiReason==='no_key'||aiReason==='bad_pass')? gFallback() : 'AI 브리핑 생성에 실패했습니다('+aiReason+'). 잠시 후 다시 "AI 브리핑 갱신"이라고 말씀해 주세요.';
+      }
+    }catch(e){ t.innerHTML='네트워크 오류로 브리핑을 갱신하지 못했습니다. 인터넷 연결을 확인 후 다시 시도해 주세요.'; }
+    const m=el('chatMsgs'); m.scrollTop=m.scrollHeight;
   }
   function gFallback(){
     if(aiReason==='no_key'||aiReason==='bad_pass') return '자유 대화형 AI는 아직 켜져 있지 않습니다. 분석·위험·브리핑은 아래 버튼으로 바로 가능합니다. 전체 AI 대화를 켜려면 Vercel 환경변수 <b>OPENAI_API_KEY</b> 등록이 필요합니다 — 원하시면 설정을 안내해 드릴게요.';
@@ -1209,7 +1228,7 @@ const App = (function(){
     };
   }
   function gHelp(){
-    return { plain:true, c:`회사 데이터를 바탕으로 이렇게 도와드립니다:<br>• <b>분석/현황</b>: "종합 브리핑", "위험 점검", "자금 현황", "영업/생산/구매", "신규사업"<br>• <b>지시(수정 전 확인)</b>: "오늘 할일 추가 ○○", "경보 추가 ○○", "매출목표 1.2억 설정", "일정 추가 2026-07-01 회의"<br>모든 답변은 <b>결론 → 근거 → 위험 → 추천 행동</b> 순으로 드립니다.` };
+    return { plain:true, c:`회사 데이터를 바탕으로 이렇게 도와드립니다:<br>• <b>분석/현황</b>: "종합 브리핑", "위험 점검", "자금 현황", "영업/생산/구매", "신규사업"<br>• <b>AI 브리핑 갱신</b>: "AI 브리핑 갱신해줘" → 📰 브리핑 화면을 최신 카드로 다시 생성<br>• <b>지시(수정 전 확인)</b>: "오늘 할일 추가 ○○", "경보 추가 ○○", "매출목표 1.2억 설정", "일정 추가 2026-07-01 회의"<br>모든 답변은 <b>결론 → 근거 → 위험 → 추천 행동</b> 순으로 드립니다.` };
   }
 
   // ---------- helpers ----------
