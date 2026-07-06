@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>비엘테크 · 임직원 AI 도우미</title>
+<style>
+  :root{ --navy:#002b62; --accent:#005b9d; --teal:#38b2b9; --text:#1d1d1f; --dim:#6b7280; --border:#e4eaf3; --bg1:#eef4fb; --bg2:#e1eaf6; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Segoe UI","Malgun Gothic",Roboto,sans-serif;background:linear-gradient(165deg,var(--bg1),var(--bg2));min-height:100vh;color:var(--text);display:flex;align-items:center;justify-content:center;padding:16px}
+  .wrap{width:100%;max-width:560px}
+  .brand{text-align:center;margin-bottom:16px}
+  .brand .co{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-.4px}
+  .brand .sub{font-size:13px;color:var(--dim);margin-top:3px}
+
+  .card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:0 18px 50px rgba(0,30,80,.12);overflow:hidden}
+
+  /* Login */
+  #login{padding:34px 28px;text-align:center}
+  #login h2{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:6px}
+  #login p{font-size:13px;color:var(--dim);margin-bottom:20px;line-height:1.5}
+  .field{display:flex;gap:8px;max-width:340px;margin:0 auto}
+  input{font-family:inherit;font-size:14px;color:var(--text);border:1px solid var(--border);background:#f5f7fb;border-radius:12px;padding:11px 14px;outline:none;flex:1}
+  input:focus{border-color:var(--accent);background:#fff}
+  button{font-family:inherit;cursor:pointer;border:none}
+  .btn{background:var(--accent);color:#fff;font-size:14px;font-weight:600;border-radius:12px;padding:11px 18px}
+  .btn:hover{filter:brightness(1.08)}
+  .err{color:#c0392b;font-size:12.5px;margin-top:12px;min-height:16px}
+
+  /* Chat */
+  #chat{display:none;flex-direction:column;height:min(78vh,680px)}
+  .chead{background:linear-gradient(180deg,var(--navy),#013f72);color:#fff;padding:15px 18px;display:flex;align-items:center;justify-content:space-between}
+  .chead .t{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+  .dot{width:7px;height:7px;border-radius:50%;background:#3fd28a;box-shadow:0 0 0 3px #3fd28a33}
+  .chead .out{background:rgba(255,255,255,.15);color:#fff;font-size:12px;border-radius:8px;padding:5px 10px}
+  .msgs{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#f4f7fb}
+  .m{max-width:88%;padding:11px 14px;border-radius:16px;font-size:14px;line-height:1.62;word-break:break-word}
+  .m.bot{background:#fff;border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:5px}
+  .m.me{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:5px}
+  .m.bot b{color:var(--navy)}
+  .sugg{display:flex;gap:7px;flex-wrap:wrap;padding:8px 14px;background:#fff;border-top:1px solid var(--border)}
+  .sugg button{font-size:12px;padding:6px 12px;border-radius:15px;border:1px solid var(--border);background:#f5f7fb;color:var(--text)}
+  .sugg button:hover{border-color:var(--accent);color:var(--accent)}
+  .cinput{display:flex;gap:8px;padding:12px;background:#fff;border-top:1px solid var(--border)}
+  .cinput input{border-radius:20px}
+  .send{width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .foot{text-align:center;font-size:11px;color:var(--dim);margin-top:12px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <div class="co">비엘테크(주)</div>
+      <div class="sub">임직원 AI 도우미 · 회사 정보 안내</div>
+    </div>
+
+    <div class="card">
+      <!-- 로그인 -->
+      <div id="login">
+        <h2>🔒 임직원 접속</h2>
+        <p>사내 접속 코드를 입력하세요.<br>(코드는 관리자에게 문의)</p>
+        <div class="field">
+          <input id="pass" type="password" placeholder="접속 코드" autocomplete="off" />
+          <button class="btn" id="enterBtn">입장</button>
+        </div>
+        <div class="err" id="loginErr"></div>
+      </div>
+
+      <!-- 채팅 -->
+      <div id="chat">
+        <div class="chead">
+          <div class="t"><span class="dot"></span>🤖 비엘테크 AI 도우미</div>
+          <button class="out" id="logoutBtn">나가기</button>
+        </div>
+        <div class="msgs" id="msgs"></div>
+        <div class="sugg">
+          <button onclick="ask('회사 소개해줘')">회사 소개</button>
+          <button onclick="ask('주요 제품과 브랜드가 뭐야?')">제품·브랜드</button>
+          <button onclick="ask('보유 인증이 뭐가 있어?')">인증</button>
+          <button onclick="ask('수출 국가와 파트너는?')">수출·파트너</button>
+          <button onclick="ask('본사 주소랑 연락처 알려줘')">연락처</button>
+        </div>
+        <div class="cinput">
+          <input id="q" placeholder="회사에 대해 무엇이든 물어보세요" autocomplete="off" />
+          <button class="send" id="sendBtn" aria-label="전송">➤</button>
+        </div>
+      </div>
+    </div>
+    <div class="foot">답변은 사내 지식베이스 기반입니다 · OpenAI 기반 · 확인되지 않은 정보는 담당 부서에 문의하세요.</div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+  var API = "/api/assistant/";
+  var PKEY = "blt.emp.pass";
+  var hist = [];
+  var el = function(id){ return document.getElementById(id); };
+  function pass(){ try{ return localStorage.getItem(PKEY) || ""; }catch(e){ return ""; } }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];}); }
+  function md(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>"); }
+
+  function addMsg(role, html){ var d=document.createElement("div"); d.className="m "+(role==="me"?"me":"bot"); d.innerHTML=html; var m=el("msgs"); m.appendChild(d); m.scrollTop=m.scrollHeight; return d; }
+
+  async function api(payload){
+    try{
+      var res = await fetch(API, { method:"POST", headers:{ "Content-Type":"application/json", "x-emp-pass": pass() }, body: JSON.stringify(payload) });
+      return await res.json();
+    }catch(e){ return { ok:false, reason:"network", detail:String(e&&e.message||e) }; }
+  }
+
+  function showChat(){
+    el("login").style.display="none";
+    el("chat").style.display="flex";
+    if(!hist.length){ addMsg("bot","안녕하세요! 비엘테크 <b>임직원 AI 도우미</b>입니다. 회사 소개·제품·인증·수출·연락처 등 회사 관련 정보를 안내해 드립니다. 무엇을 도와드릴까요?"); }
+    setTimeout(function(){ el("q").focus(); }, 50);
+  }
+
+  async function login(){
+    var code = el("pass").value.trim();
+    el("loginErr").textContent = "";
+    if(!code){ el("loginErr").textContent="접속 코드를 입력하세요."; return; }
+    try{ localStorage.setItem(PKEY, code); }catch(e){}
+    el("enterBtn").disabled = true;
+    var j = await api({ ping:true });
+    el("enterBtn").disabled = false;
+    if(j && j.ok){ showChat(); }
+    else if(j && j.reason==="bad_pass"){ el("loginErr").textContent="접속 코드가 올바르지 않습니다."; }
+    else { showChat(); } // 코드 미설정 서버여도 입장 허용(설정 안내는 응답 시)
+  }
+
+  window.ask = function(text){ el("q").value=text; send(); };
+
+  async function send(){
+    var q = el("q").value.trim(); if(!q) return;
+    el("q").value = "";
+    addMsg("me", esc(q));
+    hist.push({ role:"user", content:q }); hist = hist.slice(-12);
+    var t = addMsg("bot", '<span style="color:#6b7280">답변 작성 중…</span>');
+    var j = await api({ messages: hist });
+    if(j && j.ok && j.text){ t.innerHTML = md(j.text); hist.push({ role:"assistant", content:j.text }); }
+    else if(j && j.reason==="no_key"){ t.innerHTML = "AI가 아직 설정되지 않았습니다. 관리자에게 문의하세요. <span style=\"color:#6b7280\">(Vercel 환경변수 OPENAI_API_KEY 필요)</span>"; }
+    else if(j && j.reason==="bad_pass"){ t.innerHTML = "접속 코드가 만료되었거나 올바르지 않습니다. 다시 로그인해 주세요."; try{localStorage.removeItem(PKEY);}catch(e){} setTimeout(function(){ el("chat").style.display="none"; el("login").style.display="block"; },1200); }
+    else { t.innerHTML = "죄송합니다, 답변을 가져오지 못했습니다." + (j&&j.detail?(" <span style=\"color:#6b7280\">("+esc(j.detail)+")</span>"):""); }
+    el("msgs").scrollTop = el("msgs").scrollHeight;
+  }
+
+  el("enterBtn").addEventListener("click", login);
+  el("pass").addEventListener("keydown", function(e){ if(e.key==="Enter") login(); });
+  el("sendBtn").addEventListener("click", send);
+  el("q").addEventListener("keydown", function(e){ if(e.key==="Enter") send(); });
+  el("logoutBtn").addEventListener("click", function(){ try{localStorage.removeItem(PKEY);}catch(e){} hist=[]; el("msgs").innerHTML=""; el("chat").style.display="none"; el("login").style.display="block"; el("pass").value=""; });
+
+  // 이미 코드가 저장돼 있으면 바로 채팅 화면
+  if(pass()){ showChat(); }
+})();
+</script>
+</body>
+</html>
