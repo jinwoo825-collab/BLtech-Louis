@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>비엘테크 · 하이드로겔 제조원가 PMS</title>
+<style>
+  :root{
+    --bg:#f4f6fa; --panel:#ffffff; --ink:#1a2230; --muted:#6b7686;
+    --line:#e2e7ef; --brand:#1e6fd9; --brand-d:#155bb5; --soft:#eef4fd;
+    --green:#12a150; --amber:#c67b00; --red:#e0483d;
+    --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 20px rgba(20,30,50,.05);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Malgun Gothic",sans-serif;
+    background:var(--bg);color:var(--ink);font-size:13.5px;line-height:1.5;}
+  header{display:flex;align-items:center;gap:14px;padding:13px 22px;background:var(--panel);
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;}
+  header .brand{display:flex;flex-direction:column;}
+  header h1{font-size:16px;margin:0;font-weight:700;}
+  header .sub{font-size:11.5px;color:var(--muted);}
+  header .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#1e6fd9,#33c1c9);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;}
+  .spacer{flex:1;}
+  .btn{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;
+    padding:7px 13px;cursor:pointer;font-size:12.5px;transition:.15s;font-weight:500;}
+  .btn:hover{border-color:var(--brand);color:var(--brand);}
+  .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff;}
+  .btn.primary:hover{background:var(--brand-d);color:#fff;}
+  .btn.sm{padding:4px 9px;font-size:11.5px;}
+  .btn.danger:hover{border-color:var(--red);color:var(--red);}
+
+  /* tabs */
+  .tabbar{display:flex;gap:4px;padding:0 22px;background:var(--panel);border-bottom:1px solid var(--line);
+    position:sticky;top:57px;z-index:19;}
+  .tab{padding:11px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;
+    border-bottom:2px solid transparent;margin-bottom:-1px;}
+  .tab:hover{color:var(--ink);}
+  .tab.active{color:var(--brand);border-bottom-color:var(--brand);}
+
+  .wrap{max-width:1280px;margin:0 auto;padding:18px;display:grid;
+    grid-template-columns:1.15fr .85fr;gap:16px;align-items:start;}
+  @media(max-width:960px){.wrap{grid-template-columns:1fr;}}
+  .wrap-single{max-width:1000px;margin:0 auto;padding:18px;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;}
+  .card-h{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);}
+  .card-h .step{width:22px;height:22px;border-radius:6px;background:var(--soft);color:var(--brand);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;}
+  .card-h h2{margin:0;font-size:14px;font-weight:700;}
+  .card-h .note{font-size:11.5px;color:var(--muted);margin-left:auto;}
+  .card-b{padding:14px 16px;}
+
+  table{width:100%;border-collapse:collapse;}
+  .mat-tbl th{font-size:11px;color:var(--muted);text-align:left;font-weight:600;padding:0 6px 6px;}
+  .mat-tbl td{padding:3px 4px;}
+  .mat-tbl input{width:100%;}
+  .contrib{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:var(--brand-d);
+    font-size:12.5px;padding-right:6px;white-space:nowrap;}
+  .contrib.big{color:var(--red);}
+  input,select{border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:13px;
+    font-family:inherit;color:var(--ink);background:#fff;width:100%;}
+  input:focus,select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--soft);}
+  input.num{text-align:right;}
+  .del-x{cursor:pointer;color:var(--muted);font-weight:700;padding:4px 8px;border-radius:6px;text-align:center;}
+  .del-x:hover{background:#fdecea;color:var(--red);}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  .fld label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px;font-weight:500;}
+  .fld .pickwrap{display:flex;gap:6px;}
+  .fld .pickwrap select{flex:0 0 auto;width:auto;max-width:150px;font-size:11.5px;color:var(--muted);}
+  .derived{background:var(--soft);border:1px dashed #c5dbf6;border-radius:8px;padding:8px 11px;
+    display:flex;justify-content:space-between;align-items:center;font-size:12.5px;margin-top:4px;}
+  .derived b{font-weight:700;color:var(--brand-d);}
+
+  .result-hero{background:linear-gradient(135deg,#123a6b,#1e6fd9);color:#fff;border:none;}
+  .result-hero .card-h{border-color:rgba(255,255,255,.15);}
+  .result-hero .card-h h2{color:#fff;}
+  .result-hero .card-h .step{background:rgba(255,255,255,.18);color:#fff;}
+  .hero-main{display:flex;gap:10px;padding:16px;flex-wrap:wrap;}
+  .hero-box{flex:1;min-width:130px;background:rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;}
+  .hero-box .l{font-size:11.5px;opacity:.85;}
+  .hero-box .v{font-size:23px;font-weight:800;margin-top:2px;letter-spacing:-.3px;}
+  .hero-box .v small{font-size:12px;font-weight:600;opacity:.85;}
+  .hero-box.accent{background:#fff;color:var(--brand-d);}
+
+  .rows{padding:6px 16px 14px;}
+  .rrow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .rrow:last-child{border-bottom:none;}
+  .rrow .k{color:var(--muted);}
+  .rrow .k b{color:var(--ink);font-weight:600;}
+  .rrow .v{font-weight:700;font-variant-numeric:tabular-nums;}
+  .rrow.total{font-size:14px;}
+  .rrow.total .v{color:var(--brand-d);font-size:15px;}
+
+  .bar{display:flex;height:22px;border-radius:6px;overflow:hidden;margin:2px 16px 10px;border:1px solid var(--line);}
+  .bar span{height:100%;font-size:0;}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;padding:0 16px 14px;font-size:11.5px;color:var(--muted);}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle;}
+
+  .warn{color:var(--red);font-size:11.5px;margin-top:6px;}
+  .ok{color:var(--green);}
+  .muted{color:var(--muted);}
+  .hgroup{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:2px 0 8px;font-weight:700;}
+
+  .scn-tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .scn-tbl th{text-align:left;color:var(--muted);font-weight:600;font-size:11px;padding:6px 8px;border-bottom:1px solid var(--line);}
+  .scn-tbl td{padding:7px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;}
+  .scn-tbl tr:hover td{background:var(--soft);}
+  .scn-name{font-weight:600;cursor:pointer;}
+  .scn-name:hover{color:var(--brand);}
+  .pill{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--soft);color:var(--brand-d);font-weight:600;}
+  .empty{color:var(--muted);text-align:center;padding:18px;font-size:12.5px;}
+  .addrow{margin-top:8px;}
+  .savehint{font-size:11.5px;color:var(--green);display:flex;align-items:center;gap:5px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">BL</div>
+  <div class="brand">
+    <h1>하이드로겔 제조원가 PMS</h1>
+    <div class="sub">비엘테크(주) · 원주 하이드로겔 사업부 · 공급가 산정 도구</div>
+  </div>
+  <span id="saveStatus" class="savehint" style="margin-right:6px"></span>
+  <div class="spacer"></div>
+  <input type="text" id="scnName" placeholder="시나리오 이름 (예: 원료A안)" style="width:180px">
+  <button class="btn" onclick="saveScenario()">💾 시나리오 저장</button>
+  <button class="btn" onclick="exportData()">백업 내보내기</button>
+  <button class="btn" onclick="document.getElementById('imp').click()">가져오기</button>
+  <input type="file" id="imp" accept=".json" style="display:none" onchange="importData(event)">
+</header>
+
+<div class="tabbar">
+  <div class="tab active" id="tab-calc" onclick="showTab('calc')">원가 계산</div>
+  <div class="tab" id="tab-master" onclick="showTab('master')">단가 마스터 (가격 저장소)</div>
+</div>
+
+<!-- ============ VIEW: 원가 계산 ============ -->
+<div class="view active" id="view-calc">
+<div class="wrap">
+  <!-- LEFT: inputs -->
+  <div>
+    <div class="card">
+      <div class="card-h"><span class="step">1</span><h2>원료 배합 (하이드로겔 쉬트)</h2>
+        <span class="note">Kg당 단가 × 배합비%</span></div>
+      <div class="card-b">
+        <table class="mat-tbl">
+          <thead><tr>
+            <th style="width:34%">원료명</th><th style="width:22%">Kg당 단가 (원)</th>
+            <th style="width:18%">배합비 (%)</th><th style="width:22%;text-align:right">원가 기여 (원/kg)</th><th></th>
+          </tr></thead>
+          <tbody id="matBody"></tbody>
+        </table>
+        <datalist id="matMasterList"></datalist>
+        <button class="btn sm addrow" onclick="addMat()">+ 원료 추가</button>
+        <span class="muted" style="font-size:11.5px;margin-left:8px">원료명을 마스터에 등록해두면 자동으로 단가가 채워집니다.</span>
+        <div class="derived" style="margin-top:12px">
+          <span>배합비 합계 <b id="pctSum">0</b>%</span>
+          <span>배합 원가 <b><span id="blendCost">0</span> 원/kg</b></span>
+        </div>
+        <div id="pctWarn" class="warn" style="display:none">⚠ 배합비 합계가 100%가 아닙니다 — 합계 기준으로 가중평균해 계산합니다.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="step">2</span><h2>원단(쉬트) 사양</h2>
+        <span class="note">평량 → 1㎡당 중량 → 시트 중량</span></div>
+      <div class="card-b">
+        <div class="grid2">
+          <div class="fld"><label>겔 비중 (g/cm³)</label><input class="num" id="gelDensity" type="number" step="0.01"></div>
+          <div class="fld"><label>겔 두께 (mm)</label><input class="num" id="gelThk" type="number" step="0.01"></div>
+        </div>
+        <div class="grid2" style="margin-top:12px">
+          <div class="fld"><label>원단 가로 (mm)</label><input class="num" id="sheetW" type="number" step="1"></div>
+          <div class="fld"><label>원단 세로 (mm)</label><input class="num" id="sheetH" type="number" step="1"></div>
+        </div>
+        <div class="fld" style="margin-top:12px">
+          <label>원단(백킹) 선택 — 단가 마스터 (원/㎡)</label>
+          <select id="fabricPick" onchange="calc()">
+            <option value="">원단 없음 (겔만)</option>
+          </select>
+        </div>
+        <div class="derived" style="margin-top:12px"><span>겔 1㎡당 중량 <span class="muted">= 비중 × 두께</span></span><span><b id="kgPerM2">0</b> kg/㎡ &nbsp;(<span id="gPerM2">0</span> g/㎡)</span></div>
+        <div class="derived"><span>시트 면적 <span class="muted" id="areaTxt"></span></span><span><b id="sheetArea">0</b> ㎡</span></div>
+        <div class="derived"><span>겔 시트 중량</span><span><b id="sheetKg">0</b> kg</span></div>
+        <div class="derived"><span>① 겔 원료비 <span class="muted">(겔중량 × 배합원가)</span></span><span><b id="gelCost">0</b> 원</span></div>
+        <div class="derived"><span>② 원단 원가 <span class="muted" id="fabSrc"></span></span><span><b id="fabCost">0</b> 원</span></div>
+        <div class="derived" style="border:1px solid var(--brand);background:#e7f0fd"><span><b style="color:var(--ink)">겔쉬트 1장 원료비 (①+②)</b></span><span><b id="sheetMatCost">0</b> 원</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="step">3</span><h2>제품 사이즈 · 시트당 생산수량</h2>
+        <span class="note">1쉬트에서 몇 개</span></div>
+      <div class="card-b">
+        <div class="grid3">
+          <div class="fld"><label>제품 가로 (mm)</label><input class="num" id="prodW" type="number" step="1"></div>
+          <div class="fld"><label>제품 세로 (mm)</label><input class="num" id="prodH" type="number" step="1"></div>
+          <div class="fld"><label>제품 간격/여백 (mm)</label><input class="num" id="gap" type="number" step="0.5"></div>
+        </div>
+        <div class="grid2" style="margin-top:12px">
+          <div class="fld">
+            <label>시트당 제품수 (자동계산)</label>
+            <div class="derived" style="margin:0"><span id="autoLayout" class="muted"></span><span><b id="perSheetAuto">0</b> 개</span></div>
+          </div>
+          <div class="fld">
+            <label>수동 지정 (선택 · 비우면 자동값)</label>
+            <input class="num" id="perSheetManual" type="number" step="1" placeholder="자동값 사용">
+          </div>
+        </div>
+        <div class="derived"><span>적용 시트당 제품수 <span class="muted">(면적 ÷ (제품+간격) 기준)</span></span><span><b id="perSheetUsed">0</b> 개</span></div>
+        <div class="derived" style="border:1px solid var(--brand);background:#e7f0fd">
+          <span><b style="color:var(--ink)">제품 1개당 원료비</b> <span class="muted">(겔쉬트 1장 원료비 ÷ 시트당 제품수)</span></span>
+          <span><b id="unitMatCostBox">0</b> 원</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="step">4</span><h2>포장 (파우치 · 박스)</h2></div>
+      <div class="card-b">
+        <div class="hgroup">파우치</div>
+        <div class="grid2">
+          <div class="fld"><label>파우치 단가 (원/개)</label>
+            <div class="pickwrap">
+              <select id="pouchPick" onchange="pickPrice('pouch',this.value)"><option value="">직접입력</option></select>
+              <input class="num" id="pouchPrice" type="number" step="1">
+            </div>
+          </div>
+          <div class="fld"><label>1파우치당 제품수 (개)</label><input class="num" id="prodPerPouch" type="number" step="1"></div>
+        </div>
+        <div class="hgroup" style="margin-top:14px">박스</div>
+        <div class="grid2">
+          <div class="fld"><label>박스 단가 (원/개)</label>
+            <div class="pickwrap">
+              <select id="boxPick" onchange="pickPrice('box',this.value)"><option value="">직접입력</option></select>
+              <input class="num" id="boxPrice" type="number" step="1">
+            </div>
+          </div>
+          <div class="fld"><label>1박스당 파우치수 (개)</label><input class="num" id="pouchPerBox" type="number" step="1"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="step">5</span><h2>로스 · 목표 마진</h2>
+        <span class="note">로스는 파우치 단위</span></div>
+      <div class="card-b">
+        <div class="grid2">
+          <div class="fld"><label>로스율 (%) · 파우치 단위</label><input class="num" id="lossPct" type="number" step="0.1"></div>
+          <div class="fld"><label>목표 마진율 (%) · 공급가 산정</label><input class="num" id="marginPct" type="number" step="0.5"></div>
+        </div>
+        <div class="derived"><span>파우치 1개 로스 시 손실액</span><span><b id="lossPerPouch">0</b> 원</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="step">6</span><h2>인건비 · 기타 제조비용</h2>
+        <span class="note">1일 생산 CAPA로 배분</span></div>
+      <div class="card-b">
+        <div class="hgroup">인건비 (1일 기준) · 단가 마스터에서 인력수준 선택</div>
+        <table class="mat-tbl">
+          <thead><tr><th style="width:50%">인력 수준</th><th>인원수</th><th style="text-align:right">1일 인건비</th><th></th></tr></thead>
+          <tbody id="laborBody"></tbody>
+        </table>
+        <button class="btn sm addrow" onclick="addLabor()">+ 인력 추가</button>
+        <div class="derived" style="margin-top:10px"><span>1일 총 인건비</span><span><b id="dailyLabor">0</b> 원/일</span></div>
+
+        <div class="hgroup" style="margin-top:16px">기타 제조비용 (월 기준 · 단가 마스터 합계)</div>
+        <div id="ohList" class="muted" style="font-size:12px;line-height:1.9"></div>
+        <div class="derived" style="margin-top:6px"><span>월 기타비용 합계</span><span><b id="monthlyOH">0</b> 원/월</span></div>
+
+        <div class="grid2" style="margin-top:12px">
+          <div class="fld"><label>월 가동일수 (일/월)</label><input class="num" id="opDays" type="number" step="1"></div>
+          <div class="fld"><label>1일 생산 CAPA (개/일)</label><input class="num" id="capa" type="number" step="1"></div>
+        </div>
+        <div class="derived"><span>1일 기타비용 <span class="muted">(월합계 ÷ 가동일수)</span></span><span><b id="dailyOH">0</b> 원/일</span></div>
+        <div class="derived"><span>제품당 인건비 <span class="muted">(1일 인건비 ÷ CAPA)</span></span><span><b id="laborUnit">0</b> 원</span></div>
+        <div class="derived"><span>제품당 기타비용 <span class="muted">(1일 기타 ÷ CAPA)</span></span><span><b id="ohUnit">0</b> 원</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: results -->
+  <div>
+    <div class="card result-hero">
+      <div class="card-h"><span class="step">✓</span><h2>제조원가 결과</h2></div>
+      <div class="hero-main">
+        <div class="hero-box"><div class="l">제조원가 / 개</div><div class="v"><span id="rCostUnit">0</span><small> 원</small></div></div>
+        <div class="hero-box accent"><div class="l">권장 공급가 / 개</div><div class="v"><span id="rSupply">0</span><small> 원</small></div></div>
+      </div>
+      <div class="hero-main" style="padding-top:0">
+        <div class="hero-box"><div class="l">제조원가 / 파우치</div><div class="v" style="font-size:19px"><span id="rCostPouch">0</span><small> 원</small></div></div>
+        <div class="hero-box"><div class="l">제조원가 / 박스</div><div class="v" style="font-size:19px"><span id="rCostBox">0</span><small> 원</small></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="step">₩</span><h2>제품 1개 원가 구성</h2></div>
+      <div class="bar" id="costBar"></div>
+      <div class="legend">
+        <span><i style="background:#1e6fd9"></i>원료비 <b id="lgMat">0</b>원</span>
+        <span><i style="background:#33c1c9"></i>파우치 <b id="lgPouch">0</b>원</span>
+        <span><i style="background:#8bb8f0"></i>박스 <b id="lgBox">0</b>원</span>
+        <span><i style="background:#e0483d"></i>로스 <b id="lgLoss">0</b>원</span>
+        <span><i style="background:#f0a935"></i>인건비 <b id="lgLabor">0</b>원</span>
+        <span><i style="background:#9b8cff"></i>기타비용 <b id="lgOH">0</b>원</span>
+      </div>
+      <div class="rows">
+        <div class="rrow"><span class="k">원료비 <b>(시트원료비 ÷ 시트당 제품수)</b></span><span class="v"><span id="rMat">0</span> 원</span></div>
+        <div class="rrow"><span class="k">파우치비 <b>(파우치단가 ÷ 파우치당 제품수)</b></span><span class="v"><span id="rPouch">0</span> 원</span></div>
+        <div class="rrow"><span class="k">박스비 <b>(박스단가 ÷ 박스당 제품수)</b></span><span class="v"><span id="rBox">0</span> 원</span></div>
+        <div class="rrow"><span class="k">소계 (로스 전)</span><span class="v"><span id="rSub">0</span> 원</span></div>
+        <div class="rrow"><span class="k">로스 반영 (<span id="rLossPct">0</span>%)</span><span class="v">+ <span id="rLoss">0</span> 원</span></div>
+        <div class="rrow"><span class="k">재료·포장 계 (로스 후)</span><span class="v"><span id="rSubLoss">0</span> 원</span></div>
+        <div class="rrow"><span class="k">인건비 / 개 <b>(1일 인건비 ÷ CAPA)</b></span><span class="v">+ <span id="rLabor">0</span> 원</span></div>
+        <div class="rrow"><span class="k">기타제조비 / 개 <b>(1일 기타 ÷ CAPA)</b></span><span class="v">+ <span id="rOH">0</span> 원</span></div>
+        <div class="rrow total"><span class="k"><b>최종 제조원가 / 개</b></span><span class="v"><span id="rTotal">0</span> 원</span></div>
+        <div class="rrow"><span class="k">예상 이익 / 개 (마진 <span id="rMarginPct">0</span>%)</span><span class="v ok">+ <span id="rProfit">0</span> 원</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="step">≡</span><h2>시나리오 비교</h2>
+        <span class="note">원료 변경안별 원가/공급가</span></div>
+      <div class="card-b" style="padding:0">
+        <table class="scn-tbl">
+          <thead><tr><th>시나리오</th><th style="text-align:right">배합원가<br>(원/kg)</th><th style="text-align:right">제조원가<br>(원/개)</th><th style="text-align:right">공급가<br>(원/개)</th><th></th></tr></thead>
+          <tbody id="scnBody"></tbody>
+        </table>
+        <div id="scnEmpty" class="empty">상단 이름 입력 후 <b>시나리오 저장</b>하면 현재 조건이 여기에 쌓여 비교됩니다.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ VIEW: 단가 마스터 ============ -->
+<div class="view" id="view-master">
+<div class="wrap-single">
+  <div class="card">
+    <div class="card-h"><span class="step">💾</span><h2>단가 마스터 — 가격을 한 번 등록해 두면 계산에 불러 씁니다</h2>
+      <span class="note savehint">✔ 자동 저장됨</span></div>
+    <div class="card-b">
+      <span class="muted" style="font-size:12px">여기서 등록한 단가는 브라우저에 저장되어, 원가 계산 화면의 원료명·파우치·박스 선택에 자동으로 연결됩니다.</span>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-h"><h2>① 원료 단가 (원/kg)</h2></div>
+      <div class="card-b">
+        <table class="mat-tbl"><thead><tr><th style="width:58%">원료명</th><th>단가(원/kg)</th><th></th></tr></thead>
+          <tbody id="mMaterial"></tbody></table>
+        <button class="btn sm addrow" onclick="addPM('material')">+ 원료 단가 추가</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h2>② 원단 단가 (원/㎡)</h2></div>
+      <div class="card-b">
+        <table class="mat-tbl"><thead><tr><th style="width:62%">품목명</th><th>단가(원/㎡)</th><th></th></tr></thead>
+          <tbody id="mFabric"></tbody></table>
+        <button class="btn sm addrow" onclick="addPM('fabric')">+ 원단 단가 추가</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h2>③ 파우치 단가 (원/개)</h2></div>
+      <div class="card-b">
+        <table class="mat-tbl"><thead><tr><th style="width:58%">품목명</th><th>단가(원/개)</th><th></th></tr></thead>
+          <tbody id="mPouch"></tbody></table>
+        <button class="btn sm addrow" onclick="addPM('pouch')">+ 파우치 단가 추가</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h2>④ 박스 단가 (원/개)</h2></div>
+      <div class="card-b">
+        <table class="mat-tbl"><thead><tr><th style="width:58%">품목명</th><th>단가(원/개)</th><th></th></tr></thead>
+          <tbody id="mBox"></tbody></table>
+        <button class="btn sm addrow" onclick="addPM('box')">+ 박스 단가 추가</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h2>⑤ 인건비 (인력수준 · 일당)</h2></div>
+      <div class="card-b">
+        <table class="mat-tbl"><thead><tr><th style="width:58%">인력 수준</th><th>일당(원/인·일)</th><th></th></tr></thead>
+          <tbody id="mLabor"></tbody></table>
+        <button class="btn sm addrow" onclick="addPM('labor')">+ 인력 수준 추가</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h2>⑥ 기타 제조비용 (월 비용)</h2></div>
+      <div class="card-b">
+        <table class="mat-tbl"><thead><tr><th style="width:58%">항목</th><th>월 비용(원/월)</th><th></th></tr></thead>
+          <tbody id="mOverhead"></tbody></table>
+        <button class="btn sm addrow" onclick="addPM('overhead')">+ 기타비용 항목 추가</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const KEY='bltech_hydrogel_pms_v2';
+let materials=[];
+let scenarios=[];
+let master={material:[],fabric:[],pouch:[],box:[],labor:[],overhead:[]};
+let laborLines=[];
+
+const INP_IDS=['fabricPick','gelDensity','gelThk','sheetW','sheetH','prodW','prodH','gap','perSheetManual','pouchPrice','prodPerPouch','boxPrice','pouchPerBox','lossPct','marginPct','opDays','capa'];
+let _savedInp=null;
+const defaults={gelDensity:1.0,gelThk:1.0,sheetW:300,sheetH:400,prodW:50,prodH:70,gap:0,perSheetManual:'',
+  pouchPrice:80,prodPerPouch:1,boxPrice:500,pouchPerBox:100,lossPct:3,marginPct:30,opDays:22,capa:2000};
+const DEF_LABOR=[{name:'숙련공',price:150000},{name:'일반공',price:110000},{name:'보조',price:90000}];
+const DEF_OVERHEAD=[{name:'수도광열비',price:3000000},{name:'소모품비',price:1500000},{name:'임대료',price:4000000},{name:'감가상각비',price:2500000},{name:'수선유지비',price:1000000},{name:'보험료',price:800000},{name:'기타비용',price:1000000}];
+const DEF_LABORLINES=[{level:'숙련공',count:1},{level:'일반공',count:2}];
+
+function seed(){
+  materials=[
+    {name:'한천', price:39000, pct:0.465},
+    {name:'물', price:200, pct:69.28},
+    {name:'as-58', price:34000, pct:2.77},
+    {name:'fhs', price:19000, pct:4.55},
+    {name:'글리세린', price:3700, pct:17.81},
+    {name:'edta', price:15000, pct:0.228},
+    {name:'al-g', price:15000, pct:0.228},
+    {name:'에탄올', price:3000, pct:4.65},
+    {name:'향료', price:300000, pct:0.01},
+  ];
+  Object.entries(defaults).forEach(([k,v])=>{const el=document.getElementById(k); if(el) el.value=v;});
+  master={
+    material:materials.map(m=>({name:m.name,price:m.price})),
+    fabric:[{name:'외부구매 원단(예시)',price:5000}],
+    pouch:[{name:'표준 파우치',price:80}],
+    box:[{name:'표준 박스',price:500}],
+    labor:JSON.parse(JSON.stringify(DEF_LABOR)),
+    overhead:JSON.parse(JSON.stringify(DEF_OVERHEAD))
+  };
+  laborLines=JSON.parse(JSON.stringify(DEF_LABORLINES));
+}
+
+/* ---------- state ---------- */
+function collect(){
+  const inp={};
+  INP_IDS.forEach(id=>inp[id]=document.getElementById(id).value);
+  return {materials:JSON.parse(JSON.stringify(materials)), laborLines:JSON.parse(JSON.stringify(laborLines)), inp};
+}
+function applyState(s){
+  if(s.materials) materials=s.materials;
+  if(s.laborLines) laborLines=s.laborLines;
+  if(s.inp) Object.entries(s.inp).forEach(([k,v])=>{const el=document.getElementById(k); if(el) el.value=v;});
+}
+function persist(){
+  const s=document.getElementById('saveStatus');
+  try{
+    localStorage.setItem(KEY, JSON.stringify({current:collect(), scenarios, master}));
+    if(s){ const d=new Date();
+      s.textContent='✔ 자동 저장됨 '+d.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+      s.style.color='var(--green)'; }
+  }catch(e){
+    if(s){ s.textContent='⚠ 저장 실패 — [백업 내보내기]로 파일 저장하세요'; s.style.color='var(--red)'; }
+  }
+}
+function load(){
+  const raw=localStorage.getItem(KEY);
+  if(!raw) return false;
+  try{
+    const d=JSON.parse(raw);
+    scenarios=d.scenarios||[];
+    if(d.master) master=Object.assign({material:[],fabric:[],pouch:[],box:[],labor:[],overhead:[]}, d.master);
+    if(d.current){ applyState(d.current); _savedInp=d.current.inp; }
+    if(!d.master && d.current){ // build master from current if absent
+      master.material=(d.current.materials||[]).map(m=>({name:m.name,price:m.price}));
+      master.pouch=[{name:'표준 파우치',price:+d.current.inp.pouchPrice||0}];
+      master.box=[{name:'표준 박스',price:+d.current.inp.boxPrice||0}];
+    }
+    // 기존 데이터에 인건비·기타비용이 없으면 예시값으로 채움
+    if(!master.labor || !master.labor.length) master.labor=JSON.parse(JSON.stringify(DEF_LABOR));
+    if(!master.overhead || !master.overhead.length) master.overhead=JSON.parse(JSON.stringify(DEF_OVERHEAD));
+    if(!laborLines || !laborLines.length) laborLines=JSON.parse(JSON.stringify(DEF_LABORLINES));
+    return true;
+  }catch(e){ return false; }
+}
+
+/* ---------- blend table ---------- */
+function renderMats(){
+  const tb=document.getElementById('matBody');
+  tb.innerHTML=materials.map((m,i)=>`
+    <tr>
+      <td><input list="matMasterList" value="${escAttr(m.name)}" oninput="updMat(${i},'name',this.value)" onchange="autofillMat(${i})"></td>
+      <td><input class="num" type="number" step="1" value="${m.price}" oninput="updMat(${i},'price',this.value)"></td>
+      <td><input class="num" type="number" step="0.001" value="${m.pct}" oninput="updMat(${i},'pct',this.value)"></td>
+      <td class="contrib" id="contrib-${i}">0</td>
+      <td><div class="del-x" onclick="delMat(${i})">✕</div></td>
+    </tr>`).join('');
+}
+function addMat(){ materials.push({name:'',price:0,pct:0}); renderMats(); calc(); }
+function delMat(i){ materials.splice(i,1); renderMats(); calc(); }
+function updMat(i,f,v){ materials[i][f]= f==='name'?v:parseFloat(v)||0; calc(); }
+function autofillMat(i){
+  const hit=master.material.find(x=>x.name && x.name===materials[i].name);
+  if(hit){ materials[i].price=hit.price; renderMats(); calc(); }
+}
+
+/* ---------- price master ---------- */
+function renderMaster(){
+  renderPM('material','mMaterial',false);
+  renderPM('fabric','mFabric',false);
+  renderPM('pouch','mPouch',false);
+  renderPM('box','mBox',false);
+  renderPM('labor','mLabor',false);
+  renderPM('overhead','mOverhead',false);
+  refreshLinks();
+}
+function refreshLinks(){
+  // datalist for blend material names
+  document.getElementById('matMasterList').innerHTML=
+    master.material.map(m=>`<option value="${escAttr(m.name)}">${fmt(m.price,0)}원/kg</option>`).join('');
+  // pickers (원단/파우치/박스)
+  fillPicker('fabricPick','fabric','원단 없음 (겔만)');
+  fillPicker('pouchPick','pouch');
+  fillPicker('boxPick','box');
+  // 인건비 라인 선택지 + 기타비용 목록
+  renderLabor();
+  const oh=document.getElementById('ohList');
+  if(oh) oh.innerHTML = master.overhead.length
+    ? master.overhead.map(o=>`${esc(o.name||'(항목)')} <b>${fmt(o.price,0)}</b>`).join('  ·  ')
+    : '(등록된 기타비용 없음 — 단가 마스터에서 추가)';
+}
+
+/* ---------- 인건비 라인 (원가계산 6번) ---------- */
+function renderLabor(){
+  const tb=document.getElementById('laborBody'); if(!tb) return;
+  const opts=master.labor.map(l=>`<option value="${escAttr(l.name)}">${esc(l.name)} · ${fmt(l.price,0)}원/일</option>`).join('');
+  tb.innerHTML=laborLines.map((ln,i)=>`
+    <tr>
+      <td><select onchange="updLabor(${i},'level',this.value)"><option value="">인력 선택</option>${opts}</select></td>
+      <td><input class="num" type="number" step="1" value="${ln.count}" oninput="updLabor(${i},'count',this.value)"></td>
+      <td class="contrib" id="laborSub-${i}">0</td>
+      <td><div class="del-x" onclick="delLabor(${i})">✕</div></td>
+    </tr>`).join('');
+  laborLines.forEach((ln,i)=>{ const s=tb.querySelectorAll('select')[i]; if(s) s.value=ln.level||''; });
+}
+function addLabor(){ laborLines.push({level:'',count:1}); renderLabor(); calc(); }
+function delLabor(i){ laborLines.splice(i,1); renderLabor(); calc(); }
+function updLabor(i,f,v){ laborLines[i][f]= f==='count'?(parseFloat(v)||0):v; calc(); }
+function renderPM(cat,tbid,hasUnit){
+  const tb=document.getElementById(tbid);
+  tb.innerHTML=master[cat].map((r,i)=>`
+    <tr>
+      <td><input value="${escAttr(r.name)}" oninput="updPM('${cat}',${i},'name',this.value)"></td>
+      <td><input class="num" type="number" step="1" value="${r.price}" oninput="updPM('${cat}',${i},'price',this.value)"></td>
+      ${hasUnit?`<td><input value="${escAttr(r.unit||'')}" oninput="updPM('${cat}',${i},'unit',this.value)"></td>`:''}
+      <td><div class="del-x" onclick="delPM('${cat}',${i})">✕</div></td>
+    </tr>`).join('');
+}
+function addPM(cat){ master[cat].push({name:'',price:0}); renderMaster(); persist(); }
+function delPM(cat,i){ master[cat].splice(i,1); renderMaster(); persist(); }
+function updPM(cat,i,f,v){ master[cat][i][f]= f==='price'?(parseFloat(v)||0):v; refreshLinks(); calc(); persist(); }
+function fillPicker(selId,cat,emptyLabel){
+  const sel=document.getElementById(selId);
+  const cur=sel.value;
+  sel.innerHTML='<option value="">'+(emptyLabel||'직접입력')+'</option>'+
+    master[cat].map((r,i)=>`<option value="${i}">${escAttr(r.name||'(무명)')} · ${fmt(r.price,0)}원</option>`).join('');
+  sel.value=cur;
+}
+function pickPrice(cat,idx){
+  if(idx===''){ return; }
+  const r=master[cat][+idx]; if(!r) return;
+  document.getElementById(cat==='pouch'?'pouchPrice':'boxPrice').value=r.price;
+  calc();
+}
+
+/* ---------- calc ---------- */
+function num(id){ return parseFloat(document.getElementById(id).value)||0; }
+function calc(){
+  const pctSum=materials.reduce((s,m)=>s+(m.pct||0),0);
+  const blend= pctSum>0 ? materials.reduce((s,m)=>s+m.price*m.pct,0)/pctSum : 0;
+  document.getElementById('pctSum').textContent=fmt(pctSum,3);
+  document.getElementById('blendCost').textContent=fmt(blend,1);
+  document.getElementById('pctWarn').style.display=(pctSum>0 && Math.abs(pctSum-100)>0.01)?'block':'none';
+  // per-material contribution
+  materials.forEach((m,i)=>{
+    const cell=document.getElementById('contrib-'+i); if(!cell) return;
+    const c= pctSum>0 ? m.price*m.pct/pctSum : 0;
+    cell.textContent=fmt(c,1);
+    cell.classList.toggle('big', blend>0 && c/blend>0.35);
+  });
+
+  const dens=num('gelDensity'), thk=num('gelThk'), sW=num('sheetW'), sH=num('sheetH');
+  const kgPerM2=dens*thk, gsm=kgPerM2*1000;      // 겔 1㎡당 중량 = 비중 × 두께
+  const area=(sW/1000)*(sH/1000);
+  const gelKg=kgPerM2*area;                       // 겔 시트 중량
+  const gelCost=gelKg*blend;                      // ① 겔 원료비
+  const fabSel=document.getElementById('fabricPick').value;
+  let fabPrice=0, fabSrc='(원단 없음)';
+  if(fabSel!=='' && master.fabric[+fabSel]){
+    fabPrice=master.fabric[+fabSel].price;
+    fabSrc=`(${fmt(fabPrice,0)}원/㎡ × ${fmt(area,4)}㎡)`;
+  }
+  const fabCost=fabPrice*area;                    // ② 원단 원가
+  const sheetMat=gelCost+fabCost;                 // 겔쉬트 1장 원료비 = ① + ②
+  set('kgPerM2',fmt(kgPerM2,3)); set('gPerM2',fmt(gsm,0)); set('sheetArea',fmt(area,4));
+  document.getElementById('areaTxt').textContent=`(${fmt(sW,0)}×${fmt(sH,0)}mm)`;
+  set('sheetKg',fmt(gelKg,4)); set('gelCost',fmt(gelCost,1)); set('fabCost',fmt(fabCost,1));
+  document.getElementById('fabSrc').textContent=fabSrc;
+  set('sheetMatCost',fmt(sheetMat,1));
+
+  const pW=num('prodW'), pH=num('prodH'), gap=num('gap');
+  const cellW=pW+gap, cellH=pH+gap, cellArea=cellW*cellH;   // 제품셀 = 제품 + 간격
+  const auto = cellArea>0 ? Math.floor((sW*sH)/cellArea) : 0; // 이론 최대치 = 시트면적 ÷ 셀면적
+  set('perSheetAuto',fmt(auto,0));
+  document.getElementById('autoLayout').textContent=cellArea>0?`면적 ÷ 셀(${fmt(cellW,0)}×${fmt(cellH,0)}mm)`:'';
+  const manual=document.getElementById('perSheetManual').value;
+  const perSheet=(manual!=='' && +manual>0)? +manual : auto;
+
+  const matUnit = perSheet>0 ? sheetMat/perSheet : 0;
+  set('perSheetUsed',fmt(perSheet,0));
+  set('unitMatCostBox',fmt(matUnit,2));
+  const ppp=num('prodPerPouch'), ppb=num('pouchPerBox');
+  const pouchUnit = ppp>0 ? num('pouchPrice')/ppp : 0;
+  const boxUnit = (ppp>0 && ppb>0) ? num('boxPrice')/(ppb*ppp) : 0;
+  const sub = matUnit+pouchUnit+boxUnit;
+
+  const loss=num('lossPct');
+  const lossMult = loss<100 ? 1/(1-loss/100) : 1;
+  const subLoss = sub*lossMult, lossAdd = subLoss-sub;   // 재료·포장 (로스 반영)
+
+  // ===== 인건비 · 기타 제조비용 (6번) =====
+  let dailyLabor=0;
+  laborLines.forEach((ln,i)=>{
+    const lv=master.labor.find(x=>x.name===ln.level);
+    const d = lv ? lv.price*(ln.count||0) : 0;
+    dailyLabor+=d;
+    const cell=document.getElementById('laborSub-'+i); if(cell) cell.textContent=fmt(d,0);
+  });
+  const monthlyOH = master.overhead.reduce((s,o)=>s+(o.price||0),0);
+  const opDays=num('opDays'), capa=num('capa');
+  const dailyOH = opDays>0 ? monthlyOH/opDays : 0;
+  const laborUnit = capa>0 ? dailyLabor/capa : 0;      // 제품당 인건비
+  const ohUnit = capa>0 ? dailyOH/capa : 0;            // 제품당 기타비용
+  set('dailyLabor',fmt(dailyLabor,0)); set('monthlyOH',fmt(monthlyOH,0)); set('dailyOH',fmt(dailyOH,0));
+  set('laborUnit',fmt(laborUnit,2)); set('ohUnit',fmt(ohUnit,2));
+
+  const total = subLoss + laborUnit + ohUnit;          // 최종 제조원가 / 개
+  const margin=num('marginPct');
+  const supply = margin<100 ? total/(1-margin/100) : total;
+  const profit = supply-total;
+  const costPouch = total*ppp, costBox = costPouch*ppb;
+  const lossPerPouch = sub*ppp*(lossMult-1);
+
+  set('rMat',fmt(matUnit,2)); set('rPouch',fmt(pouchUnit,2)); set('rBox',fmt(boxUnit,2));
+  set('rSub',fmt(sub,2)); set('rLoss',fmt(lossAdd,2)); set('rLossPct',fmt(loss,1)); set('rSubLoss',fmt(subLoss,2));
+  set('rLabor',fmt(laborUnit,2)); set('rOH',fmt(ohUnit,2));
+  set('rTotal',fmt(total,1)); set('rMarginPct',fmt(margin,1)); set('rProfit',fmt(profit,1));
+  set('rCostUnit',fmt(total,1)); set('rSupply',fmt(supply,1));
+  set('rCostPouch',fmt(costPouch,0)); set('rCostBox',fmt(costBox,0));
+  set('lossPerPouch',fmt(lossPerPouch,1));
+  set('lgMat',fmt(matUnit,1)); set('lgPouch',fmt(pouchUnit,1)); set('lgBox',fmt(boxUnit,1));
+  set('lgLoss',fmt(lossAdd,1)); set('lgLabor',fmt(laborUnit,1)); set('lgOH',fmt(ohUnit,1));
+  const segs=[[matUnit,'#1e6fd9'],[pouchUnit,'#33c1c9'],[boxUnit,'#8bb8f0'],[lossAdd,'#e0483d'],[laborUnit,'#f0a935'],[ohUnit,'#9b8cff']];
+  document.getElementById('costBar').innerHTML= total>0 ? segs.map(([v,c])=>`<span style="width:${v/total*100}%;background:${c}"></span>`).join('') : '';
+
+  window._calc={blend,total,supply};
+  persist();
+}
+function set(id,v){ const e=document.getElementById(id); if(e) e.textContent=v; }
+
+/* ---------- scenarios ---------- */
+function saveScenario(){
+  const name=document.getElementById('scnName').value.trim() || ('시나리오 '+(scenarios.length+1));
+  const c=window._calc||{blend:0,total:0,supply:0};
+  scenarios.push({id:''+Date.now()+Math.random().toString(36).slice(2,6), name,
+    state:collect(), blend:c.blend, total:c.total, supply:c.supply});
+  document.getElementById('scnName').value='';
+  renderScns(); persist();
+}
+function renderScns(){
+  const tb=document.getElementById('scnBody'), emp=document.getElementById('scnEmpty');
+  if(scenarios.length===0){ tb.innerHTML=''; emp.style.display='block'; return; }
+  emp.style.display='none';
+  const minTotal=Math.min(...scenarios.map(s=>s.total));
+  tb.innerHTML=scenarios.map(s=>`
+    <tr>
+      <td class="scn-name" onclick="loadScn('${s.id}')" title="클릭하면 이 조건을 불러옵니다">
+        ${esc(s.name)} ${s.total===minTotal?'<span class="pill">최저</span>':''}</td>
+      <td style="text-align:right">${fmt(s.blend,0)}</td>
+      <td style="text-align:right"><b>${fmt(s.total,1)}</b></td>
+      <td style="text-align:right">${fmt(s.supply,1)}</td>
+      <td style="text-align:right"><span class="del-x" onclick="delScn('${s.id}')">✕</span></td>
+    </tr>`).join('');
+}
+function loadScn(id){
+  const s=scenarios.find(x=>x.id===id); if(!s) return;
+  applyState(s.state); renderMats(); calc();
+  document.getElementById('scnName').value=s.name;
+}
+function delScn(id){ scenarios=scenarios.filter(x=>x.id!==id); renderScns(); persist(); }
+
+/* ---------- tabs ---------- */
+function showTab(t){
+  document.getElementById('view-calc').classList.toggle('active',t==='calc');
+  document.getElementById('view-master').classList.toggle('active',t==='master');
+  document.getElementById('tab-calc').classList.toggle('active',t==='calc');
+  document.getElementById('tab-master').classList.toggle('active',t==='master');
+}
+
+/* ---------- utils ---------- */
+function fmt(n,d=0){ if(!isFinite(n)) n=0;
+  return Number(n).toLocaleString('ko-KR',{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function esc(s){ return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function escAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
+
+/* ---------- import/export ---------- */
+function exportData(){
+  const blob=new Blob([JSON.stringify({current:collect(),scenarios,master},null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='hydrogel-cost-'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+}
+function importData(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const d=JSON.parse(r.result);
+    if(d.current) applyState(d.current);
+    if(d.scenarios) scenarios=d.scenarios;
+    if(d.master) master=Object.assign({material:[],fabric:[],pouch:[],box:[]}, d.master);
+    renderMats(); renderMaster(); renderScns(); calc(); alert('가져오기 완료');
+  }catch(e){ alert('파일을 읽을 수 없습니다'); } };
+  r.readAsText(f); ev.target.value='';
+}
+
+/* ---------- init ---------- */
+if(!load()){ seed(); }
+renderMats(); renderMaster(); renderScns();
+// restore picker selections after options exist
+if(_savedInp && _savedInp.fabricPick!==undefined){ const e=document.getElementById('fabricPick'); if(e) e.value=_savedInp.fabricPick; }
+// 이벤트 위임: view-calc 안의 모든 input/select 변경을 확실히 재계산에 연결
+const _vc=document.getElementById('view-calc');
+_vc.addEventListener('input',calc);
+_vc.addEventListener('change',calc);
+calc();
+</script>
+</body>
+</html>
