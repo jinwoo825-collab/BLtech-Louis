@@ -182,16 +182,18 @@
           <div class="fld"><label>원단 세로 (mm)</label><input class="num" id="sheetH" type="number" step="1"></div>
         </div>
         <div class="fld" style="margin-top:12px">
-          <label>원단(백킹) 선택 — 단가 마스터 (원/㎡)</label>
-          <select id="fabricPick" onchange="calc()">
-            <option value="">원단 없음 (겔만)</option>
-          </select>
+          <label>원단(백킹) — 여러 겹 선택 가능 (단가 마스터, 원/㎡)</label>
+          <table class="mat-tbl">
+            <thead><tr><th style="width:66%">원단 선택</th><th style="text-align:right">원가(원)</th><th></th></tr></thead>
+            <tbody id="fabricBody"></tbody>
+          </table>
+          <button class="btn sm addrow" onclick="addFabric()">+ 원단 겹 추가</button>
         </div>
         <div class="derived" style="margin-top:12px"><span>겔 1㎡당 중량 <span class="muted">= 비중 × 두께</span></span><span><b id="kgPerM2">0</b> kg/㎡ &nbsp;(<span id="gPerM2">0</span> g/㎡)</span></div>
         <div class="derived"><span>시트 면적 <span class="muted" id="areaTxt"></span></span><span><b id="sheetArea">0</b> ㎡</span></div>
         <div class="derived"><span>겔 시트 중량</span><span><b id="sheetKg">0</b> kg</span></div>
         <div class="derived"><span>① 겔 원료비 <span class="muted">(겔중량 × 배합원가)</span></span><span><b id="gelCost">0</b> 원</span></div>
-        <div class="derived"><span>② 원단 원가 <span class="muted" id="fabSrc"></span></span><span><b id="fabCost">0</b> 원</span></div>
+        <div class="derived"><span>② 원단 원가 <span class="muted" id="fabSrc">(원단 겹 합계 × 면적)</span></span><span><b id="fabCost">0</b> 원</span></div>
         <div class="derived" style="border:1px solid var(--brand);background:#e7f0fd"><span><b style="color:var(--ink)">겔쉬트 1장 원료비 (①+②)</b></span><span><b id="sheetMatCost">0</b> 원</span></div>
       </div>
     </div>
@@ -236,16 +238,13 @@
           </div>
           <div class="fld"><label>1파우치당 제품수 (개)</label><input class="num" id="prodPerPouch" type="number" step="1"></div>
         </div>
-        <div class="hgroup" style="margin-top:14px">박스</div>
-        <div class="grid2">
-          <div class="fld"><label>박스 단가 (원/개)</label>
-            <div class="pickwrap">
-              <select id="boxPick" onchange="pickPrice('box',this.value)"><option value="">직접입력</option></select>
-              <input class="num" id="boxPrice" type="number" step="1">
-            </div>
-          </div>
-          <div class="fld"><label>1박스당 파우치수 (개)</label><input class="num" id="pouchPerBox" type="number" step="1"></div>
-        </div>
+        <div class="hgroup" style="margin-top:14px">박스 (이너박스 → 아웃박스 순서로 추가 · 여러 단계 가능)</div>
+        <table class="mat-tbl">
+          <thead><tr><th style="width:42%">박스 선택</th><th style="width:32%">입수량</th><th style="text-align:right">원가/제품</th><th></th></tr></thead>
+          <tbody id="boxBody"></tbody>
+        </table>
+        <button class="btn sm addrow" onclick="addBox()">+ 박스 추가 (아웃박스 등)</button>
+        <div class="derived" style="margin-top:8px"><span>박스 원가 합계 / 제품</span><span><b id="boxCostSum">0</b> 원</span></div>
       </div>
     </div>
 
@@ -412,11 +411,13 @@ let materials=[];
 let scenarios=[];
 let master={material:[],fabric:[],pouch:[],box:[],labor:[],overhead:[]};
 let laborLines=[];
+let fabricLines=[];   // 원단(백킹) 여러 겹
+let boxLines=[];      // 박스 여러 단계(이너→아웃)
 
-const INP_IDS=['fabricPick','gelDensity','gelThk','sheetW','sheetH','prodW','prodH','gap','perSheetManual','pouchPrice','prodPerPouch','boxPrice','pouchPerBox','lossPct','marginPct','opDays','capa'];
+const INP_IDS=['gelDensity','gelThk','sheetW','sheetH','prodW','prodH','gap','perSheetManual','pouchPrice','prodPerPouch','lossPct','marginPct','opDays','capa'];
 let _savedInp=null;
 const defaults={gelDensity:1.0,gelThk:1.0,sheetW:300,sheetH:400,prodW:50,prodH:70,gap:0,perSheetManual:'',
-  pouchPrice:80,prodPerPouch:1,boxPrice:500,pouchPerBox:100,lossPct:3,marginPct:30,opDays:22,capa:2000};
+  pouchPrice:80,prodPerPouch:1,lossPct:3,marginPct:30,opDays:22,capa:2000};
 const DEF_LABOR=[{name:'숙련공',price:150000},{name:'일반공',price:110000},{name:'보조',price:90000}];
 const DEF_OVERHEAD=[{name:'수도광열비',price:3000000},{name:'소모품비',price:1500000},{name:'임대료',price:4000000},{name:'감가상각비',price:2500000},{name:'수선유지비',price:1000000},{name:'보험료',price:800000},{name:'기타비용',price:1000000}];
 const DEF_LABORLINES=[{level:'숙련공',count:1},{level:'일반공',count:2}];
@@ -436,24 +437,29 @@ function seed(){
   Object.entries(defaults).forEach(([k,v])=>{const el=document.getElementById(k); if(el) el.value=v;});
   master={
     material:materials.map(m=>({name:m.name,price:m.price})),
-    fabric:[{name:'외부구매 원단(예시)',price:5000}],
+    fabric:[{name:'의료용 부직포',price:2400},{name:'이형필름',price:1500}],
     pouch:[{name:'표준 파우치',price:80}],
-    box:[{name:'표준 박스',price:500}],
+    box:[{name:'이너박스',price:500},{name:'아웃박스',price:1500}],
     labor:JSON.parse(JSON.stringify(DEF_LABOR)),
     overhead:JSON.parse(JSON.stringify(DEF_OVERHEAD))
   };
   laborLines=JSON.parse(JSON.stringify(DEF_LABORLINES));
+  fabricLines=[{fabric:'의료용 부직포'}];
+  boxLines=[{box:'이너박스',qty:100},{box:'아웃박스',qty:6}];
 }
 
 /* ---------- state ---------- */
 function collect(){
   const inp={};
   INP_IDS.forEach(id=>inp[id]=document.getElementById(id).value);
-  return {materials:JSON.parse(JSON.stringify(materials)), laborLines:JSON.parse(JSON.stringify(laborLines)), inp};
+  return {materials:JSON.parse(JSON.stringify(materials)), laborLines:JSON.parse(JSON.stringify(laborLines)),
+    fabricLines:JSON.parse(JSON.stringify(fabricLines)), boxLines:JSON.parse(JSON.stringify(boxLines)), inp};
 }
 function applyState(s){
   if(s.materials) materials=s.materials;
   if(s.laborLines) laborLines=s.laborLines;
+  if(s.fabricLines) fabricLines=s.fabricLines;
+  if(s.boxLines) boxLines=s.boxLines;
   if(s.inp) Object.entries(s.inp).forEach(([k,v])=>{const el=document.getElementById(k); if(el) el.value=v;});
 }
 function persist(){
@@ -485,6 +491,15 @@ function load(){
     if(!master.labor || !master.labor.length) master.labor=JSON.parse(JSON.stringify(DEF_LABOR));
     if(!master.overhead || !master.overhead.length) master.overhead=JSON.parse(JSON.stringify(DEF_OVERHEAD));
     if(!laborLines || !laborLines.length) laborLines=JSON.parse(JSON.stringify(DEF_LABORLINES));
+    // 원단/박스: 구버전(단일 선택) → 라인 방식 마이그레이션
+    if((!fabricLines || !fabricLines.length) && d.current && d.current.inp){
+      const fp=d.current.inp.fabricPick;
+      if(fp!=='' && fp!=null && master.fabric[+fp]) fabricLines=[{fabric:master.fabric[+fp].name}];
+    }
+    if((!boxLines || !boxLines.length) && d.current && d.current.inp){
+      const ppb=+d.current.inp.pouchPerBox||0, bp=+d.current.inp.boxPrice||0;
+      if(ppb>0){ const bn=(master.box.find(b=>b.price===bp)||master.box[0]||{}).name||''; boxLines=[{box:bn,qty:ppb}]; }
+    }
     return true;
   }catch(e){ return false; }
 }
@@ -523,12 +538,12 @@ function refreshLinks(){
   // datalist for blend material names
   document.getElementById('matMasterList').innerHTML=
     master.material.map(m=>`<option value="${escAttr(m.name)}">${fmt(m.price,0)}원/kg</option>`).join('');
-  // pickers (원단/파우치/박스)
-  fillPicker('fabricPick','fabric','원단 없음 (겔만)');
+  // 파우치는 단일 선택 유지
   fillPicker('pouchPick','pouch');
-  fillPicker('boxPick','box');
-  // 인건비 라인 선택지 + 기타비용 목록
+  // 인건비 라인 + 원단 겹 + 박스 단계 + 기타비용 목록
   renderLabor();
+  renderFabric();
+  renderBox();
   const oh=document.getElementById('ohList');
   if(oh) oh.innerHTML = master.overhead.length
     ? master.overhead.map(o=>`${esc(o.name||'(항목)')} <b>${fmt(o.price,0)}</b>`).join('  ·  ')
@@ -551,6 +566,42 @@ function renderLabor(){
 function addLabor(){ laborLines.push({level:'',count:1}); renderLabor(); calc(); }
 function delLabor(i){ laborLines.splice(i,1); renderLabor(); calc(); }
 function updLabor(i,f,v){ laborLines[i][f]= f==='count'?(parseFloat(v)||0):v; calc(); }
+
+/* ---------- 원단(백킹) 여러 겹 ---------- */
+function renderFabric(){
+  const tb=document.getElementById('fabricBody'); if(!tb) return;
+  const opts=master.fabric.map(f=>`<option value="${escAttr(f.name)}">${esc(f.name)} · ${fmt(f.price,0)}원/㎡</option>`).join('');
+  tb.innerHTML=fabricLines.map((fl,i)=>`
+    <tr>
+      <td><select onchange="updFabric(${i},this.value)"><option value="">원단 선택</option>${opts}</select></td>
+      <td class="contrib" id="fabSub-${i}">0</td>
+      <td><div class="del-x" onclick="delFabric(${i})">✕</div></td>
+    </tr>`).join('');
+  fabricLines.forEach((fl,i)=>{ const s=tb.querySelectorAll('select')[i]; if(s) s.value=fl.fabric||''; });
+}
+function addFabric(){ fabricLines.push({fabric:''}); renderFabric(); calc(); }
+function delFabric(i){ fabricLines.splice(i,1); renderFabric(); calc(); }
+function updFabric(i,v){ fabricLines[i].fabric=v; calc(); }
+
+/* ---------- 박스 여러 단계(이너→아웃) ---------- */
+function renderBox(){
+  const tb=document.getElementById('boxBody'); if(!tb) return;
+  const opts=master.box.map(b=>`<option value="${escAttr(b.name)}">${esc(b.name)} · ${fmt(b.price,0)}원</option>`).join('');
+  tb.innerHTML=boxLines.map((bl,i)=>{
+    const holds = i===0 ? '파우치' : (i===1?'이너박스':'하위박스');
+    return `<tr>
+      <td><select onchange="updBox(${i},'box',this.value)"><option value="">박스 선택</option>${opts}</select></td>
+      <td><input class="num" type="number" step="1" value="${bl.qty}" oninput="updBox(${i},'qty',this.value)"><div style="font-size:10px;color:var(--muted)">${holds} 수/박스</div></td>
+      <td class="contrib" id="boxSub-${i}">0</td>
+      <td><div class="del-x" onclick="delBox(${i})">✕</div></td>
+    </tr>`;
+  }).join('');
+  boxLines.forEach((bl,i)=>{ const s=tb.querySelectorAll('select')[i]; if(s) s.value=bl.box||''; });
+}
+function addBox(){ boxLines.push({box:'',qty:1}); renderBox(); calc(); }
+function delBox(i){ boxLines.splice(i,1); renderBox(); calc(); }
+function updBox(i,f,v){ boxLines[i][f]= f==='qty'?(parseFloat(v)||0):v; calc(); }
+
 function renderPM(cat,tbid,hasUnit){
   const tb=document.getElementById(tbid);
   tb.innerHTML=master[cat].map((r,i)=>`
@@ -599,18 +650,20 @@ function calc(){
   const area=(sW/1000)*(sH/1000);
   const gelKg=kgPerM2*area;                       // 겔 시트 중량
   const gelCost=gelKg*blend;                      // ① 겔 원료비
-  const fabSel=document.getElementById('fabricPick').value;
-  let fabPrice=0, fabSrc='(원단 없음)';
-  if(fabSel!=='' && master.fabric[+fabSel]){
-    fabPrice=master.fabric[+fabSel].price;
-    fabSrc=`(${fmt(fabPrice,0)}원/㎡ × ${fmt(area,4)}㎡)`;
-  }
-  const fabCost=fabPrice*area;                    // ② 원단 원가
+  // ② 원단(백킹) 여러 겹 합계 × 면적
+  let fabUnitPerM2=0;
+  fabricLines.forEach((fl,i)=>{
+    const f=master.fabric.find(x=>x.name===fl.fabric);
+    const p=f?f.price:0;
+    fabUnitPerM2+=p;
+    const cell=document.getElementById('fabSub-'+i); if(cell) cell.textContent=fmt(p*area,1);
+  });
+  const fabCost=fabUnitPerM2*area;                // ② 원단 원가
   const sheetMat=gelCost+fabCost;                 // 겔쉬트 1장 원료비 = ① + ②
   set('kgPerM2',fmt(kgPerM2,3)); set('gPerM2',fmt(gsm,0)); set('sheetArea',fmt(area,4));
   document.getElementById('areaTxt').textContent=`(${fmt(sW,0)}×${fmt(sH,0)}mm)`;
   set('sheetKg',fmt(gelKg,4)); set('gelCost',fmt(gelCost,1)); set('fabCost',fmt(fabCost,1));
-  document.getElementById('fabSrc').textContent=fabSrc;
+  document.getElementById('fabSrc').textContent=`(${fmt(fabUnitPerM2,0)}원/㎡ × ${fmt(area,4)}㎡)`;
   set('sheetMatCost',fmt(sheetMat,1));
 
   const pW=num('prodW'), pH=num('prodH'), gap=num('gap');
@@ -624,9 +677,19 @@ function calc(){
   const matUnit = perSheet>0 ? sheetMat/perSheet : 0;
   set('perSheetUsed',fmt(perSheet,0));
   set('unitMatCostBox',fmt(matUnit,2));
-  const ppp=num('prodPerPouch'), ppb=num('pouchPerBox');
+  const ppp=num('prodPerPouch');
   const pouchUnit = ppp>0 ? num('pouchPrice')/ppp : 0;
-  const boxUnit = (ppp>0 && ppb>0) ? num('boxPrice')/(ppb*ppp) : 0;
+  // 박스 여러 단계(이너→아웃): 제품수/박스 누적, 각 단계 단가 ÷ 제품수 합산
+  let boxUnit=0, prodPer=ppp;
+  boxLines.forEach((bl,i)=>{
+    const b=master.box.find(x=>x.name===bl.box);
+    prodPer = prodPer * (bl.qty||0);
+    const per = (prodPer>0 && b) ? b.price/prodPer : 0;
+    boxUnit += per;
+    const cell=document.getElementById('boxSub-'+i); if(cell) cell.textContent=fmt(per,2);
+  });
+  const prodPerOuterBox = boxLines.length ? prodPer : 0;
+  set('boxCostSum',fmt(boxUnit,2));
   const sub = matUnit+pouchUnit+boxUnit;
 
   const loss=num('lossPct');
@@ -653,7 +716,7 @@ function calc(){
   const margin=num('marginPct');
   const supply = margin<100 ? total/(1-margin/100) : total;
   const profit = supply-total;
-  const costPouch = total*ppp, costBox = costPouch*ppb;
+  const costPouch = total*ppp, costBox = total*prodPerOuterBox;   // 박스 = 최외곽 박스 기준
   const lossPerPouch = sub*ppp*(lossMult-1);
 
   set('rMat',fmt(matUnit,2)); set('rPouch',fmt(pouchUnit,2)); set('rBox',fmt(boxUnit,2));
@@ -749,9 +812,11 @@ window.applyCloudState=function(obj){
     if(!master.overhead||!master.overhead.length) master.overhead=JSON.parse(JSON.stringify(DEF_OVERHEAD));
     if(obj.current){ applyState(obj.current); _savedInp=obj.current.inp; }
     if(!laborLines||!laborLines.length) laborLines=JSON.parse(JSON.stringify(DEF_LABORLINES));
+    // 원단/박스 라인 fallback (구버전 클라우드 데이터 대비)
+    const ci=(obj.current&&obj.current.inp)?obj.current.inp:{};
+    if((!fabricLines||!fabricLines.length) && ci.fabricPick!=null && ci.fabricPick!=='' && master.fabric[+ci.fabricPick]) fabricLines=[{fabric:master.fabric[+ci.fabricPick].name}];
+    if((!boxLines||!boxLines.length) && (+ci.pouchPerBox||0)>0){ const bn=(master.box.find(b=>b.price===(+ci.boxPrice||0))||master.box[0]||{}).name||''; boxLines=[{box:bn,qty:+ci.pouchPerBox}]; }
     renderMats(); renderMaster(); renderScns();
-    const fp=obj.current&&obj.current.inp?obj.current.inp.fabricPick:undefined;
-    if(fp!==undefined){ const e=document.getElementById('fabricPick'); if(e) e.value=fp; }
     calc();
   } finally { _applyingRemote=false; }
 };
@@ -762,8 +827,6 @@ window.fbDoLogin=function(){};
 /* ---------- init ---------- */
 if(!load()){ seed(); }
 renderMats(); renderMaster(); renderScns();
-// restore picker selections after options exist
-if(_savedInp && _savedInp.fabricPick!==undefined){ const e=document.getElementById('fabricPick'); if(e) e.value=_savedInp.fabricPick; }
 // 이벤트 위임: view-calc 안의 모든 input/select 변경을 확실히 재계산에 연결
 const _vc=document.getElementById('view-calc');
 _vc.addEventListener('input',calc);
