@@ -12,26 +12,20 @@
     --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 20px rgba(20,30,50,.05);
   }
   *{box-sizing:border-box;}
-  body{margin:0;font-family:-apple-system,"Segoe UI","Malgun Gothic",sans-serif;
-    background:var(--bg);color:var(--ink);font-size:13.5px;line-height:1.5;}
-  header{display:flex;align-items:center;gap:14px;padding:13px 22px;background:var(--panel);
-    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;flex-wrap:wrap;}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink);font-size:13.5px;line-height:1.5;}
+  header{display:flex;align-items:center;gap:14px;padding:13px 22px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;flex-wrap:wrap;}
   header .brand{display:flex;flex-direction:column;}
   header h1{font-size:16px;margin:0;font-weight:700;}
   header .sub{font-size:11.5px;color:var(--muted);}
-  header .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#0f9d8c,#33c1c9);
-    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;}
+  header .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#0f9d8c,#33c1c9);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;}
   .spacer{flex:1;}
-  .btn{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;
-    padding:7px 13px;cursor:pointer;font-size:12.5px;transition:.15s;font-weight:500;}
+  .btn{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 13px;cursor:pointer;font-size:12.5px;transition:.15s;font-weight:500;}
   .btn:hover{border-color:var(--brand);color:var(--brand);}
   .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff;}
   .btn.primary:hover{background:var(--brand-d);color:#fff;}
   .btn.sm{padding:4px 9px;font-size:11.5px;}
-  .tabbar{display:flex;gap:4px;padding:0 22px;background:var(--panel);border-bottom:1px solid var(--line);
-    position:sticky;top:57px;z-index:19;}
-  .tab{padding:11px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;
-    border-bottom:2px solid transparent;margin-bottom:-1px;}
+  .tabbar{display:flex;gap:4px;padding:0 22px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:57px;z-index:19;overflow-x:auto;}
+  .tab{padding:11px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;}
   .tab:hover{color:var(--ink);}
   .tab.active{color:var(--brand);border-bottom-color:var(--brand);}
   .wrap{max-width:1280px;margin:0 auto;padding:18px;display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start;}
@@ -59,16 +53,15 @@
   .fld label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px;font-weight:500;}
   .derived{background:var(--soft);border:1px dashed #b6e2db;border-radius:8px;padding:8px 11px;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;margin-top:4px;}
   .derived b{font-weight:700;color:var(--brand-d);}
+  .savebar{display:flex;gap:8px;margin-top:12px;align-items:flex-end;}
+  .savebar .fld{flex:1;}
   .result-hero{background:linear-gradient(135deg,#0b5a52,#0f9d8c);color:#fff;border:none;}
   .result-hero .card-h{border-color:rgba(255,255,255,.15);}
-  .result-hero .card-h h2{color:#fff;}
-  .result-hero .card-h .step{background:rgba(255,255,255,.18);color:#fff;}
+  .result-hero .card-h h2{color:#fff;} .result-hero .card-h .step{background:rgba(255,255,255,.18);color:#fff;}
   .hero-main{display:flex;gap:10px;padding:16px;flex-wrap:wrap;}
   .hero-box{flex:1;min-width:130px;background:rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;}
-  .hero-box .l{font-size:11.5px;opacity:.85;}
-  .hero-box .v{font-size:22px;font-weight:800;margin-top:2px;letter-spacing:-.3px;}
-  .hero-box .v small{font-size:12px;font-weight:600;opacity:.85;}
-  .hero-box.accent{background:#fff;color:var(--brand-d);}
+  .hero-box .l{font-size:11.5px;opacity:.85;} .hero-box .v{font-size:22px;font-weight:800;margin-top:2px;letter-spacing:-.3px;}
+  .hero-box .v small{font-size:12px;font-weight:600;opacity:.85;} .hero-box.accent{background:#fff;color:var(--brand-d);}
   .rows{padding:6px 16px 14px;}
   .rrow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;}
   .rrow:last-child{border-bottom:none;}
@@ -79,9 +72,7 @@
   .bar span{height:100%;font-size:0;}
   .legend{display:flex;flex-wrap:wrap;gap:10px;padding:0 16px 14px;font-size:11px;color:var(--muted);}
   .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle;}
-  .warn{color:var(--red);font-size:11.5px;margin-top:6px;}
-  .ok{color:var(--green);} .muted{color:var(--muted);}
-  .hgroup{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:2px 0 8px;font-weight:700;}
+  .muted{color:var(--muted);} .hgroup{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:2px 0 8px;font-weight:700;}
   .scn-tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
   .scn-tbl th{text-align:left;color:var(--muted);font-weight:600;font-size:11px;padding:6px 8px;border-bottom:1px solid var(--line);}
   .scn-tbl td{padding:7px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;}
@@ -89,6 +80,7 @@
   .pill{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--soft);color:var(--brand-d);font-weight:600;}
   .empty{color:var(--muted);text-align:center;padding:18px;font-size:12.5px;}
   .addrow{margin-top:8px;} .savehint{font-size:11.5px;}
+  .flow{background:var(--soft);border-color:#b6e2db;} .flow .card-b{font-size:12.5px;color:var(--ink);}
 </style>
 </head>
 <body>
@@ -96,7 +88,7 @@
   <div class="logo">BL</div>
   <div class="brand">
     <h1>정형용 캐스팅 테이프 제조원가</h1>
-    <div class="sub">비엘테크(주) · Orthopedic Casting Tape · 롤당 원가 산정</div>
+    <div class="sub">비엘테크(주) · Orthopedic Casting Tape · 공정 단계별 코드 관리</div>
   </div>
   <a class="btn" href="../" style="text-decoration:none">← 메인</a>
   <button class="btn" onclick="exportData()">백업 내보내기</button>
@@ -120,107 +112,91 @@
 <!-- ============ 1공정품 ============ -->
 <div class="view" id="view-s1">
 <div class="wrap-single">
-    <div class="card">
-      <div class="card-h"><span class="step">0</span><h2>원가 산정 방식</h2><span class="note">여기(1공정품)에서 설정 · 전체 공통</span></div>
-      <div class="card-b">
-        <select id="calcMode" onchange="onMode()">
-          <option value="raw">① 원부자재부터 조성 (수지 배합 + 원단 직조/구매)</option>
-          <option value="stage1">② 1차 가공품 선택 (수지·원단을 마스터에서)</option>
-          <option value="stage2">③ 2차 가공품 선택 (코팅롤 1롤당 단가)</option>
-        </select>
-      </div>
-    </div>
+  <div class="card flow"><div class="card-b">📌 <b>1공정품</b>: 수지 배합·원단을 만든 뒤 <b>코드명</b>으로 저장하세요. → <b>2공정품</b> 탭에서 그 코드를 골라 씁니다.</div></div>
 
-    <div class="card" id="card-stage1" style="display:none">
-      <div class="card-h"><span class="step">1</span><h2>1차 가공품 선택</h2><span class="note">마스터에서</span></div>
-      <div class="card-b">
-        <div class="grid2">
-          <div class="fld"><label>수지 (1차 가공품, 원/kg)</label><select id="stage1ResinSel" onchange="calc()"></select></div>
-          <div class="fld"><label>원단 (1차 가공품, 원/inch·m)</label><select id="stage1FabricSel" onchange="calc()"></select></div>
-        </div>
-        <div class="derived" style="margin-top:12px"><span>수지 단가</span><span><b id="s1ResinPrice">0</b> 원/kg</span></div>
-        <div class="derived"><span>원단 단가 / 중량</span><span><b id="s1FabPrice">0</b> 원/inch·m · <b id="s1FabKg">0</b> kg/inch·m</span></div>
-      </div>
+  <div class="card">
+    <div class="card-h"><span class="step">1</span><h2>수지 배합 (수경화성 폴리우레탄)</h2><span class="note">원료 % → 원/kg</span></div>
+    <div class="card-b">
+      <table class="mat-tbl"><thead><tr><th style="width:38%">원료명</th><th style="width:22%">원/kg</th><th style="width:18%">배합비%</th><th style="width:22%;text-align:right">기여(원/kg)</th><th></th></tr></thead><tbody id="resinBody"></tbody></table>
+      <datalist id="resinMasterList"></datalist>
+      <button class="btn sm addrow" onclick="addResin()">+ 원료 추가</button>
+      <div class="derived" style="margin-top:12px"><span>배합비 합계 <b id="pctSum">0</b>%</span><span>수지 배합원가 <b><span id="resinCost">0</span> 원/kg</b></span></div>
+      <div class="savebar"><div class="fld"><label>수지 코드명 (예: 수지A)</label><input type="text" id="resinCode" placeholder="코드명"></div>
+        <button class="btn primary" onclick="saveResinCode()">＋ 1공정품(수지) 저장</button></div>
     </div>
+  </div>
 
-    <!-- 1. 수지 배합 -->
-    <div class="card" id="card-resin">
-      <div class="card-h"><span class="step">1</span><h2>수지 배합 (수경화성 폴리우레탄)</h2><span class="note">원료 % → 원/kg</span></div>
-      <div class="card-b">
-        <table class="mat-tbl">
-          <thead><tr><th style="width:38%">원료명</th><th style="width:22%">원/kg</th><th style="width:18%">배합비%</th><th style="width:22%;text-align:right">기여(원/kg)</th><th></th></tr></thead>
-          <tbody id="resinBody"></tbody>
-        </table>
-        <datalist id="resinMasterList"></datalist>
-        <button class="btn sm addrow" onclick="addResin()">+ 원료 추가</button>
-        <div class="derived" style="margin-top:12px"><span>배합비 합계 <b id="pctSum">0</b>%</span><span>수지 배합원가 <b><span id="resinCost">0</span> 원/kg</b></span></div>
+  <div class="card">
+    <div class="card-h"><span class="step">2</span><h2>원단 선택 (직조 / 구매)</h2><span class="note">원/inch·m</span></div>
+    <div class="card-b">
+      <div class="grid2">
+        <div class="fld"><label>원단 방식</label>
+          <select id="fabricMode" onchange="onFabricMode()"><option value="woven">직조 (원사에서 계산)</option><option value="bought">구매 (완성 원단)</option></select></div>
+        <div class="fld"><label>원단 선택 (단가 마스터)</label><select id="fabricName" onchange="calc()"></select></div>
       </div>
+      <div class="derived" style="margin-top:12px"><span>원단 단가 <span class="muted" id="fabWtSrc"></span></span><span><b id="fabPricePerIM">0</b> 원/inch·m</span></div>
+      <div class="derived"><span>원단 중량</span><span><b id="fabKgPerIM">0</b> kg/inch·m</span></div>
+      <div class="savebar"><div class="fld"><label>원단 코드명 (예: 원단B)</label><input type="text" id="fabricCode" placeholder="코드명"></div>
+        <button class="btn primary" onclick="saveFabricCode()">＋ 1공정품(원단) 저장</button></div>
     </div>
-
-    <!-- 2. 원단 선택 -->
-    <div class="card" id="card-fabric">
-      <div class="card-h"><span class="step">2</span><h2>원단 선택 (직조 / 구매)</h2><span class="note">원/inch·m</span></div>
-      <div class="card-b">
-        <div class="grid2">
-          <div class="fld"><label>원단 방식</label>
-            <select id="fabricMode" onchange="onFabricMode()">
-              <option value="woven">직조 (원사에서 계산)</option>
-              <option value="bought">구매 (완성 원단)</option>
-            </select>
-          </div>
-          <div class="fld"><label>원단 선택 (단가 마스터)</label>
-            <select id="fabricName" onchange="calc()"></select>
-          </div>
-        </div>
-        <div class="derived" style="margin-top:12px"><span>원단 단가</span><span><b id="fabPricePerIM">0</b> 원/inch·m</span></div>
-        <div class="derived"><span>원단 중량 <span class="muted" id="fabWtSrc"></span></span><span><b id="fabKgPerIM">0</b> kg/inch·m</span></div>
-      </div>
-    </div>
+  </div>
 </div>
 </div>
 
 <!-- ============ 2공정품 ============ -->
 <div class="view" id="view-s2">
 <div class="wrap-single">
+  <div class="card flow"><div class="card-b">📌 <b>2공정품</b>: 1공정 코드(수지·원단)를 고르고 롤 규격·코팅·부자재를 넣으면 <b>2공정품 원가</b>가 나옵니다. → <b>코드명</b>으로 저장하면 <b>완제품</b> 탭에서 씁니다.</div></div>
 
-    <div class="card" id="card-stage2" style="display:none">
-      <div class="card-h"><span class="step">2</span><h2>2차 가공품 선택 (코팅롤)</h2><span class="note">1롤당 원자재비</span></div>
-      <div class="card-b">
-        <div class="fld"><label>코팅롤 (2차 가공품, 원/롤)</label><select id="stage2Sel" onchange="calc()"></select></div>
-        <div class="derived" style="margin-top:12px"><span>코팅롤 1롤당 원자재비</span><span><b id="s2Price">0</b> 원</span></div>
+  <div class="card">
+    <div class="card-h"><span class="step">1</span><h2>1공정품 코드 선택 (수지 · 원단)</h2><span class="note">1공정에서 저장한 코드</span></div>
+    <div class="card-b">
+      <div class="grid2">
+        <div class="fld"><label>수지 코드 (원/kg)</label><select id="s1ResinSel" onchange="calc()"></select></div>
+        <div class="fld"><label>원단 코드 (원/inch·m)</label><select id="s1FabricSel" onchange="calc()"></select></div>
       </div>
+      <div class="derived" style="margin-top:12px"><span>수지 단가</span><span><b id="s1ResinPrice">0</b> 원/kg</span></div>
+      <div class="derived"><span>원단 단가 / 중량</span><span><b id="s1FabPrice">0</b> 원/inch·m · <b id="s1FabKg">0</b> kg/inch·m</span></div>
     </div>
+  </div>
 
-    <!-- 3. 롤 규격 & 코팅 -->
-    <div class="card" id="card-roll">
-      <div class="card-h"><span class="step">3</span><h2>롤 규격 · 코팅</h2><span class="note">1롤 원자재비</span></div>
-      <div class="card-b">
-        <div class="grid3">
-          <div class="fld"><label>롤 폭 (inch)</label><input class="num" id="rollW" type="number" step="0.1"></div>
-          <div class="fld"><label>롤 길이 (m)</label><input class="num" id="rollL" type="number" step="0.1"></div>
-          <div class="fld"><label>코팅량 (수지 무게비 %)</label><input class="num" id="coatPct" type="number" step="0.5"></div>
-        </div>
-        <div class="derived" style="margin-top:12px"><span>롤 원단량 <span class="muted">(폭 × 길이)</span></span><span><b id="rollIM">0</b> inch·m</span></div>
-        <div class="derived"><span>원단 무게</span><span><b id="fabWt">0</b> kg</span></div>
-        <div class="derived"><span>수지 무게 <span class="muted">(원단무게 × r/(1−r))</span></span><span><b id="resinWt">0</b> kg</span></div>
-        <div class="derived"><span>① 원단비 <span class="muted">(inch·m × 원단단가)</span></span><span><b id="fabCost">0</b> 원</span></div>
-        <div class="derived"><span>② 수지비 <span class="muted">(수지무게 × 배합원가)</span></span><span><b id="resinCostRoll">0</b> 원</span></div>
-        <div class="derived" style="border:1px solid var(--brand);background:#dff3ef"><span><b style="color:var(--ink)">롤 원자재비 (①+②)</b></span><span><b id="rollMatCost">0</b> 원</span></div>
+  <div class="card">
+    <div class="card-h"><span class="step">2</span><h2>롤 규격 · 코팅</h2><span class="note">롤 원자재비</span></div>
+    <div class="card-b">
+      <div class="grid3">
+        <div class="fld"><label>롤 폭 (inch)</label><input class="num" id="rollW" type="number" step="0.1"></div>
+        <div class="fld"><label>롤 길이 (m)</label><input class="num" id="rollL" type="number" step="0.1"></div>
+        <div class="fld"><label>코팅량 (수지 무게비 %)</label><input class="num" id="coatPct" type="number" step="0.5"></div>
       </div>
+      <div class="derived" style="margin-top:12px"><span>롤 원단량 <span class="muted">(폭 × 길이)</span></span><span><b id="rollIM">0</b> inch·m</span></div>
+      <div class="derived"><span>원단 무게</span><span><b id="fabWt">0</b> kg</span></div>
+      <div class="derived"><span>수지 무게 <span class="muted">(원단무게 × r/(1−r))</span></span><span><b id="resinWt">0</b> kg</span></div>
+      <div class="derived"><span>① 원단비</span><span><b id="fabCost">0</b> 원</span></div>
+      <div class="derived"><span>② 수지비</span><span><b id="resinCostRoll">0</b> 원</span></div>
+      <div class="derived"><span>롤 원자재비 (①+②)</span><span><b id="rollMatCost">0</b> 원</span></div>
     </div>
+  </div>
 
-    <!-- 4. 부자재 -->
-    <div class="card">
-      <div class="card-h"><span class="step">4</span><h2>부자재 (롤당 1개씩)</h2></div>
-      <div class="card-b">
-        <div class="grid3">
-          <div class="fld"><label>코어</label><select id="coreSel" onchange="calc()"></select></div>
-          <div class="fld"><label>파우치</label><select id="pouchSel" onchange="calc()"></select></div>
-          <div class="fld"><label>라벨</label><select id="labelSel" onchange="calc()"></select></div>
-        </div>
-        <div class="derived" style="margin-top:12px"><span>부자재 합계 / 롤</span><span><b id="subMatCost">0</b> 원</span></div>
+  <div class="card">
+    <div class="card-h"><span class="step">3</span><h2>부자재 (롤당 1개씩)</h2></div>
+    <div class="card-b">
+      <div class="grid3">
+        <div class="fld"><label>코어</label><select id="coreSel" onchange="calc()"></select></div>
+        <div class="fld"><label>파우치</label><select id="pouchSel" onchange="calc()"></select></div>
+        <div class="fld"><label>라벨</label><select id="labelSel" onchange="calc()"></select></div>
       </div>
+      <div class="derived" style="margin-top:12px"><span>③ 부자재 합계 / 롤</span><span><b id="subMatCost">0</b> 원</span></div>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="step">✓</span><h2>2공정품 원가 · 코드 저장</h2></div>
+    <div class="card-b">
+      <div class="derived" style="border:1px solid var(--brand);background:#dff3ef"><span><b style="color:var(--ink)">2공정품 원가 (①+②+③)</b></span><span><b id="stage2Cost">0</b> 원/롤</span></div>
+      <div class="savebar"><div class="fld"><label>2공정품 코드명 (예: 롤C)</label><input type="text" id="stage2Code" placeholder="코드명"></div>
+        <button class="btn primary" onclick="saveStage2Code()">＋ 2공정품 저장</button></div>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -228,29 +204,30 @@
 <div class="view active" id="view-final">
 <div class="wrap">
   <div>
+    <div class="card flow"><div class="card-b">📌 <b>완제품</b>: <b>2공정품 코드</b>를 고르고 포장·인건비·기타·로스·마진을 반영하면 최종 제조원가·공급가가 나옵니다.</div></div>
 
-    <!-- 5. 포장 -->
     <div class="card">
-      <div class="card-h"><span class="step">5</span><h2>포장 (인박스 → 아웃박스)</h2><span class="note">여러 단계</span></div>
+      <div class="card-h"><span class="step">1</span><h2>2공정품 코드 선택</h2><span class="note">2공정에서 저장한 코드</span></div>
       <div class="card-b">
-        <table class="mat-tbl">
-          <thead><tr><th style="width:42%">박스 선택</th><th style="width:32%">입수량</th><th style="text-align:right">원가/롤</th><th></th></tr></thead>
-          <tbody id="boxBody"></tbody>
-        </table>
+        <div class="fld"><label>2공정품 코드 (원/롤)</label><select id="stage2Sel" onchange="calc()"></select></div>
+        <div class="derived" style="margin-top:12px"><span>2공정품 원자재비 / 롤</span><span><b id="finBase">0</b> 원</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="step">2</span><h2>포장 (인박스 → 아웃박스)</h2><span class="note">여러 단계</span></div>
+      <div class="card-b">
+        <table class="mat-tbl"><thead><tr><th style="width:42%">박스 선택</th><th style="width:32%">입수량</th><th style="text-align:right">원가/롤</th><th></th></tr></thead><tbody id="boxBody"></tbody></table>
         <button class="btn sm addrow" onclick="addBox()">+ 박스 추가 (아웃박스 등)</button>
         <div class="derived" style="margin-top:8px"><span>박스 원가 합계 / 롤</span><span><b id="boxCostSum">0</b> 원</span></div>
       </div>
     </div>
 
-    <!-- 6. 인건비 · 기타 -->
     <div class="card">
-      <div class="card-h"><span class="step">6</span><h2>인건비(공정별) · 기타 제조비용</h2><span class="note">1일 CAPA(롤)로 배분</span></div>
+      <div class="card-h"><span class="step">3</span><h2>인건비(공정별) · 기타 제조비용</h2><span class="note">1일 CAPA(롤)로 배분</span></div>
       <div class="card-b">
         <div class="hgroup">인건비 (1일 기준 · 공정별)</div>
-        <table class="mat-tbl">
-          <thead><tr><th style="width:50%">공정 / 인력</th><th>인원수</th><th style="text-align:right">1일 인건비</th><th></th></tr></thead>
-          <tbody id="laborBody"></tbody>
-        </table>
+        <table class="mat-tbl"><thead><tr><th style="width:50%">공정 / 인력</th><th>인원수</th><th style="text-align:right">1일 인건비</th><th></th></tr></thead><tbody id="laborBody"></tbody></table>
         <button class="btn sm addrow" onclick="addLabor()">+ 공정/인력 추가</button>
         <div class="derived" style="margin-top:10px"><span>1일 총 인건비</span><span><b id="dailyLabor">0</b> 원/일</span></div>
         <div class="hgroup" style="margin-top:16px">기타 제조비용 (월 · 단가 마스터 합계)</div>
@@ -260,24 +237,20 @@
           <div class="fld"><label>월 가동일수 (일/월)</label><input class="num" id="opDays" type="number" step="1"></div>
           <div class="fld"><label>1일 생산 CAPA (롤/일)</label><input class="num" id="capa" type="number" step="1"></div>
         </div>
-        <div class="derived"><span>롤당 인건비 <span class="muted">(1일 인건비 ÷ CAPA)</span></span><span><b id="laborUnit">0</b> 원</span></div>
-        <div class="derived"><span>롤당 기타비용 <span class="muted">(1일 기타 ÷ CAPA)</span></span><span><b id="ohUnit">0</b> 원</span></div>
+        <div class="derived"><span>롤당 인건비</span><span><b id="laborUnit">0</b> 원</span></div>
+        <div class="derived"><span>롤당 기타비용</span><span><b id="ohUnit">0</b> 원</span></div>
       </div>
     </div>
 
-    <!-- 7. 로스 · 마진 -->
     <div class="card">
-      <div class="card-h"><span class="step">7</span><h2>로스 · 목표 마진</h2></div>
-      <div class="card-b">
-        <div class="grid2">
-          <div class="fld"><label>로스율 (%) · 롤 단위</label><input class="num" id="lossPct" type="number" step="0.1"></div>
-          <div class="fld"><label>목표 마진율 (%)</label><input class="num" id="marginPct" type="number" step="0.5"></div>
-        </div>
-      </div>
+      <div class="card-h"><span class="step">4</span><h2>로스 · 목표 마진</h2></div>
+      <div class="card-b"><div class="grid2">
+        <div class="fld"><label>로스율 (%) · 롤 단위</label><input class="num" id="lossPct" type="number" step="0.1"></div>
+        <div class="fld"><label>목표 마진율 (%)</label><input class="num" id="marginPct" type="number" step="0.5"></div>
+      </div></div>
     </div>
   </div>
 
-  <!-- 결과 -->
   <div>
     <div class="card result-hero">
       <div class="card-h"><span class="step">✓</span><h2>제조원가 결과</h2></div>
@@ -304,9 +277,9 @@
         <span><i style="background:#9b8cff"></i>기타 <b id="lgOH">0</b></span>
       </div>
       <div class="rows">
-        <div class="rrow"><span class="k" id="rFabLabel">원단비</span><span class="v"><span id="rFab">0</span> 원</span></div>
-        <div class="rrow"><span class="k">수지비</span><span class="v"><span id="rResin">0</span> 원</span></div>
-        <div class="rrow"><span class="k">부자재 (코어+파우치+라벨)</span><span class="v"><span id="rSub2">0</span> 원</span></div>
+        <div class="rrow"><span class="k">원단비 <span class="muted">(2공정품 내)</span></span><span class="v"><span id="rFab">0</span> 원</span></div>
+        <div class="rrow"><span class="k">수지비 <span class="muted">(2공정품 내)</span></span><span class="v"><span id="rResin">0</span> 원</span></div>
+        <div class="rrow"><span class="k">부자재 <span class="muted">(2공정품 내)</span></span><span class="v"><span id="rSub2">0</span> 원</span></div>
         <div class="rrow"><span class="k">박스비</span><span class="v"><span id="rBox">0</span> 원</span></div>
         <div class="rrow"><span class="k">소계 (로스 전)</span><span class="v"><span id="rSub">0</span> 원</span></div>
         <div class="rrow"><span class="k">로스 반영 (<span id="rLossPct">0</span>%)</span><span class="v">+ <span id="rLoss">0</span> 원</span></div>
@@ -320,10 +293,7 @@
     <div class="card">
       <div class="card-h"><span class="step">≡</span><h2>시나리오 비교</h2></div>
       <div class="card-b" style="padding:0">
-        <table class="scn-tbl">
-          <thead><tr><th>시나리오</th><th style="text-align:right">수지원가<br>(원/kg)</th><th style="text-align:right">제조원가<br>(원/롤)</th><th style="text-align:right">공급가<br>(원/롤)</th><th></th></tr></thead>
-          <tbody id="scnBody"></tbody>
-        </table>
+        <table class="scn-tbl"><thead><tr><th>시나리오</th><th style="text-align:right">2공정품<br>(원/롤)</th><th style="text-align:right">제조원가<br>(원/롤)</th><th style="text-align:right">공급가<br>(원/롤)</th><th></th></tr></thead><tbody id="scnBody"></tbody></table>
         <div id="scnEmpty" class="empty">이름 입력 후 <b>시나리오 저장</b>하면 여기에 쌓입니다.</div>
       </div>
     </div>
@@ -336,45 +306,19 @@
 <div class="wrap-single">
   <div class="card"><div class="card-h"><span class="step">💾</span><h2>단가 마스터 — 등록하면 계산에 불러 씁니다 (자동 저장)</h2></div></div>
   <div class="grid2">
-    <div class="card"><div class="card-h"><h2>① 수지 원료 (원/kg)</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:58%">원료명</th><th>원/kg</th><th></th></tr></thead><tbody id="mResin"></tbody></table>
-      <button class="btn sm addrow" onclick="addPM('resinRaw')">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>② 원사 (원/kg)</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:58%">원사명</th><th>원/kg</th><th></th></tr></thead><tbody id="mYarn"></tbody></table>
-      <button class="btn sm addrow" onclick="addPM('yarn')">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>③ 직조 원단 (원사에서 계산)</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:30%">원단명</th><th>원사</th><th>kg/inch·m</th><th>직조가공비<br>(원/inch·m)</th><th></th></tr></thead><tbody id="mWoven"></tbody></table>
-      <button class="btn sm addrow" onclick="addWoven()">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>④ 구매 원단</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:44%">원단명</th><th>원/inch·m</th><th>kg/inch·m</th><th></th></tr></thead><tbody id="mBought"></tbody></table>
-      <button class="btn sm addrow" onclick="addBought()">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>⑤ 코어 (원/개)</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:58%">품목</th><th>원/개</th><th></th></tr></thead><tbody id="mCore"></tbody></table>
-      <button class="btn sm addrow" onclick="addPM('core')">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>⑥ 파우치 (원/개)</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:58%">품목</th><th>원/개</th><th></th></tr></thead><tbody id="mPouch"></tbody></table>
-      <button class="btn sm addrow" onclick="addPM('pouch')">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>⑦ 라벨 (원/개)</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:58%">품목</th><th>원/개</th><th></th></tr></thead><tbody id="mLabel"></tbody></table>
-      <button class="btn sm addrow" onclick="addPM('label')">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>⑧ 박스 (원/개)</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:58%">품목</th><th>원/개</th><th></th></tr></thead><tbody id="mBox"></tbody></table>
-      <button class="btn sm addrow" onclick="addPM('box')">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>⑨ 인건비 (공정/일당)</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:58%">공정 / 인력</th><th>일당(원/인·일)</th><th></th></tr></thead><tbody id="mLabor"></tbody></table>
-      <button class="btn sm addrow" onclick="addPM('labor')">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>⑩ 기타 제조비용 (월)</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:58%">항목</th><th>월 비용(원)</th><th></th></tr></thead><tbody id="mOverhead"></tbody></table>
-      <button class="btn sm addrow" onclick="addPM('overhead')">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>⑪ 1차 가공품 · 수지 (원/kg)</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:58%">품목</th><th>원/kg</th><th></th></tr></thead><tbody id="mS1Resin"></tbody></table>
-      <button class="btn sm addrow" onclick="addPM('stage1Resin')">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>⑫ 1차 가공품 · 원단</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:44%">품목</th><th>원/inch·m</th><th>kg/inch·m</th><th></th></tr></thead><tbody id="mS1Fabric"></tbody></table>
-      <button class="btn sm addrow" onclick="addS1Fabric()">+ 추가</button></div></div>
-    <div class="card"><div class="card-h"><h2>⑬ 2차 가공품 · 코팅롤 (원/롤)</h2></div><div class="card-b">
-      <table class="mat-tbl"><thead><tr><th style="width:58%">품목</th><th>원/롤</th><th></th></tr></thead><tbody id="mS2Roll"></tbody></table>
-      <button class="btn sm addrow" onclick="addPM('stage2Roll')">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>① 수지 원료 (원/kg)</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:58%">원료명</th><th>원/kg</th><th></th></tr></thead><tbody id="mResin"></tbody></table><button class="btn sm addrow" onclick="addPM('resinRaw')">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>② 원사 (원/kg)</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:58%">원사명</th><th>원/kg</th><th></th></tr></thead><tbody id="mYarn"></tbody></table><button class="btn sm addrow" onclick="addPM('yarn')">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>③ 직조 원단 (원사에서 계산)</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:30%">원단명</th><th>원사</th><th>kg/inch·m</th><th>직조가공비</th><th></th></tr></thead><tbody id="mWoven"></tbody></table><button class="btn sm addrow" onclick="addWoven()">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>④ 구매 원단</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:44%">원단명</th><th>원/inch·m</th><th>kg/inch·m</th><th></th></tr></thead><tbody id="mBought"></tbody></table><button class="btn sm addrow" onclick="addBought()">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>⑤ 코어 (원/개)</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:58%">품목</th><th>원/개</th><th></th></tr></thead><tbody id="mCore"></tbody></table><button class="btn sm addrow" onclick="addPM('core')">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>⑥ 파우치 (원/개)</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:58%">품목</th><th>원/개</th><th></th></tr></thead><tbody id="mPouch"></tbody></table><button class="btn sm addrow" onclick="addPM('pouch')">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>⑦ 라벨 (원/개)</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:58%">품목</th><th>원/개</th><th></th></tr></thead><tbody id="mLabel"></tbody></table><button class="btn sm addrow" onclick="addPM('label')">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>⑧ 박스 (원/개)</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:58%">품목</th><th>원/개</th><th></th></tr></thead><tbody id="mBox"></tbody></table><button class="btn sm addrow" onclick="addPM('box')">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>⑨ 인건비 (공정/일당)</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:58%">공정 / 인력</th><th>일당(원/인·일)</th><th></th></tr></thead><tbody id="mLabor"></tbody></table><button class="btn sm addrow" onclick="addPM('labor')">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>⑩ 기타 제조비용 (월)</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:58%">항목</th><th>월 비용(원)</th><th></th></tr></thead><tbody id="mOverhead"></tbody></table><button class="btn sm addrow" onclick="addPM('overhead')">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>⑪ 1공정품 · 수지 코드 (원/kg)</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:58%">코드</th><th>원/kg</th><th></th></tr></thead><tbody id="mS1Resin"></tbody></table><button class="btn sm addrow" onclick="addPM('stage1Resin')">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>⑫ 1공정품 · 원단 코드</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:44%">코드</th><th>원/inch·m</th><th>kg/inch·m</th><th></th></tr></thead><tbody id="mS1Fabric"></tbody></table><button class="btn sm addrow" onclick="addS1Fabric()">+ 추가</button></div></div>
+    <div class="card"><div class="card-h"><h2>⑬ 2공정품 · 코드 (원/롤)</h2></div><div class="card-b"><table class="mat-tbl"><thead><tr><th style="width:58%">코드</th><th>원/롤</th><th></th></tr></thead><tbody id="mStage2"></tbody></table><button class="btn sm addrow" onclick="addPM('stage2')">+ 추가</button></div></div>
   </div>
 </div>
 </div>
@@ -397,14 +341,16 @@
 <script>
 const KEY='bltech_ortho_castingtape_v1';
 let resinMats=[], scenarios=[], laborLines=[], boxLines=[];
-let master={resinRaw:[],yarn:[],wovenFabric:[],boughtFabric:[],core:[],pouch:[],label:[],box:[],labor:[],overhead:[],stage1Resin:[],stage1Fabric:[],stage2Roll:[]};
-let sel={mode:'raw',fabricMode:'woven',fabricName:'',core:'',pouch:'',label:'',stage1Resin:'',stage1Fabric:'',stage2:''};
-const MASTER_KEYS={resinRaw:[],yarn:[],wovenFabric:[],boughtFabric:[],core:[],pouch:[],label:[],box:[],labor:[],overhead:[],stage1Resin:[],stage1Fabric:[],stage2Roll:[]};
-let _applyingRemote=false, _savedInp=null;
+const MASTER_KEYS={resinRaw:[],yarn:[],wovenFabric:[],boughtFabric:[],core:[],pouch:[],label:[],box:[],labor:[],overhead:[],stage1Resin:[],stage1Fabric:[],stage2:[]};
+let master=cp(MASTER_KEYS);
+let sel={fabricMode:'woven',fabricName:'',core:'',pouch:'',label:'',s1Resin:'',s1Fabric:'',stage2:''};
+let _applyingRemote=false, _lastResinKg=0, _lastFab={price:0,kg:0}, _lastStage2={price:0,fab:0,resin:0,sub:0};
 
 const INP_IDS=['rollW','rollL','coatPct','opDays','capa','lossPct','marginPct'];
 const defaults={rollW:4,rollL:3.6,coatPct:60,opDays:22,capa:500,lossPct:3,marginPct:30};
 const DEF_OVERHEAD=[{name:'수도광열비',price:3000000},{name:'소모품비',price:1500000},{name:'임대료',price:4000000},{name:'감가상각비',price:2500000},{name:'수선유지비',price:1000000},{name:'보험료',price:800000},{name:'기타비용',price:1000000}];
+
+function cp(o){ return JSON.parse(JSON.stringify(o)); }
 
 function seed(){
   resinMats=[{name:'PU 프리폴리머',price:9000,pct:70},{name:'촉매',price:15000,pct:3},{name:'안정제',price:12000,pct:5},{name:'첨가제',price:8000,pct:22}];
@@ -414,187 +360,144 @@ function seed(){
     yarn:[{name:'유리섬유사',price:5000},{name:'폴리에스터사',price:3000}],
     wovenFabric:[{name:'직조 캐스트원단A',yarn:'유리섬유사',kgPerIM:0.02,weaveCost:50}],
     boughtFabric:[{name:'구매 캐스트원단B',pricePerIM:300,kgPerIM:0.022}],
-    core:[{name:'플라스틱 코어',price:150}],
-    pouch:[{name:'알루미늄 파우치',price:200}],
-    label:[{name:'제품 라벨',price:50}],
+    core:[{name:'플라스틱 코어',price:150}], pouch:[{name:'알루미늄 파우치',price:200}], label:[{name:'제품 라벨',price:50}],
     box:[{name:'인박스',price:500},{name:'아웃박스',price:1500}],
     labor:[{name:'1차공정',price:120000},{name:'2차공정(코팅)',price:150000},{name:'포장',price:90000}],
-    overhead:JSON.parse(JSON.stringify(DEF_OVERHEAD)),
-    stage1Resin:[{name:'수지 1차품 A',price:9110}],
-    stage1Fabric:[{name:'캐스트원단 1차품 B',pricePerIM:150,kgPerIM:0.02}],
-    stage2Roll:[{name:'코팅롤 2차품 C',price:6100}]
+    overhead:cp(DEF_OVERHEAD),
+    stage1Resin:[{name:'수지A',price:9110}],
+    stage1Fabric:[{name:'원단B',pricePerIM:150,kgPerIM:0.02}],
+    stage2:[{name:'롤C',price:6495.5,fab:2160,resin:3935.5,sub:400}]
   };
   laborLines=[{level:'1차공정',count:1},{level:'2차공정(코팅)',count:1},{level:'포장',count:2}];
   boxLines=[{box:'인박스',qty:10},{box:'아웃박스',qty:10}];
-  sel={mode:'raw',fabricMode:'woven',fabricName:'직조 캐스트원단A',core:'플라스틱 코어',pouch:'알루미늄 파우치',label:'제품 라벨',stage1Resin:'수지 1차품 A',stage1Fabric:'캐스트원단 1차품 B',stage2:'코팅롤 2차품 C'};
+  sel={fabricMode:'woven',fabricName:'직조 캐스트원단A',core:'플라스틱 코어',pouch:'알루미늄 파우치',label:'제품 라벨',s1Resin:'수지A',s1Fabric:'원단B',stage2:'롤C'};
 }
 
 /* ---------- 상태 ---------- */
-function collect(){
-  const inp={}; INP_IDS.forEach(id=>inp[id]=document.getElementById(id).value);
-  return {resinMats:cp(resinMats), laborLines:cp(laborLines), boxLines:cp(boxLines), sel:cp(sel), inp};
-}
-function cp(o){ return JSON.parse(JSON.stringify(o)); }
+function collect(){ const inp={}; INP_IDS.forEach(id=>inp[id]=document.getElementById(id).value);
+  return {resinMats:cp(resinMats), laborLines:cp(laborLines), boxLines:cp(boxLines), sel:cp(sel), inp}; }
 function applyState(s){
   if(s.resinMats) resinMats=s.resinMats;
   if(s.laborLines) laborLines=s.laborLines;
   if(s.boxLines) boxLines=s.boxLines;
-  if(s.sel) sel=Object.assign({mode:'raw',fabricMode:'woven',fabricName:'',core:'',pouch:'',label:'',stage1Resin:'',stage1Fabric:'',stage2:''}, s.sel);
+  if(s.sel) sel=Object.assign({fabricMode:'woven',fabricName:'',core:'',pouch:'',label:'',s1Resin:'',s1Fabric:'',stage2:''}, s.sel);
   if(s.inp) Object.entries(s.inp).forEach(([k,v])=>{const el=document.getElementById(k); if(el) el.value=v;});
 }
-function persist(){
-  const st=document.getElementById('saveStatus');
-  try{
-    localStorage.setItem(KEY, JSON.stringify({current:collect(), scenarios, master}));
-    if(st){ st.textContent='✔ 저장됨 '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}); st.style.color='var(--green)'; }
-  }catch(e){ if(st){ st.textContent='⚠ 저장 실패'; st.style.color='var(--red)'; } }
+function persist(){ const st=document.getElementById('saveStatus');
+  try{ localStorage.setItem(KEY, JSON.stringify({current:collect(), scenarios, master}));
+    if(st){ st.textContent='✔ 저장됨 '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}); st.style.color='var(--green)'; } }
+  catch(e){ if(st){ st.textContent='⚠ 저장 실패'; st.style.color='var(--red)'; } }
   if(!_applyingRemote && window.__cloudSave){ try{ window.__cloudSave(); }catch(_){} }
 }
-function load(){
-  const raw=localStorage.getItem(KEY); if(!raw) return false;
-  try{
-    const d=JSON.parse(raw);
-    scenarios=d.scenarios||[];
+function load(){ const raw=localStorage.getItem(KEY); if(!raw) return false;
+  try{ const d=JSON.parse(raw); scenarios=d.scenarios||[];
     if(d.master) master=Object.assign(cp(MASTER_KEYS), d.master);
-    if(d.current){ applyState(d.current); _savedInp=d.current.inp; }
+    if(d.current){ applyState(d.current); }
     if(!master.overhead||!master.overhead.length) master.overhead=cp(DEF_OVERHEAD);
     return true;
   }catch(e){ return false; }
 }
 
 /* ---------- 수지 배합 ---------- */
-function renderResin(){
-  const tb=document.getElementById('resinBody');
-  tb.innerHTML=resinMats.map((m,i)=>`
-    <tr>
-      <td><input list="resinMasterList" value="${escAttr(m.name)}" oninput="updResin(${i},'name',this.value)" onchange="autofillResin(${i})"></td>
-      <td><input class="num" type="number" step="1" value="${m.price}" oninput="updResin(${i},'price',this.value)"></td>
-      <td><input class="num" type="number" step="0.01" value="${m.pct}" oninput="updResin(${i},'pct',this.value)"></td>
-      <td class="contrib" id="rcontrib-${i}">0</td>
-      <td><div class="del-x" onclick="delResin(${i})">✕</div></td>
-    </tr>`).join('');
-}
+function renderResin(){ const tb=document.getElementById('resinBody');
+  tb.innerHTML=resinMats.map((m,i)=>`<tr>
+    <td><input list="resinMasterList" value="${escAttr(m.name)}" oninput="updResin(${i},'name',this.value)" onchange="autofillResin(${i})"></td>
+    <td><input class="num" type="number" step="1" value="${m.price}" oninput="updResin(${i},'price',this.value)"></td>
+    <td><input class="num" type="number" step="0.01" value="${m.pct}" oninput="updResin(${i},'pct',this.value)"></td>
+    <td class="contrib" id="rcontrib-${i}">0</td><td><div class="del-x" onclick="delResin(${i})">✕</div></td></tr>`).join(''); }
 function addResin(){ resinMats.push({name:'',price:0,pct:0}); renderResin(); calc(); }
 function delResin(i){ resinMats.splice(i,1); renderResin(); calc(); }
 function updResin(i,f,v){ resinMats[i][f]= f==='name'?v:parseFloat(v)||0; calc(); }
 function autofillResin(i){ const h=master.resinRaw.find(x=>x.name && x.name===resinMats[i].name); if(h){ resinMats[i].price=h.price; renderResin(); calc(); } }
 
-/* ---------- 인건비/박스 라인 ---------- */
-function renderLabor(){
-  const tb=document.getElementById('laborBody'); if(!tb) return;
+/* ---------- 코드 저장 ---------- */
+function saveCode(cat,code,obj){
+  code=(code||'').trim(); if(!code){ alert('코드명을 입력하세요'); return false; }
+  const ex=master[cat].find(x=>x.name===code);
+  if(ex){ if(!confirm('같은 코드["'+code+'"]가 있습니다. 덮어쓸까요?')) return false; Object.assign(ex,obj); }
+  else master[cat].push(Object.assign({name:code},obj));
+  renderMaster(); persist(); return true;
+}
+function saveResinCode(){ if(saveCode('stage1Resin', document.getElementById('resinCode').value, {price:_lastResinKg})){
+  alert('저장됨 · 수지 코드 "'+document.getElementById('resinCode').value.trim()+'" = '+fmt(_lastResinKg,1)+'원/kg'); document.getElementById('resinCode').value=''; } }
+function saveFabricCode(){ if(saveCode('stage1Fabric', document.getElementById('fabricCode').value, {pricePerIM:_lastFab.price,kgPerIM:_lastFab.kg})){
+  alert('저장됨 · 원단 코드 "'+document.getElementById('fabricCode').value.trim()+'"'); document.getElementById('fabricCode').value=''; } }
+function saveStage2Code(){ if(saveCode('stage2', document.getElementById('stage2Code').value, {price:_lastStage2.price,fab:_lastStage2.fab,resin:_lastStage2.resin,sub:_lastStage2.sub})){
+  alert('저장됨 · 2공정품 코드 "'+document.getElementById('stage2Code').value.trim()+'" = '+fmt(_lastStage2.price,1)+'원/롤'); document.getElementById('stage2Code').value=''; } }
+
+/* ---------- 라인 ---------- */
+function renderLabor(){ const tb=document.getElementById('laborBody'); if(!tb) return;
   const opts=master.labor.map(l=>`<option value="${escAttr(l.name)}">${esc(l.name)} · ${fmt(l.price,0)}원/일</option>`).join('');
-  tb.innerHTML=laborLines.map((ln,i)=>`
-    <tr><td><select onchange="updLabor(${i},'level',this.value)"><option value="">공정 선택</option>${opts}</select></td>
+  tb.innerHTML=laborLines.map((ln,i)=>`<tr><td><select onchange="updLabor(${i},'level',this.value)"><option value="">공정 선택</option>${opts}</select></td>
     <td><input class="num" type="number" step="1" value="${ln.count}" oninput="updLabor(${i},'count',this.value)"></td>
     <td class="contrib" id="laborSub-${i}">0</td><td><div class="del-x" onclick="delLabor(${i})">✕</div></td></tr>`).join('');
-  laborLines.forEach((ln,i)=>{ const s=tb.querySelectorAll('select')[i]; if(s) s.value=ln.level||''; });
-}
+  laborLines.forEach((ln,i)=>{ const s=tb.querySelectorAll('select')[i]; if(s) s.value=ln.level||''; }); }
 function addLabor(){ laborLines.push({level:'',count:1}); renderLabor(); calc(); }
 function delLabor(i){ laborLines.splice(i,1); renderLabor(); calc(); }
 function updLabor(i,f,v){ laborLines[i][f]= f==='count'?(parseFloat(v)||0):v; calc(); }
-
-function renderBox(){
-  const tb=document.getElementById('boxBody'); if(!tb) return;
+function renderBox(){ const tb=document.getElementById('boxBody'); if(!tb) return;
   const opts=master.box.map(b=>`<option value="${escAttr(b.name)}">${esc(b.name)} · ${fmt(b.price,0)}원</option>`).join('');
   tb.innerHTML=boxLines.map((bl,i)=>{ const holds=i===0?'롤':(i===1?'인박스':'하위박스');
     return `<tr><td><select onchange="updBox(${i},'box',this.value)"><option value="">박스 선택</option>${opts}</select></td>
     <td><input class="num" type="number" step="1" value="${bl.qty}" oninput="updBox(${i},'qty',this.value)"><div style="font-size:10px;color:var(--muted)">${holds} 수/박스</div></td>
     <td class="contrib" id="boxSub-${i}">0</td><td><div class="del-x" onclick="delBox(${i})">✕</div></td></tr>`; }).join('');
-  boxLines.forEach((bl,i)=>{ const s=tb.querySelectorAll('select')[i]; if(s) s.value=bl.box||''; });
-}
+  boxLines.forEach((bl,i)=>{ const s=tb.querySelectorAll('select')[i]; if(s) s.value=bl.box||''; }); }
 function addBox(){ boxLines.push({box:'',qty:1}); renderBox(); calc(); }
 function delBox(i){ boxLines.splice(i,1); renderBox(); calc(); }
 function updBox(i,f,v){ boxLines[i][f]= f==='qty'?(parseFloat(v)||0):v; calc(); }
 
-/* ---------- 선택(원단/부자재) ---------- */
+/* ---------- 선택 UI ---------- */
 function fabricList(){ return sel.fabricMode==='woven'?master.wovenFabric:master.boughtFabric; }
-function populateFabricName(){
-  const s=document.getElementById('fabricName');
-  s.innerHTML='<option value="">원단 선택</option>'+fabricList().map(f=>`<option value="${escAttr(f.name)}">${esc(f.name)}</option>`).join('');
-  s.value=sel.fabricName||'';
-}
+function populateFabricName(){ const s=document.getElementById('fabricName');
+  s.innerHTML='<option value="">원단 선택</option>'+fabricList().map(f=>`<option value="${escAttr(f.name)}">${esc(f.name)}</option>`).join(''); s.value=sel.fabricName||''; }
 function onFabricMode(){ sel.fabricMode=document.getElementById('fabricMode').value; sel.fabricName=''; populateFabricName(); calc(); }
-function fillSel(id,cat){
-  const s=document.getElementById(id); if(!s) return;
-  s.innerHTML='<option value="">선택</option>'+master[cat].map(r=>`<option value="${escAttr(r.name)}">${esc(r.name)} · ${fmt(r.price,0)}원</option>`).join('');
-  s.value=sel[cat]||'';
-}
+function fillSel(id,cat,selKey){ const s=document.getElementById(id); if(!s) return;
+  s.innerHTML='<option value="">선택</option>'+master[cat].map(r=>{ const p=(r.price!=null)?r.price:r.pricePerIM;
+    return `<option value="${escAttr(r.name)}">${esc(r.name)} · ${fmt(p||0,0)}원</option>`; }).join(''); s.value=sel[selKey]||''; }
 function renderSelUI(){
   document.getElementById('fabricMode').value=sel.fabricMode||'woven';
   populateFabricName();
-  fillSel('coreSel','core'); fillSel('pouchSel','pouch'); fillSel('labelSel','label');
-  fillStageSel('stage1ResinSel','stage1Resin','stage1Resin');
-  fillStageSel('stage1FabricSel','stage1Fabric','stage1Fabric');
-  fillStageSel('stage2Sel','stage2Roll','stage2');
-  const cm=document.getElementById('calcMode'); if(cm) cm.value=sel.mode||'raw';
-  updateModeUI();
+  fillSel('coreSel','core','core'); fillSel('pouchSel','pouch','pouch'); fillSel('labelSel','label','label');
+  fillSel('s1ResinSel','stage1Resin','s1Resin'); fillSel('s1FabricSel','stage1Fabric','s1Fabric');
+  fillSel('stage2Sel','stage2','stage2');
 }
-function fillStageSel(id,cat,selKey){
-  const s=document.getElementById(id); if(!s) return;
-  s.innerHTML='<option value="">선택</option>'+master[cat].map(r=>{ const p=(r.price!=null)?r.price:r.pricePerIM;
-    return `<option value="${escAttr(r.name)}">${esc(r.name)} · ${fmt(p||0,0)}원</option>`; }).join('');
-  s.value=sel[selKey]||'';
-}
-function updateModeUI(){
-  const m=sel.mode||'raw', sh=(id,v)=>{ const e=document.getElementById(id); if(e) e.style.display=v?'':'none'; };
-  sh('card-resin', m==='raw'); sh('card-fabric', m==='raw');
-  sh('card-stage1', m==='stage1'); sh('card-stage2', m==='stage2');
-  sh('card-roll', m!=='stage2');
-}
-function onMode(){ sel.mode=document.getElementById('calcMode').value; updateModeUI(); calc(); }
 
 /* ---------- 단가 마스터 ---------- */
 function renderMaster(){
-  renderPM('resinRaw','mResin'); renderPM('yarn','mYarn');
-  renderWoven(); renderBought();
+  renderPM('resinRaw','mResin'); renderPM('yarn','mYarn'); renderWoven(); renderBought();
   renderPM('core','mCore'); renderPM('pouch','mPouch'); renderPM('label','mLabel');
   renderPM('box','mBox'); renderPM('labor','mLabor'); renderPM('overhead','mOverhead');
-  renderPM('stage1Resin','mS1Resin'); renderS1Fabric(); renderPM('stage2Roll','mS2Roll');
+  renderPM('stage1Resin','mS1Resin'); renderS1Fabric(); renderPM('stage2','mStage2');
   refreshLinks();
 }
-function renderS1Fabric(){
-  const tb=document.getElementById('mS1Fabric'); if(!tb) return;
-  tb.innerHTML=master.stage1Fabric.map((r,i)=>`
-    <tr><td><input value="${escAttr(r.name)}" oninput="updS1Fabric(${i},'name',this.value)"></td>
-    <td><input class="num" type="number" step="1" value="${r.pricePerIM}" oninput="updS1Fabric(${i},'pricePerIM',this.value)"></td>
-    <td><input class="num" type="number" step="0.001" value="${r.kgPerIM}" oninput="updS1Fabric(${i},'kgPerIM',this.value)"></td>
-    <td><div class="del-x" onclick="delS1Fabric(${i})">✕</div></td></tr>`).join('');
-}
-function addS1Fabric(){ master.stage1Fabric.push({name:'',pricePerIM:0,kgPerIM:0}); renderMaster(); persist(); }
-function delS1Fabric(i){ master.stage1Fabric.splice(i,1); renderMaster(); calc(); persist(); }
-function updS1Fabric(i,f,v){ master.stage1Fabric[i][f]= f==='name'?v:(parseFloat(v)||0); renderSelUI(); calc(); persist(); }
 function refreshLinks(){
   document.getElementById('resinMasterList').innerHTML=master.resinRaw.map(m=>`<option value="${escAttr(m.name)}">${fmt(m.price,0)}원/kg</option>`).join('');
   renderLabor(); renderBox(); renderSelUI();
   const oh=document.getElementById('ohList');
   if(oh) oh.innerHTML=master.overhead.length?master.overhead.map(o=>`${esc(o.name||'(항목)')} <b>${fmt(o.price,0)}</b>`).join('  ·  '):'(기타비용 없음)';
 }
-function renderPM(cat,tbid){
-  const tb=document.getElementById(tbid); if(!tb) return;
-  tb.innerHTML=master[cat].map((r,i)=>`
-    <tr><td><input value="${escAttr(r.name)}" oninput="updPM('${cat}',${i},'name',this.value)"></td>
+function renderPM(cat,tbid){ const tb=document.getElementById(tbid); if(!tb) return;
+  tb.innerHTML=master[cat].map((r,i)=>`<tr><td><input value="${escAttr(r.name)}" oninput="updPM('${cat}',${i},'name',this.value)"></td>
     <td><input class="num" type="number" step="1" value="${r.price}" oninput="updPM('${cat}',${i},'price',this.value)"></td>
-    <td><div class="del-x" onclick="delPM('${cat}',${i})">✕</div></td></tr>`).join('');
-}
-function renderWoven(){
-  const tb=document.getElementById('mWoven'); if(!tb) return;
+    <td><div class="del-x" onclick="delPM('${cat}',${i})">✕</div></td></tr>`).join(''); }
+function renderWoven(){ const tb=document.getElementById('mWoven'); if(!tb) return;
   const yopt=master.yarn.map(y=>`<option value="${escAttr(y.name)}">${esc(y.name)}</option>`).join('');
-  tb.innerHTML=master.wovenFabric.map((r,i)=>`
-    <tr><td><input value="${escAttr(r.name)}" oninput="updWoven(${i},'name',this.value)"></td>
+  tb.innerHTML=master.wovenFabric.map((r,i)=>`<tr><td><input value="${escAttr(r.name)}" oninput="updWoven(${i},'name',this.value)"></td>
     <td><select onchange="updWoven(${i},'yarn',this.value)"><option value="">원사</option>${yopt}</select></td>
     <td><input class="num" type="number" step="0.001" value="${r.kgPerIM}" oninput="updWoven(${i},'kgPerIM',this.value)"></td>
     <td><input class="num" type="number" step="1" value="${r.weaveCost}" oninput="updWoven(${i},'weaveCost',this.value)"></td>
     <td><div class="del-x" onclick="delWoven(${i})">✕</div></td></tr>`).join('');
-  master.wovenFabric.forEach((r,i)=>{ const s=tb.querySelectorAll('select')[i]; if(s) s.value=r.yarn||''; });
-}
-function renderBought(){
-  const tb=document.getElementById('mBought'); if(!tb) return;
-  tb.innerHTML=master.boughtFabric.map((r,i)=>`
-    <tr><td><input value="${escAttr(r.name)}" oninput="updBought(${i},'name',this.value)"></td>
+  master.wovenFabric.forEach((r,i)=>{ const s=tb.querySelectorAll('select')[i]; if(s) s.value=r.yarn||''; }); }
+function renderBought(){ const tb=document.getElementById('mBought'); if(!tb) return;
+  tb.innerHTML=master.boughtFabric.map((r,i)=>`<tr><td><input value="${escAttr(r.name)}" oninput="updBought(${i},'name',this.value)"></td>
     <td><input class="num" type="number" step="1" value="${r.pricePerIM}" oninput="updBought(${i},'pricePerIM',this.value)"></td>
     <td><input class="num" type="number" step="0.001" value="${r.kgPerIM}" oninput="updBought(${i},'kgPerIM',this.value)"></td>
-    <td><div class="del-x" onclick="delBought(${i})">✕</div></td></tr>`).join('');
-}
+    <td><div class="del-x" onclick="delBought(${i})">✕</div></td></tr>`).join(''); }
+function renderS1Fabric(){ const tb=document.getElementById('mS1Fabric'); if(!tb) return;
+  tb.innerHTML=master.stage1Fabric.map((r,i)=>`<tr><td><input value="${escAttr(r.name)}" oninput="updS1Fabric(${i},'name',this.value)"></td>
+    <td><input class="num" type="number" step="1" value="${r.pricePerIM}" oninput="updS1Fabric(${i},'pricePerIM',this.value)"></td>
+    <td><input class="num" type="number" step="0.001" value="${r.kgPerIM}" oninput="updS1Fabric(${i},'kgPerIM',this.value)"></td>
+    <td><div class="del-x" onclick="delS1Fabric(${i})">✕</div></td></tr>`).join(''); }
 function addPM(cat){ master[cat].push({name:'',price:0}); renderMaster(); persist(); }
 function delPM(cat,i){ master[cat].splice(i,1); renderMaster(); calc(); persist(); }
 function updPM(cat,i,f,v){ master[cat][i][f]= f==='price'?(parseFloat(v)||0):v; refreshLinks(); calc(); persist(); }
@@ -604,85 +507,66 @@ function updWoven(i,f,v){ master.wovenFabric[i][f]=(f==='name'||f==='yarn')?v:(p
 function addBought(){ master.boughtFabric.push({name:'',pricePerIM:0,kgPerIM:0}); renderMaster(); persist(); }
 function delBought(i){ master.boughtFabric.splice(i,1); renderMaster(); calc(); persist(); }
 function updBought(i,f,v){ master.boughtFabric[i][f]= f==='name'?v:(parseFloat(v)||0); renderSelUI(); calc(); persist(); }
+function addS1Fabric(){ master.stage1Fabric.push({name:'',pricePerIM:0,kgPerIM:0}); renderMaster(); persist(); }
+function delS1Fabric(i){ master.stage1Fabric.splice(i,1); renderMaster(); calc(); persist(); }
+function updS1Fabric(i,f,v){ master.stage1Fabric[i][f]= f==='name'?v:(parseFloat(v)||0); renderSelUI(); calc(); persist(); }
 
-/* ---------- 원단 단가 계산 ---------- */
-function resolveFabric(){
-  const name=sel.fabricName;
-  if(sel.fabricMode==='woven'){
-    const f=master.wovenFabric.find(x=>x.name===name); if(!f) return {price:0,kg:0,src:'(원단 미선택)'};
-    const y=master.yarn.find(x=>x.name===f.yarn);
-    const yp=y?y.price:0;
-    const price=yp*(f.kgPerIM||0)+(f.weaveCost||0);
-    return {price, kg:f.kgPerIM||0, src:`직조: 원사 ${fmt(yp,0)}×${fmt(f.kgPerIM,3)} + 가공 ${fmt(f.weaveCost,0)}`};
-  } else {
-    const f=master.boughtFabric.find(x=>x.name===name); if(!f) return {price:0,kg:0,src:'(원단 미선택)'};
-    return {price:f.pricePerIM||0, kg:f.kgPerIM||0, src:'구매 원단'};
-  }
-}
+/* ---------- 원단 (1공정 live) ---------- */
+function resolveFabric(){ const name=sel.fabricName;
+  if(sel.fabricMode==='woven'){ const f=master.wovenFabric.find(x=>x.name===name); if(!f) return {price:0,kg:0,src:'(원단 미선택)'};
+    const y=master.yarn.find(x=>x.name===f.yarn); const yp=y?y.price:0;
+    return {price:yp*(f.kgPerIM||0)+(f.weaveCost||0), kg:f.kgPerIM||0, src:`직조: 원사${fmt(yp,0)}×${fmt(f.kgPerIM,3)}+가공${fmt(f.weaveCost,0)}`}; }
+  const f=master.boughtFabric.find(x=>x.name===name); if(!f) return {price:0,kg:0,src:'(원단 미선택)'};
+  return {price:f.pricePerIM||0, kg:f.kgPerIM||0, src:'구매 원단'}; }
 
 /* ---------- calc ---------- */
 function num(id){ return parseFloat(document.getElementById(id).value)||0; }
 function set(id,v){ const e=document.getElementById(id); if(e) e.textContent=v; }
 function calc(){
-  // 수지 배합원가
+  // 1공정: 수지 배합원가
   const pctSum=resinMats.reduce((s,m)=>s+(m.pct||0),0);
   const resinKg= pctSum>0 ? resinMats.reduce((s,m)=>s+m.price*m.pct,0)/pctSum : 0;
   set('pctSum',fmt(pctSum,2)); set('resinCost',fmt(resinKg,1));
   resinMats.forEach((m,i)=>{ const c=document.getElementById('rcontrib-'+i); if(c) c.textContent=fmt(pctSum>0?m.price*m.pct/pctSum:0,1); });
-
-  // 선택값
-  sel.mode=document.getElementById('calcMode').value;
+  // 1공정: 원단 (live)
+  sel.fabricMode=document.getElementById('fabricMode').value;
   sel.fabricName=document.getElementById('fabricName').value;
-  sel.core=document.getElementById('coreSel').value;
-  sel.pouch=document.getElementById('pouchSel').value;
-  sel.label=document.getElementById('labelSel').value;
-  sel.stage1Resin=document.getElementById('stage1ResinSel').value;
-  sel.stage1Fabric=document.getElementById('stage1FabricSel').value;
-  sel.stage2=document.getElementById('stage2Sel').value;
+  const liveFab=resolveFabric();
+  set('fabPricePerIM',fmt(liveFab.price,1)); set('fabKgPerIM',fmt(liveFab.kg,3));
+  document.getElementById('fabWtSrc').textContent=liveFab.src;
+  _lastResinKg=resinKg; _lastFab={price:liveFab.price,kg:liveFab.kg};
 
-  const w=num('rollW'), L=num('rollL'), coat=num('coatPct')/100;
-  const inchM=w*L;
-  let resinKgUsed=0, fabPrice=0, fabKg=0, rollMat=0, fabCost=0, resinCostRoll=0, fabWt=0, resinWt=0, matALabel='원단비';
-
-  if(sel.mode==='stage2'){
-    const r=master.stage2Roll.find(x=>x.name===sel.stage2);
-    rollMat=r?r.price:0; fabCost=rollMat; resinCostRoll=0; matALabel='코팅롤(2차) 원자재비';
-    set('s2Price',fmt(rollMat,1));
-  } else {
-    if(sel.mode==='stage1'){
-      const rr=master.stage1Resin.find(x=>x.name===sel.stage1Resin); resinKgUsed=rr?rr.price:0;
-      const ff=master.stage1Fabric.find(x=>x.name===sel.stage1Fabric); fabPrice=ff?ff.pricePerIM:0; fabKg=ff?ff.kgPerIM:0;
-      set('s1ResinPrice',fmt(resinKgUsed,1)); set('s1FabPrice',fmt(fabPrice,1)); set('s1FabKg',fmt(fabKg,3));
-    } else {
-      resinKgUsed=resinKg;
-      const f=resolveFabric(); fabPrice=f.price; fabKg=f.kg;
-      set('fabPricePerIM',fmt(f.price,1)); set('fabKgPerIM',fmt(f.kg,3));
-      document.getElementById('fabWtSrc').textContent=f.src;
-    }
-    fabWt=inchM*fabKg;
-    resinWt= coat<1 ? fabWt*coat/(1-coat) : 0;
-    fabCost=inchM*fabPrice;
-    resinCostRoll=resinWt*resinKgUsed;
-    rollMat=fabCost+resinCostRoll;
-  }
+  // 2공정: 1공정 코드 선택 → 롤 + 부자재
+  sel.s1Resin=document.getElementById('s1ResinSel').value;
+  sel.s1Fabric=document.getElementById('s1FabricSel').value;
+  sel.core=document.getElementById('coreSel').value; sel.pouch=document.getElementById('pouchSel').value; sel.label=document.getElementById('labelSel').value;
+  const rr=master.stage1Resin.find(x=>x.name===sel.s1Resin); const resinKgUsed=rr?rr.price:0;
+  const ff=master.stage1Fabric.find(x=>x.name===sel.s1Fabric); const fPrice=ff?ff.pricePerIM:0, fKg=ff?ff.kgPerIM:0;
+  set('s1ResinPrice',fmt(resinKgUsed,1)); set('s1FabPrice',fmt(fPrice,1)); set('s1FabKg',fmt(fKg,3));
+  const w=num('rollW'),L=num('rollL'),coat=num('coatPct')/100, inchM=w*L;
+  const fabWt=inchM*fKg, resinWt= coat<1?fabWt*coat/(1-coat):0;
+  const fabCost=inchM*fPrice, resinCostRoll=resinWt*resinKgUsed, rollMat=fabCost+resinCostRoll;
   set('rollIM',fmt(inchM,3)); set('fabWt',fmt(fabWt,4)); set('resinWt',fmt(resinWt,4));
   set('fabCost',fmt(fabCost,1)); set('resinCostRoll',fmt(resinCostRoll,1)); set('rollMatCost',fmt(rollMat,1));
-  const rfl=document.getElementById('rFabLabel'); if(rfl) rfl.textContent=matALabel;
-
-  // 부자재
   const cP=(master.core.find(x=>x.name===sel.core)||{}).price||0;
   const pP=(master.pouch.find(x=>x.name===sel.pouch)||{}).price||0;
   const lP=(master.label.find(x=>x.name===sel.label)||{}).price||0;
-  const subMat=cP+pP+lP;
-  set('subMatCost',fmt(subMat,1));
+  const subMat=cP+pP+lP; set('subMatCost',fmt(subMat,1));
+  const stage2Cost=rollMat+subMat; set('stage2Cost',fmt(stage2Cost,1));
+  _lastStage2={price:stage2Cost,fab:fabCost,resin:resinCostRoll,sub:subMat};
 
-  // 박스 (롤 기준 누적)
+  // 완제품: 2공정품 코드 선택
+  sel.stage2=document.getElementById('stage2Sel').value;
+  const c2=master.stage2.find(x=>x.name===sel.stage2)||{};
+  const base=c2.price||0;
+  const bFab=(c2.fab!=null)?c2.fab:base, bResin=c2.resin||0, bSub=c2.sub||0;
+  set('finBase',fmt(base,1));
+
+  // 박스
   let boxUnit=0, per=1;
   boxLines.forEach((bl,i)=>{ const b=master.box.find(x=>x.name===bl.box); per=per*(bl.qty||0);
-    const c=(per>0&&b)?b.price/per:0; boxUnit+=c;
-    const cell=document.getElementById('boxSub-'+i); if(cell) cell.textContent=fmt(c,2); });
-  const rollsPerOuter = boxLines.length ? per : 0;
-  const rollsPerInner = boxLines.length ? (boxLines[0].qty||0) : 0;
+    const c=(per>0&&b)?b.price/per:0; boxUnit+=c; const cell=document.getElementById('boxSub-'+i); if(cell) cell.textContent=fmt(c,2); });
+  const rollsPerOuter=boxLines.length?per:0, rollsPerInner=boxLines.length?(boxLines[0].qty||0):0;
   set('boxCostSum',fmt(boxUnit,2));
 
   // 인건비/기타
@@ -691,59 +575,48 @@ function calc(){
     const cell=document.getElementById('laborSub-'+i); if(cell) cell.textContent=fmt(d,0); });
   const monthlyOH=master.overhead.reduce((s,o)=>s+(o.price||0),0);
   const opDays=num('opDays'), capa=num('capa');
-  const dailyOH= opDays>0?monthlyOH/opDays:0;
-  const laborUnit= capa>0?dailyLabor/capa:0;
-  const ohUnit= capa>0?dailyOH/capa:0;
-  set('dailyLabor',fmt(dailyLabor,0)); set('monthlyOH',fmt(monthlyOH,0));
-  set('laborUnit',fmt(laborUnit,2)); set('ohUnit',fmt(ohUnit,2));
+  const dailyOH= opDays>0?monthlyOH/opDays:0, laborUnit= capa>0?dailyLabor/capa:0, ohUnit= capa>0?dailyOH/capa:0;
+  set('dailyLabor',fmt(dailyLabor,0)); set('monthlyOH',fmt(monthlyOH,0)); set('laborUnit',fmt(laborUnit,2)); set('ohUnit',fmt(ohUnit,2));
 
-  // 합산
-  const sub=rollMat+subMat+boxUnit;
-  const loss=num('lossPct'); const lossMult= loss<100?1/(1-loss/100):1;
+  // 최종
+  const sub=base+boxUnit;
+  const loss=num('lossPct'), lossMult= loss<100?1/(1-loss/100):1;
   const subLoss=sub*lossMult, lossAdd=subLoss-sub;
   const total=subLoss+laborUnit+ohUnit;
-  const margin=num('marginPct'); const supply= margin<100?total/(1-margin/100):total;
+  const margin=num('marginPct'), supply= margin<100?total/(1-margin/100):total;
 
-  set('rFab',fmt(fabCost,1)); set('rResin',fmt(resinCostRoll,1)); set('rSub2',fmt(subMat,1)); set('rBox',fmt(boxUnit,2));
+  set('rFab',fmt(bFab,1)); set('rResin',fmt(bResin,1)); set('rSub2',fmt(bSub,1)); set('rBox',fmt(boxUnit,2));
   set('rSub',fmt(sub,1)); set('rLoss',fmt(lossAdd,2)); set('rLossPct',fmt(loss,1));
   set('rLabor',fmt(laborUnit,2)); set('rOH',fmt(ohUnit,2));
   set('rTotal',fmt(total,1)); set('rMarginPct',fmt(margin,1)); set('rProfit',fmt(supply-total,1));
   set('rCostUnit',fmt(total,1)); set('rSupply',fmt(supply,1));
   set('rCostInner',fmt(total*rollsPerInner,0)); set('rCostOuter',fmt(total*rollsPerOuter,0));
-
-  set('lgFab',fmt(fabCost,0)); set('lgResin',fmt(resinCostRoll,0)); set('lgSub',fmt(subMat,0));
+  set('lgFab',fmt(bFab,0)); set('lgResin',fmt(bResin,0)); set('lgSub',fmt(bSub,0));
   set('lgBox',fmt(boxUnit,0)); set('lgLoss',fmt(lossAdd,0)); set('lgLabor',fmt(laborUnit,0)); set('lgOH',fmt(ohUnit,0));
-  const segs=[[fabCost,'#0f9d8c'],[resinCostRoll,'#33c1c9'],[subMat,'#8bd3cb'],[boxUnit,'#c7b3f0'],[lossAdd,'#e0483d'],[laborUnit,'#f0a935'],[ohUnit,'#9b8cff']];
+  const segs=[[bFab,'#0f9d8c'],[bResin,'#33c1c9'],[bSub,'#8bd3cb'],[boxUnit,'#c7b3f0'],[lossAdd,'#e0483d'],[laborUnit,'#f0a935'],[ohUnit,'#9b8cff']];
   document.getElementById('costBar').innerHTML= total>0?segs.map(([v,c])=>`<span style="width:${Math.max(0,v)/total*100}%;background:${c}"></span>`).join(''):'';
 
-  window._calc={resinKg:resinKgUsed,total,supply};
+  window._calc={stage2:base,total,supply};
   persist();
 }
 
 /* ---------- 시나리오 ---------- */
-function saveScenario(){
-  const name=document.getElementById('scnName').value.trim()||('시나리오 '+(scenarios.length+1));
-  const c=window._calc||{resinKg:0,total:0,supply:0};
-  scenarios.push({id:''+Date.now()+Math.random().toString(36).slice(2,6),name,state:collect(),resinKg:c.resinKg,total:c.total,supply:c.supply});
-  document.getElementById('scnName').value=''; renderScns(); persist();
-}
-function renderScns(){
-  const tb=document.getElementById('scnBody'), emp=document.getElementById('scnEmpty');
-  if(!scenarios.length){ tb.innerHTML=''; emp.style.display='block'; return; }
-  emp.style.display='none';
+function saveScenario(){ const name=document.getElementById('scnName').value.trim()||('시나리오 '+(scenarios.length+1));
+  const c=window._calc||{stage2:0,total:0,supply:0};
+  scenarios.push({id:''+Date.now()+Math.random().toString(36).slice(2,6),name,state:collect(),stage2:c.stage2,total:c.total,supply:c.supply});
+  document.getElementById('scnName').value=''; renderScns(); persist(); }
+function renderScns(){ const tb=document.getElementById('scnBody'), emp=document.getElementById('scnEmpty');
+  if(!scenarios.length){ tb.innerHTML=''; emp.style.display='block'; return; } emp.style.display='none';
   const mn=Math.min(...scenarios.map(s=>s.total));
-  tb.innerHTML=scenarios.map(s=>`<tr>
-    <td class="scn-name" onclick="loadScn('${s.id}')">${esc(s.name)} ${s.total===mn?'<span class="pill">최저</span>':''}</td>
-    <td style="text-align:right">${fmt(s.resinKg,0)}</td><td style="text-align:right"><b>${fmt(s.total,1)}</b></td>
-    <td style="text-align:right">${fmt(s.supply,1)}</td><td style="text-align:right"><span class="del-x" onclick="delScn('${s.id}')">✕</span></td></tr>`).join('');
-}
+  tb.innerHTML=scenarios.map(s=>`<tr><td class="scn-name" onclick="loadScn('${s.id}')">${esc(s.name)} ${s.total===mn?'<span class="pill">최저</span>':''}</td>
+    <td style="text-align:right">${fmt(s.stage2,0)}</td><td style="text-align:right"><b>${fmt(s.total,1)}</b></td>
+    <td style="text-align:right">${fmt(s.supply,1)}</td><td style="text-align:right"><span class="del-x" onclick="delScn('${s.id}')">✕</span></td></tr>`).join(''); }
 function loadScn(id){ const s=scenarios.find(x=>x.id===id); if(!s) return; applyState(s.state); renderResin(); renderMaster(); renderScns(); calc(); document.getElementById('scnName').value=s.name; }
 function delScn(id){ scenarios=scenarios.filter(x=>x.id!==id); renderScns(); persist(); }
 
 /* ---------- tabs/utils ---------- */
-function showTab(t){ ['master','s1','s2','final'].forEach(x=>{
-    const v=document.getElementById('view-'+x); if(v) v.classList.toggle('active',x===t);
-    const tab=document.getElementById('tab-'+x); if(tab) tab.classList.toggle('active',x===t); }); }
+function showTab(t){ ['master','s1','s2','final'].forEach(x=>{ const v=document.getElementById('view-'+x); if(v) v.classList.toggle('active',x===t);
+  const tab=document.getElementById('tab-'+x); if(tab) tab.classList.toggle('active',x===t); }); }
 function fmt(n,d=0){ if(!isFinite(n)) n=0; return Number(n).toLocaleString('ko-KR',{minimumFractionDigits:d,maximumFractionDigits:d}); }
 function esc(s){ return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 function escAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
@@ -751,17 +624,15 @@ function exportData(){ const blob=new Blob([JSON.stringify({current:collect(),sc
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='ortho-castingtape-'+new Date().toISOString().slice(0,10)+'.json'; a.click(); }
 function importData(ev){ const f=ev.target.files[0]; if(!f) return; const r=new FileReader();
   r.onload=()=>{ try{ const d=JSON.parse(r.result); if(d.current) applyState(d.current); if(d.scenarios) scenarios=d.scenarios;
-    if(d.master) master=Object.assign(master,d.master); renderResin(); renderMaster(); renderScns(); calc(); alert('가져오기 완료'); }
+    if(d.master) master=Object.assign(cp(MASTER_KEYS),d.master); renderResin(); renderMaster(); renderScns(); calc(); alert('가져오기 완료'); }
     catch(e){ alert('파일을 읽을 수 없습니다'); } }; r.readAsText(f); ev.target.value=''; }
 
 /* ---------- 클라우드 브릿지 ---------- */
 window.currentPayload=function(){ return {current:collect(), scenarios, master}; };
 window.applyCloudState=function(obj){ if(!obj) return; _applyingRemote=true;
-  try{ scenarios=obj.scenarios||[];
-    if(obj.master) master=Object.assign(cp(MASTER_KEYS), obj.master);
+  try{ scenarios=obj.scenarios||[]; if(obj.master) master=Object.assign(cp(MASTER_KEYS), obj.master);
     if(!master.overhead||!master.overhead.length) master.overhead=cp(DEF_OVERHEAD);
-    if(obj.current) applyState(obj.current);
-    renderResin(); renderMaster(); renderScns(); calc();
+    if(obj.current) applyState(obj.current); renderResin(); renderMaster(); renderScns(); calc();
   } finally { _applyingRemote=false; } };
 window.fbAuthClick=function(){ alert('클라우드 기능을 불러오는 중입니다. 잠시 후 다시 시도해 주세요.'); };
 window.fbDoLogin=function(){};
@@ -769,8 +640,7 @@ window.fbDoLogin=function(){};
 /* ---------- init ---------- */
 if(!load()){ seed(); }
 renderResin(); renderMaster(); renderScns();
-['view-s1','view-s2','view-final'].forEach(id=>{ const v=document.getElementById(id);
-  if(v){ v.addEventListener('input',calc); v.addEventListener('change',calc); } });
+['view-s1','view-s2','view-final'].forEach(id=>{ const v=document.getElementById(id); if(v){ v.addEventListener('input',calc); v.addEventListener('change',calc); } });
 calc();
 </script>
 
@@ -779,14 +649,7 @@ calc();
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyDvQHobAUdGI3qHbzvX_hIlTRnUwnUocOk",
-  authDomain: "bltech-ceo-dashboard.firebaseapp.com",
-  projectId: "bltech-ceo-dashboard",
-  storageBucket: "bltech-ceo-dashboard.firebasestorage.app",
-  messagingSenderId: "543555206274",
-  appId: "1:543555206274:web:4bd2988a7bfa388c08889b"
-};
+const firebaseConfig = { apiKey:"AIzaSyDvQHobAUdGI3qHbzvX_hIlTRnUwnUocOk", authDomain:"bltech-ceo-dashboard.firebaseapp.com", projectId:"bltech-ceo-dashboard", storageBucket:"bltech-ceo-dashboard.firebasestorage.app", messagingSenderId:"543555206274", appId:"1:543555206274:web:4bd2988a7bfa388c08889b" };
 const authBtn=document.getElementById('authBtn'), authStatus=document.getElementById('authStatus');
 let db,auth,user=null,saveTimer=null;
 function setStatus(t,c){ if(authStatus){ authStatus.textContent=t; authStatus.style.color=c||'var(--muted)'; } }
