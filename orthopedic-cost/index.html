@@ -111,16 +111,17 @@
 </header>
 
 <div class="tabbar">
-  <div class="tab active" id="tab-calc" onclick="showTab('calc')">원가 계산</div>
   <div class="tab" id="tab-master" onclick="showTab('master')">단가 마스터</div>
+  <div class="tab" id="tab-s1" onclick="showTab('s1')">1공정품</div>
+  <div class="tab" id="tab-s2" onclick="showTab('s2')">2공정품</div>
+  <div class="tab active" id="tab-final" onclick="showTab('final')">완제품</div>
 </div>
 
-<!-- ============ 원가 계산 ============ -->
-<div class="view active" id="view-calc">
-<div class="wrap">
-  <div>
+<!-- ============ 1공정품 ============ -->
+<div class="view" id="view-s1">
+<div class="wrap-single">
     <div class="card">
-      <div class="card-h"><span class="step">0</span><h2>원가 산정 방식</h2><span class="note">단계 선택</span></div>
+      <div class="card-h"><span class="step">0</span><h2>원가 산정 방식</h2><span class="note">여기(1공정품)에서 설정 · 전체 공통</span></div>
       <div class="card-b">
         <select id="calcMode" onchange="onMode()">
           <option value="raw">① 원부자재부터 조성 (수지 배합 + 원단 직조/구매)</option>
@@ -139,14 +140,6 @@
         </div>
         <div class="derived" style="margin-top:12px"><span>수지 단가</span><span><b id="s1ResinPrice">0</b> 원/kg</span></div>
         <div class="derived"><span>원단 단가 / 중량</span><span><b id="s1FabPrice">0</b> 원/inch·m · <b id="s1FabKg">0</b> kg/inch·m</span></div>
-      </div>
-    </div>
-
-    <div class="card" id="card-stage2" style="display:none">
-      <div class="card-h"><span class="step">2</span><h2>2차 가공품 선택 (코팅롤)</h2><span class="note">1롤당 원자재비</span></div>
-      <div class="card-b">
-        <div class="fld"><label>코팅롤 (2차 가공품, 원/롤)</label><select id="stage2Sel" onchange="calc()"></select></div>
-        <div class="derived" style="margin-top:12px"><span>코팅롤 1롤당 원자재비</span><span><b id="s2Price">0</b> 원</span></div>
       </div>
     </div>
 
@@ -183,6 +176,20 @@
         <div class="derived"><span>원단 중량 <span class="muted" id="fabWtSrc"></span></span><span><b id="fabKgPerIM">0</b> kg/inch·m</span></div>
       </div>
     </div>
+</div>
+</div>
+
+<!-- ============ 2공정품 ============ -->
+<div class="view" id="view-s2">
+<div class="wrap-single">
+
+    <div class="card" id="card-stage2" style="display:none">
+      <div class="card-h"><span class="step">2</span><h2>2차 가공품 선택 (코팅롤)</h2><span class="note">1롤당 원자재비</span></div>
+      <div class="card-b">
+        <div class="fld"><label>코팅롤 (2차 가공품, 원/롤)</label><select id="stage2Sel" onchange="calc()"></select></div>
+        <div class="derived" style="margin-top:12px"><span>코팅롤 1롤당 원자재비</span><span><b id="s2Price">0</b> 원</span></div>
+      </div>
+    </div>
 
     <!-- 3. 롤 규격 & 코팅 -->
     <div class="card" id="card-roll">
@@ -214,6 +221,13 @@
         <div class="derived" style="margin-top:12px"><span>부자재 합계 / 롤</span><span><b id="subMatCost">0</b> 원</span></div>
       </div>
     </div>
+</div>
+</div>
+
+<!-- ============ 완제품 ============ -->
+<div class="view active" id="view-final">
+<div class="wrap">
+  <div>
 
     <!-- 5. 포장 -->
     <div class="card">
@@ -727,8 +741,9 @@ function loadScn(id){ const s=scenarios.find(x=>x.id===id); if(!s) return; apply
 function delScn(id){ scenarios=scenarios.filter(x=>x.id!==id); renderScns(); persist(); }
 
 /* ---------- tabs/utils ---------- */
-function showTab(t){ document.getElementById('view-calc').classList.toggle('active',t==='calc'); document.getElementById('view-master').classList.toggle('active',t==='master');
-  document.getElementById('tab-calc').classList.toggle('active',t==='calc'); document.getElementById('tab-master').classList.toggle('active',t==='master'); }
+function showTab(t){ ['master','s1','s2','final'].forEach(x=>{
+    const v=document.getElementById('view-'+x); if(v) v.classList.toggle('active',x===t);
+    const tab=document.getElementById('tab-'+x); if(tab) tab.classList.toggle('active',x===t); }); }
 function fmt(n,d=0){ if(!isFinite(n)) n=0; return Number(n).toLocaleString('ko-KR',{minimumFractionDigits:d,maximumFractionDigits:d}); }
 function esc(s){ return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 function escAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
@@ -754,8 +769,8 @@ window.fbDoLogin=function(){};
 /* ---------- init ---------- */
 if(!load()){ seed(); }
 renderResin(); renderMaster(); renderScns();
-document.getElementById('view-calc').addEventListener('input',calc);
-document.getElementById('view-calc').addEventListener('change',calc);
+['view-s1','view-s2','view-final'].forEach(id=>{ const v=document.getElementById(id);
+  if(v){ v.addEventListener('input',calc); v.addEventListener('change',calc); } });
 calc();
 </script>
 
